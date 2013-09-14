@@ -12,10 +12,10 @@ namespace LinearHomeworkInterface
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            int n = 2;
-            int m = 3;
+            int n = 3;
+            int m = 4;
             int max = 2;
-            int freeVars = 0;
+            int freeVars = 1;
             Boolean inconsistent = false;
 
             Random rand = new Random();
@@ -263,7 +263,7 @@ namespace LinearHomeworkInterface
                 Array.Copy(matrix, 0, matrixFree, 0, m - 1);
                 while (free > 0)
                 {
-                    int row = rand.Next(n - 1);
+                    int row = rand.Next(freeVars - 1);
                     int multiplier = rand.Next(max) + 1;
                     index = index - 1;
                     for (int t = 0; t < m; t++)
