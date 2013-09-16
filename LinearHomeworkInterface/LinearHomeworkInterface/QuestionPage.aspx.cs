@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Web.Services;
 
 namespace LinearHomeworkInterface
 {
@@ -12,6 +13,7 @@ namespace LinearHomeworkInterface
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+
             int n = 3;
             int m = 4;
             int max = 2;
@@ -348,6 +350,57 @@ namespace LinearHomeworkInterface
             //    }
             //}
             //Console.ReadLine();
+
+            //You can set your solution here, just substitute the numbers
+            //with your matrix solution values from above
+            SetSolution(Convert.ToString(1 + " " + 3 + " " + 5));
+        }
+
+        //our WebMethod for setting the values for our key
+        [WebMethod]
+        public static string SetSolution(String ListPassingSolutions)
+        {
+            string[] lines = ListPassingSolutions.Split(' ');
+            int[] KeySolutions;
+            int x = 0;
+            for (int i = 0; i < lines.Length; i++)
+            {
+                x++;
+            }
+            KeySolutions = new int[x];
+            x = 0;
+            for (int i = 0; i < lines.Length; i++)
+            {
+                KeySolutions[x] = System.Convert.ToInt32(lines[i]);
+                x++;
+            }
+
+            GradeComponent.Grader grader = new GradeComponent.Grader();
+            grader.SetKey(KeySolutions);
+            return "Complete";
+        }
+
+        //our WebMethod for checking the user's solution(s)
+        [WebMethod]
+        public static string GradeAnswer(String ListPassingSolutions)
+        {
+            string[] lines = ListPassingSolutions.Split(' ');
+            int[] UserSolutions;
+            int x = 0;
+            for (int i = 0; i < lines.Length; i++)
+            {
+                x++;
+            }
+            UserSolutions = new int[x];
+            x = 0;
+            for (int i = 0; i < lines.Length; i++)
+            {
+                UserSolutions[x] = System.Convert.ToInt32(lines[i]);
+                x++;
+            }
+
+            GradeComponent.Grader grader = new GradeComponent.Grader();
+            return grader.Grade(UserSolutions);
         }
     }
 }

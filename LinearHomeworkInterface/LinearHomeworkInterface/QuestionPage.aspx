@@ -22,6 +22,10 @@ MathJax.Hub.Config({
     </script>
 </head>
 <body>
+    <form id="form1" runat="server">
+      <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true" />
+      <!---<asp:Button runat="server" ID="Button1" ClientIDMode="Static" Text="Call MyMethod" UseSubmitBehavior="false" /> --->
+    </form>
     <div class="container">
         <div class="navbar-inner" style="position: fixed; width: 900px; z-index: 1000;">
             <div class="nav-collapse collapse">
@@ -105,7 +109,7 @@ MathJax.Hub.Config({
                             <div id="info" style="color: #888;">Use the Tools to answer the question...</div>
                         </div>
                         <hr style="margin-bottom: 0px; margin-top: 0px;"/>
-                        <a class="btn btn-primary" style="margin-top: 5px; float: right; margin-bottom: 50px;" href="#" type="submit">Submit Answer</a>
+                        <a id="submitAnswer" class="btn btn-primary"  href="#" onclick="submitAnswer()" style="margin-top: 5px; float: right; margin-bottom: 50px;" type="submit">Submit Answer</a>
                     </form>
                 </div>
             </div>
@@ -162,6 +166,23 @@ MathJax.Hub.Config({
             $('#freeLink' + index).attr("onclick", "addFreeVariable(" + index + ")");
         }
 
+        function setSolutionKey() {
+            $.ajax({
+                type: "POST",
+                url: "QuestionPage.aspx/SetSolution",
+                data: "{'ListPassingSolutions': '0 1 8'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    alert(msg.d);
+                },
+                error: function (response) {
+                    $('body', document).html(response.responseText);
+                    alert(response.d);
+                }
+            });
+        }
+
         $(document).ready(function () {
             $('.dropdown-menu input, #makeMatrix').click(function (e) {
                 e.stopPropagation();
@@ -191,11 +212,38 @@ MathJax.Hub.Config({
                     generatedAnswer = true;
                     $('#matrixHolder').append("<h4>Answer: </h4>");
                     for (var i = 0; i < variables; i++) {
-                        $('#matrixHolder').append("<strong>x<sub>" + (i + 1) + "</sub> = </strong><input id=\"var" + i + "\" onkeypress=\"return validateNumericInput(event)\" style=\"width: 27px; margin-right: 3px;\"></input><a id=\"freeLink" + i + "\" onclick=\"addFreeVariable(" + i + ")\" tabindex=\"-1\" href=\"#\">Set Free Variable</a></br>");
+                        $('#matrixHolder').append("<strong>x<sub>" + (i + 1) + "</sub> = </strong><input id=\"var" + i + "\" onkeypress=\"return validateNumericInput(event)\" class=\"ansbox\" style=\"width: 27px; margin-right: 3px;\"></input><a id=\"freeLink" + i + "\" onclick=\"addFreeVariable(" + i + ")\" tabindex=\"-1\" href=\"#\">Set Free Variable</a></br>");
                     }
                 }
             });
+
+            $('#submitAnswer').click(function () {
+                if (generatedAnswer === true) {
+                    var variables = $('#variables').val();
+                    var params = "";
+                    for (var i = 0; i < variables; i++) {
+                        var params = params + ($('#var' + i).val()) + " ";
+                    }
+                    params = params.substring(0, params.length-1);
+
+                    $.ajax({
+                        type: "POST",
+                        url: "QuestionPage.aspx/GradeAnswer",
+                        data: "{'ListPassingSolutions': '" + params + "'}",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (msg) {
+                            alert(msg.d);
+                        },
+                        error: function (response) {
+                            $('body', document).html(response.responseText);
+                            alert(response.d);
+                        }
+                    });
+                }
+            });
         });
+
     </script>
 </body>
 </html>

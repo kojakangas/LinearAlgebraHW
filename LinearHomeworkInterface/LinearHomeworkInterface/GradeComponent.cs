@@ -16,22 +16,76 @@ namespace GradeComponent
     //The class itself
     class Grader
     {
-        public int x;
-        public int y;
+        public int solCount = 0;
+        public int[] UserSolutions;
+        public int[] SolutionKey;
 
-        //The constructor for the grading program. The controller passes
+        //default constructor for the controller
+        public Grader()
+        {
+            //no need for code here
+        }
+
+        //The user-solution-passing constructor for the grading program. The controller passes
         //the solution values from the user through this constructor.
-        public Grader(int x, int y) {
-            this.x = x;
-            this.y = y;
+        public Grader(params int [] ListUserSolutions) {
+            int x = 0;
+            foreach (int i in ListUserSolutions)
+            {
+                x++;
+            }
+            UserSolutions = new int[x];
+            x = 0;
+            foreach (int i in ListUserSolutions)
+            {
+                UserSolutions[x] = i;
+                x++;
+            }
+        }
+
+        //set the key in the solution text with any list of numbers
+        public void SetKey(params int [] ListActualSolutions)
+        {
+            int x = 0;
+            foreach (int i in ListActualSolutions)
+            {
+                x++;
+            }
+            SolutionKey = new int[x];
+            x = 0;
+            foreach (int i in ListActualSolutions)
+            {
+                SolutionKey[x] = i;
+                x++;
+            }
+            String keyValue = "";
+            for (int i = 0; i < SolutionKey.Length; i++)
+            {
+                keyValue += SolutionKey[i] + "\n";
+            }
+            keyValue = keyValue.Substring(0,keyValue.Length-1);
+            System.IO.File.WriteAllText(@"C:\Users\KOEMXE\Documents\GitHub\LinearAlgebraHW\LinearHomeworkInterface\LinearHomeworkInterface\GradeKey.txt",
+                keyValue);
         }
 
         //Here is the actual grading method
-        public String Grade()
+        public String Grade(params int[] ListUserSolutions)
         {
+            int x = 0;
+            foreach (int i in ListUserSolutions)
+            {
+                x++;
+            }
+            UserSolutions = new int[x];
+            x = 0;
+            foreach (int i in ListUserSolutions)
+            {
+                UserSolutions[x] = i;
+                x++;
+            }
             // Read each line of our solution text file into a string array. Each element 
             // of the array is one line of the file. 
-            string[] lines = System.IO.File.ReadAllLines(@"C:\data\GradeEx1.txt");
+            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\KOEMXE\Documents\GitHub\LinearAlgebraHW\LinearHomeworkInterface\LinearHomeworkInterface\GradeKey.txt");
 
             //Below are commented commands for console testing purposes.
 
@@ -42,13 +96,30 @@ namespace GradeComponent
 
             //The logic comparison section. If the user enters both solutions correctly the class
             //returns a commendation as a string, otherwise the class returns an incorrect string
-            if (System.Convert.ToInt32(lines[0]) == x && System.Convert.ToInt32(lines[1]) == y)
+            foreach (var i in UserSolutions)
+            {
+                if (this.solCount == lines.Length)
+                {
+                    this.solCount++;
+                    break;
+                }
+                else if (System.Convert.ToInt32(lines[this.solCount]) == i)
+                {
+                    this.solCount++;
+                }
+                else
+                {
+                    return "Not good. Try again.";
+                } 
+            }
+
+            if (solCount == lines.Length)
             {
                 return "Very good! You got a good grade.";
             }
-            else
-            {
-                return "Not good. Try again.";
+            else{
+                return "We couldn't match up all the solutions with our key. Please verify that you" +
+                    " have the correct number of solutions";
             }
             //Below are more commented testing commands that should not be necessary
 
