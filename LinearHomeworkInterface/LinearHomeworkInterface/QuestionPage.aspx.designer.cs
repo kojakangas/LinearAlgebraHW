@@ -13,6 +13,15 @@ namespace LinearHomeworkInterface {
     public partial class QuestionPage {
         
         /// <summary>
+        /// DataGrid control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DataGrid DataGrid;
+        
+        /// <summary>
         /// form1 control.
         /// </summary>
         /// <remarks>
@@ -28,17 +37,7 @@ namespace LinearHomeworkInterface {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.ScriptManager ScriptManager1;
-        
-        /// <summary>
-        /// Button1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Button1;
-        
+
         /// <summary>
         /// question control.
         /// </summary>
@@ -55,6 +54,5 @@ namespace LinearHomeworkInterface {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DataGrid DataGrid;
-    }
+        protected global::System.Web.UI.WebControls.DataGrid DataGrid;    }
 }

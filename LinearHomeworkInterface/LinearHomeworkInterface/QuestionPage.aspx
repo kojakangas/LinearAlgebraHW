@@ -22,10 +22,6 @@ MathJax.Hub.Config({
     </script>
 </head>
 <body>
-    <form id="form1" runat="server">
-      <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true" />
-      <!---<asp:Button runat="server" ID="Button1" ClientIDMode="Static" Text="Call MyMethod" UseSubmitBehavior="false" /> --->
-    </form>
     <div class="container">
         <div class="navbar-inner" style="position: fixed; width: 900px; z-index: 1000;">
             <div class="nav-collapse collapse">
@@ -103,7 +99,8 @@ MathJax.Hub.Config({
                         </div>
                         <asp:DataGrid ID="DataGrid" ShowHeader="False" RowHeadersVisible="false" GridLines="None" runat="server" AutoGenerateColumns="true"></asp:DataGrid>
                     </div>
-                    <form>
+                    <form id="form1" runat="server">
+                        <!---<asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true" /> --->
                         <div id="matrixHolder" style="display: inline-block; width: 100%;">
                             <!-- jQuery appends the matrices here-->
                             <div id="info" style="color: #888;">Use the Tools to answer the question...</div>
