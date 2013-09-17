@@ -17,8 +17,8 @@ namespace GradeComponent
     class Grader
     {
         public int solCount = 0;
-        public int[] UserSolutions;
-        public int[] SolutionKey;
+        public float[] UserSolutions;
+        public float[] SolutionKey;
 
         //default constructor for the controller
         public Grader()
@@ -30,12 +30,7 @@ namespace GradeComponent
         //the solution values from the user through this constructor.
         public Grader(params int [] ListUserSolutions) {
             int x = 0;
-            foreach (int i in ListUserSolutions)
-            {
-                x++;
-            }
-            UserSolutions = new int[x];
-            x = 0;
+            UserSolutions = new float[ListUserSolutions.Length];
             foreach (int i in ListUserSolutions)
             {
                 UserSolutions[x] = i;
@@ -44,15 +39,11 @@ namespace GradeComponent
         }
 
         //set the key in the solution text with any list of numbers
+        //UPDATE: Should no longer be necessary since dynamic grading has been implemented
         public void SetKey(params int [] ListActualSolutions)
         {
             int x = 0;
-            foreach (int i in ListActualSolutions)
-            {
-                x++;
-            }
-            SolutionKey = new int[x];
-            x = 0;
+            SolutionKey = new float[ListActualSolutions.Length];
             foreach (int i in ListActualSolutions)
             {
                 SolutionKey[x] = i;
@@ -69,30 +60,19 @@ namespace GradeComponent
         }
 
         //Here is the actual grading method
-        public String Grade(List<float> ActualSolution, params int[] ListUserSolutions)
+        public String Grade(List<float> ActualSolution, params float[] ListUserSolutions)
         {
+            UserSolutions = new float[ListUserSolutions.Length];
             int x = 0;
-            foreach (int i in ListUserSolutions)
-            {
-                x++;
-            }
-            UserSolutions = new int[x];
-            x = 0;
             foreach (int i in ListUserSolutions)
             {
                 UserSolutions[x] = i;
                 x++;
             }
             // Read each line of our solution text file into a string array. Each element 
-            // of the array is one line of the file. 
+            // of the array is one line of the file.
+            // UPDATE: Dynamic grading added, so checking against text file no longer necessary
             //string[] lines = System.IO.File.ReadAllLines(@"C:\Users\KOEMXE\Documents\GitHub\LinearAlgebraHW\LinearHomeworkInterface\LinearHomeworkInterface\GradeKey.txt");
-
-            //Below are commented commands for console testing purposes.
-
-            //Console.WriteLine("Please enter the first solution for x (ex. 2)");
-            //string input = Console.ReadLine();
-            //Console.WriteLine("Please enter the second solution for y (ex. 5)");
-            //string input2 = Console.ReadLine();
 
             //The logic comparison section. If the user enters both solutions correctly the class
             //returns a commendation as a string, otherwise the class returns an incorrect string
@@ -121,10 +101,7 @@ namespace GradeComponent
                 return "We couldn't match up all the solutions with our key. Please verify that you" +
                     " have the correct number of solutions";
             }
-            //Below are more commented testing commands that should not be necessary
-
-            //Console.WriteLine("Press any key to exit.");
-            //Console.ReadKey();
+            
         }
     }
 }

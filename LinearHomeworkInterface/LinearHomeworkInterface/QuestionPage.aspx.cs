@@ -388,14 +388,8 @@ namespace LinearHomeworkInterface
         public static string GradeAnswer(String ListPassingSolutions)
         {
             string[] lines = ListPassingSolutions.Split(' ');
-            int[] UserSolutions;
+            float[] UserSolutions = new float[lines.Length];
             int x = 0;
-            for (int i = 0; i < lines.Length; i++)
-            {
-                x++;
-            }
-            UserSolutions = new int[x];
-            x = 0;
             for (int i = 0; i < lines.Length; i++)
             {
                 //the commented code will handle free variables
