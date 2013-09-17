@@ -97,10 +97,10 @@ MathJax.Hub.Config({
                         <p style="margin: 0px;">Find the solution.</p>
                         <p style="margin: 0px;">2x + 3y = 4</p>
                         <p style="margin: 0px;">x + y = 2</p>
-                        <p>
-                            $${2x_1 + 3x_2} = 4$$
-                            $${x_1 + x_2} = 2$$
-                        </p>
+                        <div id="questiondisplay">
+                            <asp:Label ID="question" runat="server">
+                            </asp:Label>
+                        </div>
                         <asp:DataGrid ID="DataGrid" ShowHeader="False" RowHeadersVisible="false" GridLines="None" runat="server" AutoGenerateColumns="true"></asp:DataGrid>
                     </div>
                     <form>

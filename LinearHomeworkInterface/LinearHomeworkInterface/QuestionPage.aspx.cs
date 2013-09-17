@@ -15,9 +15,9 @@ namespace LinearHomeworkInterface
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            int n = 5;
-            int m = 6;
-            int max = 5;
+            int n = 2;
+            int m = 3;
+            int max = 2;
             int freeVars = 0;
             Boolean inconsistent = false;
 
@@ -328,6 +328,47 @@ namespace LinearHomeworkInterface
             DataGrid.DataSource = dt;
             DataGrid.DataBind();
 
+            for (int i = 0; i < n; i++)
+            {
+                char[] a = new char[1];
+                String expression = new String(a);
+                for (int j = 0; j < m; j++)
+                {
+                    if (j == 0)
+                    {
+                        expression = "$${";
+                        expression += matrix[i,j];
+                        expression += "x_";
+                        expression += j + 1;
+                        expression += " ";
+                    }
+                    else if (j < (dt.Columns.Count - 2))
+                    {
+                        if (matrix[i, j] >= 0) expression += "+ ";
+                        else expression += "- ";
+                        expression += matrix[i, j];
+                        expression += "x_";
+                        expression += j + 1;
+                        expression += " ";
+                    }
+                    else if (j == (dt.Columns.Count - 2))
+                    {
+                        if (matrix[i, j] >= 0) expression += "+ ";
+                        else expression += "- ";
+                        expression += matrix[i,j];
+                        expression += "x_";
+                        expression += j + 1;
+                        expression += "} = ";
+                    }
+                    else if (j == (dt.Columns.Count - 1))
+                    {
+                        expression += matrix[i, j];
+                        expression += "$$";
+                    }
+                }
+                question.Text = question.Text + expression;
+            }
+
             //Console.WriteLine("Solution: ");
             //for (int f = 0; f < m - 1; f++)
             //{
@@ -407,6 +448,6 @@ namespace LinearHomeworkInterface
 
             GradeComponent.Grader grader = new GradeComponent.Grader();
             return grader.Grade(solution, UserSolutions);
-        }
+        } 
     }
 }
