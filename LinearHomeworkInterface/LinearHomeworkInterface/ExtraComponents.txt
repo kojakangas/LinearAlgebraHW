@@ -22,3 +22,20 @@
             return "Complete";
         }
 
+//JQuery function for setting solution key from client side
+function setSolutionKey() {
+            $.ajax({
+                type: "POST",
+                url: "QuestionPage.aspx/SetSolution",
+                data: "{'ListPassingSolutions': '0 1 8'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    alert(msg.d);
+                },
+                error: function (response) {
+                    $('body', document).html(response.responseText);
+                    alert(response.d);
+                }
+            });
+        }

@@ -17,8 +17,8 @@ namespace LinearHomeworkInterface
         {
             int n = 2;
             int m = 3;
-            int max = 0;
-            int freeVars = 0;
+            int max = 5;
+            int freeVars = 1;
             Boolean inconsistent = false;
 
             Random rand = new Random();

@@ -91,8 +91,6 @@ MathJax.Hub.Config({
                     <div class="hero-unit" style="padding: 10px; margin-bottom: 0px;">
                         <h3 style="margin: 0px;">Question 1</h3>
                         <p style="margin: 0px;">Find the solution.</p>
-                        <p style="margin: 0px;">2x + 3y = 4</p>
-                        <p style="margin: 0px;">x + y = 2</p>
                         <div id="questiondisplay">
                             <asp:Label ID="question" runat="server">
                             </asp:Label>
@@ -100,7 +98,6 @@ MathJax.Hub.Config({
                         <asp:DataGrid ID="DataGrid" ShowHeader="False" RowHeadersVisible="false" GridLines="None" runat="server" AutoGenerateColumns="true"></asp:DataGrid>
                     </div>
                     <form id="form1" runat="server">
-                        <!---<asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true" /> --->
                         <div id="matrixHolder" style="display: inline-block; width: 100%;">
                             <!-- jQuery appends the matrices here-->
                             <div id="info" style="color: #888;">Use the Tools to answer the question...</div>
@@ -161,23 +158,6 @@ MathJax.Hub.Config({
             $('#var' + index).removeAttr("disabled");
             $('#freeLink' + index).text("Set Free Variable");
             $('#freeLink' + index).attr("onclick", "addFreeVariable(" + index + ")");
-        }
-
-        function setSolutionKey() {
-            $.ajax({
-                type: "POST",
-                url: "QuestionPage.aspx/SetSolution",
-                data: "{'ListPassingSolutions': '0 1 8'}",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (msg) {
-                    alert(msg.d);
-                },
-                error: function (response) {
-                    $('body', document).html(response.responseText);
-                    alert(response.d);
-                }
-            });
         }
 
         $(document).ready(function () {
