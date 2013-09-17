@@ -225,7 +225,7 @@ MathJax.Hub.Config({
                         var params = params + ($('#var' + i).val()) + " ";
                     }
                     params = params.substring(0, params.length-1);
-
+                    //alert(params);
                     $.ajax({
                         type: "POST",
                         url: "QuestionPage.aspx/GradeAnswer",

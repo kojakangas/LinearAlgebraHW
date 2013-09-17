@@ -69,7 +69,7 @@ namespace GradeComponent
         }
 
         //Here is the actual grading method
-        public String Grade(params int[] ListUserSolutions)
+        public String Grade(List<float> ActualSolution, params int[] ListUserSolutions)
         {
             int x = 0;
             foreach (int i in ListUserSolutions)
@@ -85,7 +85,7 @@ namespace GradeComponent
             }
             // Read each line of our solution text file into a string array. Each element 
             // of the array is one line of the file. 
-            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\KOEMXE\Documents\GitHub\LinearAlgebraHW\LinearHomeworkInterface\LinearHomeworkInterface\GradeKey.txt");
+            //string[] lines = System.IO.File.ReadAllLines(@"C:\Users\KOEMXE\Documents\GitHub\LinearAlgebraHW\LinearHomeworkInterface\LinearHomeworkInterface\GradeKey.txt");
 
             //Below are commented commands for console testing purposes.
 
@@ -98,12 +98,12 @@ namespace GradeComponent
             //returns a commendation as a string, otherwise the class returns an incorrect string
             foreach (var i in UserSolutions)
             {
-                if (this.solCount == lines.Length)
+                if (this.solCount == ActualSolution.Count)
                 {
                     this.solCount++;
                     break;
                 }
-                else if (System.Convert.ToInt32(lines[this.solCount]) == i)
+                else if (System.Convert.ToInt32(ActualSolution.ElementAt(this.solCount)) == i)
                 {
                     this.solCount++;
                 }
@@ -113,7 +113,7 @@ namespace GradeComponent
                 } 
             }
 
-            if (solCount == lines.Length)
+            if (solCount == ActualSolution.Count)
             {
                 return "Very good! You got a good grade.";
             }

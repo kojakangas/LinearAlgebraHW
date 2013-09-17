@@ -11,17 +11,20 @@ namespace LinearHomeworkInterface
 {
     public partial class QuestionPage : System.Web.UI.Page
     {
+        public static List<float> solution = null;
+
         protected void Page_Load(object sender, EventArgs e)
         {
-
-            int n = 3;
-            int m = 4;
-            int max = 2;
-            int freeVars = 1;
+            int n = 5;
+            int m = 6;
+            int max = 5;
+            int freeVars = 0;
             Boolean inconsistent = false;
 
             Random rand = new Random();
-            List<float> solution = new List<float>();
+            
+            solution = new List<float>();
+
             for (int u = 0; u < n; u++)
             {
                 solution.Add(rand.Next(max + 1));
@@ -353,7 +356,7 @@ namespace LinearHomeworkInterface
 
             //You can set your solution here, just substitute the numbers
             //with your matrix solution values from above
-            SetSolution(Convert.ToString(1 + " " + 3 + " " + 5));
+            //SetSolution(Convert.ToString(1 + " " + 3 + " " + 5));
         }
 
         //our WebMethod for setting the values for our key
@@ -395,12 +398,21 @@ namespace LinearHomeworkInterface
             x = 0;
             for (int i = 0; i < lines.Length; i++)
             {
-                UserSolutions[x] = System.Convert.ToInt32(lines[i]);
-                x++;
+                //the commented code will handle free variables
+                //if (UserSolutions[x] == "f")
+                //{
+                //    UserSolutions[x] = Convert.ToInt32(lines[i]);
+                //    x++;
+                //}
+                //else
+                //{
+                    UserSolutions[x] = System.Convert.ToInt32(lines[i]);
+                    x++;
+                //}
             }
 
             GradeComponent.Grader grader = new GradeComponent.Grader();
-            return grader.Grade(UserSolutions);
+            return grader.Grade(solution, UserSolutions);
         }
     }
 }
