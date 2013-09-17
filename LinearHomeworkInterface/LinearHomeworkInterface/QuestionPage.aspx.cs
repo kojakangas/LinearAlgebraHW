@@ -268,7 +268,7 @@ namespace LinearHomeworkInterface
                     }
                 }
             }
-
+            /*
             DataTable dt = new DataTable("matrix");
 
             for (int u = 0; u < m; u++)
@@ -289,7 +289,8 @@ namespace LinearHomeworkInterface
 
             DataGrid.DataSource = dt;
             DataGrid.DataBind();
-        }       
+            */
+
 
             for (int i = 0; i < n; i++)
             {
@@ -300,12 +301,12 @@ namespace LinearHomeworkInterface
                     if (j == 0)
                     {
                         expression = "$${";
-                        expression += matrix[i,j];
+                        expression += matrix[i, j];
                         expression += "x_";
                         expression += j + 1;
                         expression += " ";
                     }
-                    else if (j < (dt.Columns.Count - 2))
+                    else if (j < (m - 2))
                     {
                         if (matrix[i, j] >= 0) expression += "+ ";
                         else expression += "- ";
@@ -314,23 +315,25 @@ namespace LinearHomeworkInterface
                         expression += j + 1;
                         expression += " ";
                     }
-                    else if (j == (dt.Columns.Count - 2))
+                    else if (j == (m - 2))
                     {
                         if (matrix[i, j] >= 0) expression += "+ ";
                         else expression += "- ";
-                        expression += matrix[i,j];
+                        expression += matrix[i, j];
                         expression += "x_";
                         expression += j + 1;
                         expression += "} = ";
                     }
-                    else if (j == (dt.Columns.Count - 1))
+                    else if (j == (m - 1))
                     {
                         expression += matrix[i, j];
                         expression += "$$";
                     }
                 }
                 question.Text = question.Text + expression;
-            }        //our WebMethod for checking the user's solution(s)
+            }
+        }       
+         //our WebMethod for checking the user's solution(s)
         [WebMethod]
         public static string GradeAnswer(String ListPassingSolutions)
         {
