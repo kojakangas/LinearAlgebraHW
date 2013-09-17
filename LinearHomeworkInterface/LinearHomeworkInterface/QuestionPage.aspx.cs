@@ -15,9 +15,9 @@ namespace LinearHomeworkInterface
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            int n = 5;
-            int m = 6;
-            int max = 5;
+            int n = 2;
+            int m = 3;
+            int max = 0;//currently will generate 1 less than the assigned number
             int freeVars = 0;
             Boolean inconsistent = false;
 
@@ -166,40 +166,11 @@ namespace LinearHomeworkInterface
                                 }
                             }
                             constants.Add(addition / div);
-                            //                        if (div != 0) {
-                            //                            constants.add(addition / div);
-                            //                        } else {
-                            //                            //if the first constant of the equation is a 0 then
-                            //                            //to check if the generated row is any multiple of the other
-                            //                            //row this is going to add the first row down plus the current
-                            //                            //row and use the first element as the divider to get the 
-                            //                            //constant. Also it will save the position of all rows that
-                            //                            //will need the first row subtracted out before returning the array.
-                            //                            for (int b = 0; b < i; b++) {
-                            //                                if (constants.get(b) == 0) {
-                            //                                    constants.set(b, -1f);
-                            //                                } else {
-                            //                                    if (constants.get(b) > 0) {
-                            //                                        constants.set(b, constants.get(b) * (-1));
-                            //                                    }
-                            //                                }
-                            //                            }
-                            //                            constants.add(addition / matrix[0][0]);
-                            //                            firstElZero.add(i);
-                            //                        }
                             addition = matrix[r, 0];
                         }
 
-                        //                    //This is what adds the first row into the row with
-                        //                    //a zero as the first constant.
-                        //                    for (Integer row : firstElZero) {
-                        //                        for (int g = 0; g < matrix[row].length; g++) {
-                        //                            matrix[row][g] += matrix[0][g];
-                        //                        }
-                        //                    }
-
                         //Do the checking
-                        Boolean[] check = new Boolean[m];//Boolean[][] check = new Boolean[matrix.length - 1][matrix[0].length];
+                        Boolean[] check = new Boolean[m];
                         for (int k = 0; k < r; k++)
                         {
                             int l = 0;
@@ -229,7 +200,7 @@ namespace LinearHomeworkInterface
 
                             test = false;
                             if (Array.IndexOf(check, false) == (-1))
-                            {//if (!Arrays.asList(check).contains(false)) {
+                            {
                                 matrix[r, m - 1] = 0;
                                 test = true;
                                 break;
@@ -245,15 +216,6 @@ namespace LinearHomeworkInterface
                                 matrix[row, h] -= matrix[0, h];
                             }
                         }
-
-                        //                    test = false;
-                        //
-                        //                    for (int w = 0; w < check.length; w++) {
-                        //                        if (!Arrays.asList(check[w]).contains(false)) {
-                        //                            test = true;
-                        //                            break;
-                        //                        }
-                        //                    }
                     }
                 }
             }
@@ -327,61 +289,7 @@ namespace LinearHomeworkInterface
 
             DataGrid.DataSource = dt;
             DataGrid.DataBind();
-
-            //Console.WriteLine("Solution: ");
-            //for (int f = 0; f < m - 1; f++)
-            //{
-            //    Console.WriteLine(solution.ElementAt(f));
-            //}
-
-            //Console.WriteLine("Matrix: ");
-            //for (int q = 0; q < n; q++)
-            //{
-            //    for (int w = 0; w < m; w++)
-            //    {
-            //        Console.WriteLine(matrix[q, w]);
-            //    }
-            //}
-
-            //Console.WriteLine("Free Var Matrix:");
-
-            //for (int w = 0; w < n; w++)
-            //{
-            //    for (int q = 0; q < m; q++)
-            //    {
-            //        Console.WriteLine(matrixFree[w, q]);
-            //    }
-            //}
-            //Console.ReadLine();
-
-            //You can set your solution here, just substitute the numbers
-            //with your matrix solution values from above
-            //SetSolution(Convert.ToString(1 + " " + 3 + " " + 5));
-        }
-
-        //our WebMethod for setting the values for our key
-        [WebMethod]
-        public static string SetSolution(String ListPassingSolutions)
-        {
-            string[] lines = ListPassingSolutions.Split(' ');
-            int[] KeySolutions;
-            int x = 0;
-            for (int i = 0; i < lines.Length; i++)
-            {
-                x++;
-            }
-            KeySolutions = new int[x];
-            x = 0;
-            for (int i = 0; i < lines.Length; i++)
-            {
-                KeySolutions[x] = System.Convert.ToInt32(lines[i]);
-                x++;
-            }
-
-            GradeComponent.Grader grader = new GradeComponent.Grader();
-            grader.SetKey(KeySolutions);
-            return "Complete";
-        }
+        }       
 
         //our WebMethod for checking the user's solution(s)
         [WebMethod]
