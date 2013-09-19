@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Web;
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Web.Services;
 
 namespace LinearHomeworkInterface
 {
@@ -332,30 +332,39 @@ namespace LinearHomeworkInterface
                 }
                 question.Text = question.Text + expression;
             }
-        }       
-         //our WebMethod for checking the user's solution(s)
+        }
+       
+        //our WebMethod for checking the user's solution(s)
         [WebMethod]
         public static string GradeAnswer(String ListPassingSolutions)
         {
+            //create a String array of the answers submitted from the user page
+            //splits by space
             string[] lines = ListPassingSolutions.Split(' ');
+
+            //create a float array to represent our solutions being passed into
+            //this method
             float[] UserSolutions = new float[lines.Length];
+
+            //create a counter
             int x = 0;
+
+            //for all the elements being passed in our array of user strings
             for (int i = 0; i < lines.Length; i++)
             {
-                //the commented code will handle free variables
-                //if (UserSolutions[x] == "f")
-                //{
-                //    UserSolutions[x] = Convert.ToInt32(lines[i]);
-                //    x++;
-                //}
-                //else
-                //{
-                    UserSolutions[x] = System.Convert.ToInt32(lines[i]);
-                    x++;
-                //}
+                //convert each string into an integer and add it to our integer
+                //array for the grading component
+                UserSolutions[x] = System.Convert.ToInt32(lines[i]);
+
+                //increment our counter
+                x++;
             }
 
+            //create our grading object to grade the user's answers
             GradeComponent.Grader grader = new GradeComponent.Grader();
+
+            //have this created object grade the user's solutions against
+            //the answers of our generated matrix
             return grader.Grade(solution, UserSolutions);
         } 
     }

@@ -39,3 +39,24 @@ function setSolutionKey() {
                 }
             });
         }
+
+//set the key in the solution text with any list of numbers (from Grading Component)
+        //UPDATE: Should no longer be necessary since dynamic grading has been implemented
+        public void SetKey(params int [] ListActualSolutions)
+        {
+            int x = 0;
+            SolutionKey = new float[ListActualSolutions.Length];
+            foreach (int i in ListActualSolutions)
+            {
+                SolutionKey[x] = i;
+                x++;
+            }
+            String keyValue = "";
+            for (int i = 0; i < SolutionKey.Length; i++)
+            {
+                keyValue += SolutionKey[i] + "\n";
+            }
+            keyValue = keyValue.Substring(0,keyValue.Length-1);
+            System.IO.File.WriteAllText(@"C:\Users\KOEMXE\Documents\GitHub\LinearAlgebraHW\LinearHomeworkInterface\LinearHomeworkInterface\GradeKey.txt",
+                keyValue);
+        }
