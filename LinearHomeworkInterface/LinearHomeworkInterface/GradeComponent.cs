@@ -16,8 +16,17 @@ namespace GradeComponent
     //The class itself
     class Grader
     {
+        //public instance variables//
+
+        //our solution counter for the grading method
         public int solCount = 0;
+
+        //our solution array for the user solutions being
+        //passed into the grading method
         public float[] UserSolutions;
+
+        //our solution array for the actual solutions of our
+        //generated matrix
         public float[] SolutionKey;
 
         //default constructor for the controller
