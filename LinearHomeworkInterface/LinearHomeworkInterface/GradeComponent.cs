@@ -25,9 +25,8 @@ namespace GradeComponent
         //passed into the grading method
         public float[] UserSolutions;
 
-        //our solution array for the actual solutions of our
-        //generated matrix
-        public float[] SolutionKey;
+        //This is the given range that will provide a correct answer
+        public float acceptableRange = .001F;
 
         //default constructor for the controller
         public Grader()
@@ -91,7 +90,7 @@ namespace GradeComponent
 
                 //else if our actual solution for the current solution is the same as the current
                 //user solution being checked
-                else if (ActualSolution.ElementAt(this.solCount) == i)
+                else if (Math.Abs(ActualSolution.ElementAt(this.solCount)-i) < acceptableRange)
                 {
                     //increment our public solution counter
                     this.solCount++;
