@@ -17,8 +17,9 @@ namespace LinearHomeworkInterface
         {
             int n = 2;
             int m = 3;
-            int max = 5;
-            int freeVars = 1;
+            int min = -2;
+            int max = 2;
+            int freeVars = 0;
             Boolean inconsistent = false;
 
             Random rand = new Random();
@@ -27,7 +28,7 @@ namespace LinearHomeworkInterface
 
             for (int u = 0; u < n; u++)
             {
-                solution.Add(rand.Next(max + 1));
+                solution.Add(rand.Next(min, max + 1));
             }
             float[,] matrix = new float[n, m];
 
@@ -36,11 +37,13 @@ namespace LinearHomeworkInterface
             {
                 if (a == 0)
                 {
-                    matrix[0, a] = rand.Next(max) + 1;
+                    matrix[0, a] = rand.Next(min, max);
+                    if (matrix[0, a] == 0)
+                        matrix[0, a] += 1;
                 }
                 else
                 {
-                    matrix[0, a] = rand.Next(max + 1);
+                    matrix[0, a] = rand.Next(min, max + 1);
                 }
                 //this if handles when n is smaller than m by more than 1. for example n = 2 and m = 4
                 //will result in free variable
@@ -50,7 +53,7 @@ namespace LinearHomeworkInterface
                 }
                 else
                 {
-                    matrix[0, m - 1] += matrix[0, a] + rand.Next(max);
+                    matrix[0, m - 1] += matrix[0, a] + rand.Next(min, max);
                 }
             }
 
@@ -62,11 +65,13 @@ namespace LinearHomeworkInterface
                 {
                     if (a == 1)
                     {
-                        matrix[1, a] = rand.Next(max) + 1;
+                        matrix[1, a] = rand.Next(min, max);
+                        if (matrix[1, a] == 0)
+                            matrix[1, a] += 1;
                     }
                     else
                     {
-                        matrix[1, a] = rand.Next(max + 1);
+                        matrix[1, a] = rand.Next(min, max + 1);
                     }
                     //this if handles when n is smaller than m by more than 1. for example n = 2 and m = 4
                     //will result in free variable
@@ -76,7 +81,7 @@ namespace LinearHomeworkInterface
                     }
                     else
                     {
-                        matrix[1, m - 1] += matrix[1, a] + rand.Next(max);
+                        matrix[1, m - 1] += matrix[1, a] + rand.Next(min, max);
                     }
                 }
                 float num = 0;
@@ -112,11 +117,13 @@ namespace LinearHomeworkInterface
                         {
                             if (a == r)
                             {
-                                matrix[r, a] = rand.Next(max) + 1;
+                                matrix[r, a] = rand.Next(min, max);
+                                if (matrix[r, a] == 0)
+                                    matrix[r, a] += 1;
                             }
                             else
                             {
-                                matrix[r, a] = rand.Next(max + 1);
+                                matrix[r, a] = rand.Next(min, max + 1);
                             }
                             if (!(a >= n))
                             {
@@ -124,7 +131,7 @@ namespace LinearHomeworkInterface
                             }
                             else
                             {
-                                matrix[r, m - 1] += matrix[r, a] + rand.Next(max);
+                                matrix[r, m - 1] += matrix[r, a] + rand.Next(min, max);
                             }
                         }
 
@@ -309,7 +316,7 @@ namespace LinearHomeworkInterface
                     else if (j < (m - 2))
                     {
                         if (matrix[i, j] >= 0) expression += "+ ";
-                        else expression += "- ";
+                        else expression += " ";
                         expression += matrix[i, j];
                         expression += "x_";
                         expression += j + 1;
@@ -318,7 +325,7 @@ namespace LinearHomeworkInterface
                     else if (j == (m - 2))
                     {
                         if (matrix[i, j] >= 0) expression += "+ ";
-                        else expression += "- ";
+                        else expression += " ";
                         expression += matrix[i, j];
                         expression += "x_";
                         expression += j + 1;
