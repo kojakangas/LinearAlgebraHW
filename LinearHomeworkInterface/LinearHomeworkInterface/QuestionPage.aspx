@@ -194,26 +194,48 @@ MathJax.Hub.Config({
                 }
             });
 
+            //JQuery function activated when "Submit Answer" is clicked
             $('#submitAnswer').click(function () {
+                //if the user has generated an answer
                 if (generatedAnswer === true) {
+                    //create an array to store all the text in every answer text box
                     var variables = $('#variables').val();
+                    //create a variable to pass as the parameter for our grading controller
+                    //in the code behind
                     var params = "";
+                    //for each answer text the user has created
                     for (var i = 0; i < variables; i++) {
+                        //add it to the params variable to pass into the grading controller
+                        //the space in the end is supposed to be there to allow the grading
+                        //controller to separate every answer we are passing to the controller
                         var params = params + ($('#var' + i).val()) + " ";
                     }
-                    params = params.substring(0, params.length-1);
-                    //alert(params);
+                    //take off the extra space at the end of our params variable
+                    params = params.substring(0, params.length - 1);
+                    //begin our AJAX call to our WebMethod in the controller
                     $.ajax({
+                        //must be a POST type of call
                         type: "POST",
+                        //pass this to the GradeAnswer controller in our code behind
                         url: "QuestionPage.aspx/GradeAnswer",
+                        //input the params variable as the parameter for our WebMethod
                         data: "{'ListPassingSolutions': '" + params + "'}",
+                        //must have the following contentType details
                         contentType: "application/json; charset=utf-8",
+                        //must have the JSON dataType
                         dataType: "json",
+                        //the next two functions have debug purposes
+                        //if the function executed successfully
                         success: function (msg) {
+                            //give the result of this call as an alert for the user
                             alert(msg.d);
                         },
+                        //if the function encountered an error
                         error: function (response) {
+                            //replace the page with the stacktrace of the error
+                            //(obviously this shouldn't happen)
                             $('body', document).html(response.responseText);
+                            //also give an alert with accompanying error message
                             alert(response.d);
                         }
                     });

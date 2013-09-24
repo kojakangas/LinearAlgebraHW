@@ -60,3 +60,15 @@ function setSolutionKey() {
             System.IO.File.WriteAllText(@"C:\Users\KOEMXE\Documents\GitHub\LinearAlgebraHW\LinearHomeworkInterface\LinearHomeworkInterface\GradeKey.txt",
                 keyValue);
         }
+
+//The user-solution-passing constructor for the grading component. The controller passes
+        //the solution values from the user through this constructor.
+        public Grader(params int [] ListUserSolutions) {
+            int x = 0;
+            float [] UserSolutions = new float[ListUserSolutions.Length];
+            foreach (int i in ListUserSolutions)
+            {
+                UserSolutions[x] = i;
+                x++;
+            }
+        }
