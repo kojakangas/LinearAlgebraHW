@@ -21,6 +21,16 @@ namespace GradeComponent
         //our solution counter for the grading method
         public int solCount = 0;
 
+<<<<<<< HEAD
+=======
+        //our solution array for the user solutions being
+        //passed into the grading method
+        public float[] UserSolutions;
+
+        //This is the given range that will provide a correct answer
+        public float acceptableRange = .001F;
+
+>>>>>>> 6c9f0910f216b4c2defe5145bc4abe054bd7acad
         //default constructor for the controller
         public Grader()
         {
@@ -51,7 +61,18 @@ namespace GradeComponent
             {
                 //if our actual solution for the current solution is the same as the current
                 //user solution being checked
+<<<<<<< HEAD
                 if (!(ActualSolution.ElementAt(this.solCount).Equals(i)))
+=======
+                else if (Math.Abs(ActualSolution.ElementAt(this.solCount)-i) < acceptableRange)
+                {
+                    //increment our public solution counter
+                    this.solCount++;
+                }
+
+                //otherwise
+                else
+>>>>>>> 6c9f0910f216b4c2defe5145bc4abe054bd7acad
                 {
                     //we have found a wrong answer, so the user must try again (currently we only
                     //aim to check if the user solution is perfect, we're grading any work shown

@@ -30,7 +30,7 @@ MathJax.Hub.Config({
                     <li style="float: left; padding: 0 20px 0 0;"><a href="#about">About</a></li>
                     <li style="float: left; padding: 0 20px 0 0;"><a href="#contact">Contact</a></li>
                     <li class="dropdown" style="float: left; padding: 0 20px 0 0;">
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">Dropdown <b class="caret"></b></a>
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">Options <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="#">Action</a></li>
                             <li><a href="#">Another action</a></li>
@@ -92,8 +92,7 @@ MathJax.Hub.Config({
                         <h3 style="margin: 0px;">Question 1</h3>
                         <p style="margin: 0px;">Find the solution.</p>
                         <div id="questiondisplay">
-                            <asp:Label ID="question" runat="server">
-                            </asp:Label>
+                            <asp:Label ID="question" runat="server" />
                         </div>
                         <asp:DataGrid ID="DataGrid" ShowHeader="False" RowHeadersVisible="false" GridLines="None" runat="server" AutoGenerateColumns="true"></asp:DataGrid>
                     </div>
@@ -130,7 +129,7 @@ MathJax.Hub.Config({
     <script type="text/javascript">
         function validateNumericInput(evt) {
             var charCode = (evt.which) ? evt.which : evt.keyCode
-            if (charCode > 31 && (charCode < 48 || charCode > 57))
+            if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 45)
                 return false;
             return true;
         }
@@ -178,7 +177,9 @@ MathJax.Hub.Config({
                             $('#matrix' + matrixNumber + 'row' + i).append("<td><input onkeypress=\"return validateNumericInput(event)\" style=\"width: 27px;\"></input></td>");
                         }
                     }
-                    $('#row' + matrixNumber).append("<div class=\"alert alert-success\" style=\"display:flex;\">Correct!</div>");
+                    //This row will place a div next to the matrix that will be populated with a message when
+                    //we get the whole grading down
+                    //$('#row' + matrixNumber).append("<div class=\"alert alert-success\" style=\"display:flex;\">Correct!</div>");
                     matrixNumber = matrixNumber + 1;
                 }
             });

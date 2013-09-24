@@ -17,40 +17,49 @@ namespace LinearHomeworkInterface
         {
             int n = 2;
             int m = 3;
-            int max = 5;
-            int freeVars = 1;
+            int min = -2;
+            int max = 2;
+            int freeVars = 0;
             Boolean inconsistent = false;
 
             Random rand = new Random();
             
             solution = new List<float>();
 
-            for (int u = 0; u < n; u++)
+            //Generate a random solution
+            for (int rowSol = 0; rowSol < n; rowSol++)
             {
-                solution.Add(rand.Next(max + 1));
+                solution.Add(rand.Next(min, max + 1));
             }
+
             float[,] matrix = new float[n, m];
 
-            //Generates first equation
-            for (int a = 0; a < m - 1; a++)
+            //Generates first equation randomly
+            for (int col = 0; col < m - 1; col++)
             {
-                if (a == 0)
+                //If it is the first postion, make sure a non zero number is inputted
+                if (col == 0)
                 {
-                    matrix[0, a] = rand.Next(max) + 1;
+                    matrix[0, col] = rand.Next(min, max);
+                    if (matrix[0, col] == 0)
+                        matrix[0, col] += 1;
                 }
                 else
                 {
-                    matrix[0, a] = rand.Next(max + 1);
+                    matrix[0, col] = rand.Next(min, max + 1);
                 }
+
                 //this if handles when n is smaller than m by more than 1. for example n = 2 and m = 4
-                //will result in free variable
-                if (!(a >= n))
+                //ASSERT: will result in free variable
+                if (!(col >= n))
                 {
-                    matrix[0, m - 1] += matrix[0, a] * solution.ElementAt(a);
+                    matrix[0, m - 1] += matrix[0, col] * solution.ElementAt(col);
                 }
                 else
                 {
-                    matrix[0, m - 1] += matrix[0, a] + rand.Next(max);
+                    //INFO: This should never be the case in sprint 1
+                    //This may actually not be needed and we can just not have an else condition
+                    matrix[0, m - 1] += matrix[0, col] + rand.Next(min, max);
                 }
             }
 
@@ -58,42 +67,53 @@ namespace LinearHomeworkInterface
             Boolean test = true;
             while (test)
             {
-                for (int a = 0; a < m - 1; a++)
+                //This loop sets the coefficients for the second row
+                for (int col = 0; col < m - 1; col++)
                 {
-                    if (a == 1)
+                    //If it is the first postion, make sure a non zero number is inputted
+                    if (col == 1)
                     {
-                        matrix[1, a] = rand.Next(max) + 1;
+                        matrix[1, col] = rand.Next(min, max);
+                        if (matrix[1, col] == 0)
+                            matrix[1, col] += 1;
                     }
                     else
                     {
-                        matrix[1, a] = rand.Next(max + 1);
+                        matrix[1, col] = rand.Next(min, max + 1);
                     }
+
                     //this if handles when n is smaller than m by more than 1. for example n = 2 and m = 4
-                    //will result in free variable
-                    if (!(a >= n))
+                    //ASSERT: will result in free variable
+                    if (!(col >= n))
                     {
-                        matrix[1, m - 1] += matrix[1, a] * solution.ElementAt(a);
+                        matrix[1, m - 1] += matrix[1, col] * solution.ElementAt(col);
                     }
                     else
                     {
-                        matrix[1, m - 1] += matrix[1, a] + rand.Next(max);
+                        //INFO: This should never be the case in sprint 1
+                        //This may actually not be needed and we can just not have an else condition
+                        matrix[1, m - 1] += matrix[1, col] + rand.Next(min, max);
                     }
                 }
+
+                //Finds a number to check if the rows are multiples of each other
                 float num = 0;
                 if (matrix[1, 0] != 0)
                 {
                     num = matrix[0, 0] / matrix[1, 0];
                 }
 
-                for (int b = 1; b < m - 1; b++)
+                //Does the checking
+                for (int col = 1; col < m - 1; col++)
                 {
-                    if (num * matrix[0, b] != matrix[1, b])
+                    if (num * matrix[0, col] != matrix[1, col])
                     {
                         test = false;
                         break;
                     }
                 }
 
+                //If the rows are multiples, reset the last array position, generate a new row, and check it again
                 if (test)
                 {
                     matrix[1, m - 1] = 0;
@@ -103,28 +123,41 @@ namespace LinearHomeworkInterface
             //Generate the third equation
             if (n > 2)
             {
+                //This loop generates the 3rd to rth rows and checks that they are not multiples of each other
+                //or any combination of the previously generated rows
                 for (int r = 2; r < n; r++)
                 {
+                    //This nested loop does the generation and checking and only breaks when 
+                    //the generated row is not a multiple or combination of other rows
                     test = true;
                     while (test)
                     {
-                        for (int a = 0; a < m - 1; a++)
+                        //Generate a row of coefficients
+                        for (int c = 0; c < m - 1; c++)
                         {
-                            if (a == r)
+                            //If it is the rth postion, make sure a non zero number is inputted
+                            if (c == r)
                             {
-                                matrix[r, a] = rand.Next(max) + 1;
+                                matrix[r, c] = rand.Next(min, max);
+                                if (matrix[r, c] == 0)
+                                    matrix[r, c] += 1;
                             }
                             else
                             {
-                                matrix[r, a] = rand.Next(max + 1);
+                                matrix[r, c] = rand.Next(min, max + 1);
                             }
-                            if (!(a >= n))
+
+                            //this if handles when n is smaller than m by more than 1. for example n = 2 and m = 4
+                            //ASSERT: will result in free variable
+                            if (!(c >= n))
                             {
-                                matrix[r, m - 1] += matrix[r, a] * solution.ElementAt(a);
+                                matrix[r, m - 1] += matrix[r, c] * solution.ElementAt(c);
                             }
                             else
                             {
-                                matrix[r, m - 1] += matrix[r, a] + rand.Next(max);
+                                //INFO: This should never be the case in sprint 1
+                                //This may actually not be needed and we can just not have an else condition
+                                matrix[r, m - 1] += matrix[r, c] + rand.Next(min, max);
                             }
                         }
 
@@ -135,20 +168,21 @@ namespace LinearHomeworkInterface
                         //constant. Also it will save the position of all rows that
                         //will need the first row subtracted out before returning the array.
                         List<int> firstElZero = new List<int>();
-                        for (int u = 0; u < r; u++)
+                        for (int rowIndex = 0; rowIndex < r; rowIndex++)
                         {
-                            if (matrix[u, 0] == 0)
+                            if (matrix[rowIndex, 0] == 0)
                             {
-                                firstElZero.Add(u);
+                                firstElZero.Add(rowIndex);
                             }
                         }
+
                         //This is what adds the first row into the row with
                         //a zero as the first constant.
                         foreach (int row in firstElZero)
                         {
-                            for (int g = 0; g < m; g++)
+                            for (int colIndex = 0; colIndex < m; colIndex++)
                             {
-                                matrix[row, g] += matrix[0, g];
+                                matrix[row, colIndex] += matrix[0, colIndex];
                             }
                         }
 
@@ -171,33 +205,37 @@ namespace LinearHomeworkInterface
 
                         //Do the checking
                         Boolean[] check = new Boolean[m];
-                        for (int k = 0; k < r; k++)
+                        //For each row check if the generated constants above
+                        //multiplied by a row and then added to the other coefficients
+                        //in that column generate the row in question.
+                        //If so, generate a new row
+                        for (int rowPos = 0; rowPos < r; rowPos++)
                         {
-                            int l = 0;
+                            int curCol = 0;
+                            //initialize check array to false
                             for (int d = 0; d < m; d++)
                             {
                                 check[d] = false;
                             }
-                            while (l < m)
+                            while (curCol < m)
                             {
-                                float x = matrix[k, l];
+                                float x = matrix[rowPos, curCol];
                                 float adder = 0;
                                 for (int z = 0; z < r; z++)
                                 {
-                                    if (k != z)
+                                    if (rowPos != z)
                                     {
-                                        adder += matrix[z , l];
+                                        adder += matrix[z, curCol];
                                     }
                                 }
-                                float s = matrix[r, l];
-                                float f = x * constants.ElementAt(k) + adder;
-                                if (x * constants.ElementAt(k) + adder == matrix[r, l])
+                                if (x * constants.ElementAt(rowPos) + adder == matrix[r, curCol])
                                 {
-                                    check[l] = true;
+                                    check[curCol] = true;
                                 }
-                                l++;
+                                curCol++;
                             }
 
+                            //Check if the check array is all true
                             test = false;
                             if (Array.IndexOf(check, false) == (-1))
                             {
@@ -268,7 +306,9 @@ namespace LinearHomeworkInterface
                     }
                 }
             }
-            /*
+
+
+            /*Currently unused code
             DataTable dt = new DataTable("matrix");
 
             for (int u = 0; u < m; u++)
@@ -291,7 +331,7 @@ namespace LinearHomeworkInterface
             DataGrid.DataBind();
             */
 
-
+            //Displays the equations using MATHJAX by building a parsable string
             for (int i = 0; i < n; i++)
             {
                 char[] a = new char[1];
@@ -309,7 +349,7 @@ namespace LinearHomeworkInterface
                     else if (j < (m - 2))
                     {
                         if (matrix[i, j] >= 0) expression += "+ ";
-                        else expression += "- ";
+                        else expression += " ";
                         expression += matrix[i, j];
                         expression += "x_";
                         expression += j + 1;
@@ -318,7 +358,7 @@ namespace LinearHomeworkInterface
                     else if (j == (m - 2))
                     {
                         if (matrix[i, j] >= 0) expression += "+ ";
-                        else expression += "- ";
+                        else expression += " ";
                         expression += matrix[i, j];
                         expression += "x_";
                         expression += j + 1;
