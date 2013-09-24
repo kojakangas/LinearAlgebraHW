@@ -19,18 +19,11 @@ namespace GradeComponent
         //public instance variables//
 
         //our solution counter for the grading method
-        public int solCount = 0;
-
-<<<<<<< HEAD
-=======
-        //our solution array for the user solutions being
-        //passed into the grading method
-        public float[] UserSolutions;
+        public int checkAnswer = 0;
 
         //This is the given range that will provide a correct answer
         public float acceptableRange = .001F;
 
->>>>>>> 6c9f0910f216b4c2defe5145bc4abe054bd7acad
         //default constructor for the controller
         public Grader()
         {
@@ -41,7 +34,8 @@ namespace GradeComponent
         public String Grade(List<float> ActualSolution, float[] ListUserSolutions)
         {
             //The logic comparison section. If the user enters both solutions correctly the class
-            //returns a commendation as a string, otherwise the class returns an incorrect string
+            //returns a commendation as a string, otherwise the class returns a string prompting the student
+            //to try again.
 
             //if the number of user solutions is less or greater than the number of actual solutions
             if (ListUserSolutions.Length > ActualSolution.Count ||
@@ -59,32 +53,24 @@ namespace GradeComponent
             //For each element in our local array, check:
             foreach (float i in ListUserSolutions)
             {
-                //if our actual solution for the current solution is the same as the current
-                //user solution being checked
-<<<<<<< HEAD
-                if (!(ActualSolution.ElementAt(this.solCount).Equals(i)))
-=======
-                else if (Math.Abs(ActualSolution.ElementAt(this.solCount)-i) < acceptableRange)
+                //if our actual solution for the current solution is in the acceptable threshold of
+                //the current user solution being checked
+                
+                if (Math.Abs(ActualSolution.ElementAt(this.checkAnswer)-i) < acceptableRange)
                 {
                     //increment our public solution counter
-                    this.solCount++;
+                    this.checkAnswer++;
                 }
 
                 //otherwise
                 else
->>>>>>> 6c9f0910f216b4c2defe5145bc4abe054bd7acad
                 {
                     //we have found a wrong answer, so the user must try again (currently we only
-                    //aim to check if the user solution is perfect, we're grading any work shown
+                    //aim to check if the user solution is perfect, we're not grading any work shown
                     //along the way for this sprint)
                     return "Not good. Try again.";
                 }
 
-                else
-                {
-                    //increment our current answer counter to compare the next cells
-                    this.solCount++;
-                }
             }
 
             //inform the user they have a *perfect* answer,
