@@ -18,7 +18,7 @@ namespace GradeComponent
     {
         //public instance variables//
 
-        //our solution counter for the grading method
+        //our check answer counter for the grading method
         public int checkAnswer = 0;
 
         //This is the given range that will provide a correct answer
@@ -58,7 +58,7 @@ namespace GradeComponent
                 
                 if (Math.Abs(ActualSolution.ElementAt(this.checkAnswer)-i) < acceptableRange)
                 {
-                    //increment our public solution counter
+                    //increment our public check answer counter
                     this.checkAnswer++;
                 }
 
@@ -73,8 +73,8 @@ namespace GradeComponent
 
             }
 
-            //inform the user they have a *perfect* answer,
-            //since the loop found no mismatches against the
+            //inform the user they have an acceptable answer,
+            //since the loop found no solution exceeding the threshold against the
             //solutions of the generated matrix
             return "Very good! You got a good grade.";
 
