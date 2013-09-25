@@ -56,6 +56,8 @@ namespace GradeComponent
                 //first check to see if our current answer is a free variable
                 if (freeVariables[checkAnswer].Equals("f"))
                 {
+                    //current stub for if a free variable is found, to be replaced with another comparison
+                    //with the string list from the randomly generated matrix
                     return "Free variable detected!";
                 }
 
