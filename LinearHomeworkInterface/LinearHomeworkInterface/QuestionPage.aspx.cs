@@ -12,6 +12,7 @@ namespace LinearHomeworkInterface
     public partial class QuestionPage : System.Web.UI.Page
     {
         public static List<float> solution = null;
+        public static List<string> freeSolution = null;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -25,6 +26,8 @@ namespace LinearHomeworkInterface
             Random rand = new Random();
             
             solution = new List<float>();
+
+            freeSolution = new List<string>();
 
             //Generate a random solution
             for (int rowSol = 0; rowSol < n; rowSol++)
@@ -389,15 +392,32 @@ namespace LinearHomeworkInterface
             //create a counter
             int x = 0;
 
+            //create a string array which will pass our free variables to the grader
+            string[] freeVar = new string[lines.Length];
+
             //for all the elements being passed in our array of user strings
             for (int i = 0; i < lines.Length; i++)
             {
-                //convert each string into an integer and add it to our integer
-                //array for the grading component
-                UserSolutions[x] = System.Convert.ToInt32(lines[i]);
+                //if our current element is a free variable
+                if(lines[i].Equals("f")) {
+                    //add it to the free variables string array
+                    freeVar[x] = lines[i];
 
-                //increment our counter
-                x++;
+                    //increment our counter
+                    x++;
+                }
+
+                else {
+                    //convert each string into an integer and add it to our integer
+                    //array for the grading component
+                    UserSolutions[x] = System.Convert.ToInt32(lines[i]);
+
+                    //add an empty string to the free variables string array
+                    freeVar[x] = "";
+
+                    //increment our counter
+                    x++;
+                }
             }
 
             //create our grading object to grade the user's answers
@@ -405,7 +425,7 @@ namespace LinearHomeworkInterface
 
             //have this created object grade the user's solutions against
             //the answers of our generated matrix
-            return grader.Grade(solution, UserSolutions);
+            return grader.Grade(solution, UserSolutions, freeVar);
         } 
     }
 }

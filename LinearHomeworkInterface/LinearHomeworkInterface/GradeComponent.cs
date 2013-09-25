@@ -31,7 +31,7 @@ namespace GradeComponent
         }
 
         //Here is the grading method
-        public String Grade(List<float> ActualSolution, float[] ListUserSolutions)
+        public String Grade(List<float> ActualSolution, float[] ListUserSolutions, String[] freeVariables)
         {
             //The logic comparison section. If the user enters both solutions correctly the class
             //returns a commendation as a string, otherwise the class returns a string prompting the student
@@ -53,10 +53,16 @@ namespace GradeComponent
             //For each element in our local array, check:
             foreach (float i in ListUserSolutions)
             {
+                //first check to see if our current answer is a free variable
+                if (freeVariables[checkAnswer].Equals("f"))
+                {
+                    return "Free variable detected!";
+                }
+
+                //then after that check (if false we know we're dealing with an integer)...
                 //if our actual solution for the current solution is in the acceptable threshold of
                 //the current user solution being checked
-                
-                if (Math.Abs(ActualSolution.ElementAt(this.checkAnswer)-i) < acceptableRange)
+                else if (Math.Abs(ActualSolution.ElementAt(this.checkAnswer)-i) < acceptableRange)
                 {
                     //increment our public check answer counter
                     this.checkAnswer++;
@@ -68,7 +74,7 @@ namespace GradeComponent
                     //we have found a wrong answer, so the user must try again (currently we only
                     //aim to check if the user solution is perfect, we're not grading any work shown
                     //along the way for this sprint)
-                    return "Not good. Try again.";
+                    return ("Not good. Try again. Variable unmatched was: " + i);
                 }
 
             }
