@@ -1,8 +1,9 @@
 ﻿//This is the grading component for the page. The Homework Controller
-//dumps into a text file that serves as the solution key that this file
-//will utilize. The user's answer will be passed in the constructor for
-//this component and is then utilized in the actual Grade() method.
-//Author: Kieran Ojakangas Date: 9/12/2013
+//dynamically generates a solution key on which the system of equations
+//solved by the student is based. The student's answer will be passed
+//in the Grade() method as well as the solutions on which the equations
+//are created and then displayed.
+//Author: Kieran Ojakangas Date: 9/26/2013
 //Code reuse from: http://msdn.microsoft.com/en-us/library/vstudio/ezwyzy7b.aspx
 
 using System;
@@ -76,7 +77,7 @@ namespace GradeComponent
                     //we have found a wrong answer, so the user must try again (currently we only
                     //aim to check if the user solution is perfect, we're not grading any work shown
                     //along the way for this sprint)
-                    return ("Not good. Try again. Variable unmatched was: " + i);
+                    return "Not good. Try again.";
                 }
 
             }
