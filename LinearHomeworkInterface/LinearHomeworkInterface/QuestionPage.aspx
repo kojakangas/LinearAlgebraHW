@@ -129,7 +129,7 @@ MathJax.Hub.Config({
     <script type="text/javascript">
         function validateNumericInput(evt) {
             var charCode = (evt.which) ? evt.which : evt.keyCode
-            if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 45)
+            if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 45 && charCode == 190)
                 return false;
             return true;
         }
@@ -206,10 +206,12 @@ MathJax.Hub.Config({
                     var params = "";
                     //for each answer text the user has created
                     for (var i = 0; i < variables; i++) {
-                        //add it to the params variable to pass into the grading controller
-                        //the space in the end is supposed to be there to allow the grading
-                        //controller to separate every answer we are passing to the controller
-                        var params = params + ($('#var' + i).val()) + " ";
+                        if($('#var' + i).val()!=null) {
+                            //add it to the params variable to pass into the grading controller
+                            //the space in the end is supposed to be there to allow the grading
+                            //controller to separate every answer we are passing to the controller
+                            var params = params + ($('#var' + i).val()) + " ";
+                        }
                     }
                     //take off the extra space at the end of our params variable
                     params = params.substring(0, params.length - 1);

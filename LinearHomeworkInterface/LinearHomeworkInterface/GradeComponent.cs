@@ -32,7 +32,7 @@ namespace GradeComponent
         }
 
         //Here is the grading method
-        public String Grade(List<float> ActualSolution, float[] ListUserSolutions, String[] freeVariables)
+        public String Grade(List<float> ActualSolution, float[] ListUserSolutions, List<string> ActualFreeVariables, String[] UserFreeVariables)
         {
             //The logic comparison section. If the user enters both solutions correctly the class
             //returns a commendation as a string, otherwise the class returns a string prompting the student
@@ -54,12 +54,21 @@ namespace GradeComponent
             //For each element in our local array, check:
             foreach (float i in ListUserSolutions)
             {
-                //first check to see if our current answer is a free variable
-                if (freeVariables[checkAnswer].Equals("f"))
+                //first check to see if our current answer from either the user key
+                //or actual answer key is a free solution
+                if (UserFreeVariables[checkAnswer].Equals("f") || ActualFreeVariables[checkAnswer].Equals("f"))
                 {
-                    //current stub for if a free variable is found, to be replaced with another comparison
-                    //with the string list from the randomly generated matrix
-                    return "Free variable detected!";
+                    //if the user free variable matches the actual current free variable, add to the count
+                    //and move on
+                    if(UserFreeVariables[checkAnswer].Equals(ActualFreeVariables.ElementAt(checkAnswer))) {
+                        checkAnswer++;
+                    }
+                    //otherwise stop the loop- there is no reason to check further at this point since we
+                    //have an incorrect answer correspondence and if we tried checking through our else if
+                    //the program would crash
+                    else {
+                        return "Not good... try again!";
+                    }
                 }
 
                 //then after that check (if false we know we're dealing with an integer)...

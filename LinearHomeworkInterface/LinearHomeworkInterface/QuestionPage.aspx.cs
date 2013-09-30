@@ -18,9 +18,9 @@ namespace LinearHomeworkInterface
         {
             int n = 2;
             int m = 3;
-            int min = -2;
-            int max = 2;
-            int freeVars = 0;
+            int min = -4;
+            int max = 4;
+            int freeVars = 1;
             Boolean inconsistent = false;
 
             Random rand = new Random();
@@ -33,6 +33,10 @@ namespace LinearHomeworkInterface
             for (int rowSol = 0; rowSol < n; rowSol++)
             {
                 solution.Add(rand.Next(min, max + 1));
+                //create blank fields for freeSolution list
+                //so that the system can grade the users
+                //accordingly later
+                freeSolution.Add(" ");
             }
 
             float[,] matrix = new float[n, m];
@@ -63,6 +67,9 @@ namespace LinearHomeworkInterface
                     //INFO: This should never be the case in sprint 1
                     //This may actually not be needed and we can just not have an else condition
                     matrix[0, m - 1] += matrix[0, col] + rand.Next(min, max);
+                    //if it is the case, however, we'll indicate that for the grading component by adding
+                    //the free variable indicator:
+                    freeSolution[0] = "f";
                 }
             }
 
@@ -96,6 +103,9 @@ namespace LinearHomeworkInterface
                         //INFO: This should never be the case in sprint 1
                         //This may actually not be needed and we can just not have an else condition
                         matrix[1, m - 1] += matrix[1, col] + rand.Next(min, max);
+                        //if it is the case, however, we'll indicate that for the grading component by adding
+                        //the free variable indicator:
+                        freeSolution[1] = "f";
                     }
                 }
 
@@ -161,6 +171,9 @@ namespace LinearHomeworkInterface
                                 //INFO: This should never be the case in sprint 1
                                 //This may actually not be needed and we can just not have an else condition
                                 matrix[r, m - 1] += matrix[r, c] + rand.Next(min, max);
+                                //if it is the case, however, we'll indicate that for the grading component by adding
+                                //the free variable indicator:
+                                freeSolution[r] = "f";
                             }
                         }
 
@@ -276,9 +289,13 @@ namespace LinearHomeworkInterface
                     index = index - 1;
                     for (int t = 0; t < m; t++)
                     {
-                        matrixFree[index, t] = matrixFree[row, t] * multiplier;
+                        matrix[index, t] = (matrixFree[row, t]) * multiplier;
                     }
                     free--;
+                    //add free variable indicator in freeVariable answer array
+                    //so that the grading component can check and match the free
+                    //variable answer
+                    freeSolution[index] = "f";
                 }
             }
 
@@ -294,6 +311,8 @@ namespace LinearHomeworkInterface
                 {
                     matrixFree[n - 1, t] = matrix[row, t] * multiplier;
                 }
+                //add free variable indicator for a now free variable row
+                freeSolution[n-1] = "f";
                 Boolean sameSolution = true;
                 while (sameSolution)
                 {
@@ -398,8 +417,8 @@ namespace LinearHomeworkInterface
             //for all the elements being passed in our array of user strings
             for (int i = 0; i < lines.Length; i++)
             {
-                //if our current element is a free variable
-                if(lines[i].Equals("f")) {
+                //if our current element is a free variable or blank
+                if(lines[i].Equals("f") || lines[i].Equals(null)) {
                     //add it to the free variables string array
                     freeVar[x] = lines[i];
 
@@ -413,7 +432,7 @@ namespace LinearHomeworkInterface
                     UserSolutions[x] = System.Convert.ToInt32(lines[i]);
 
                     //add an empty string to the free variables string array
-                    freeVar[x] = "";
+                    freeVar[x] = " ";
 
                     //increment our counter
                     x++;
@@ -425,7 +444,7 @@ namespace LinearHomeworkInterface
 
             //have this created object grade the user's solutions against
             //the answers of our generated matrix
-            return grader.Grade(solution, UserSolutions, freeVar);
+            return grader.Grade(solution, UserSolutions, freeSolution, freeVar);
         } 
     }
 }
