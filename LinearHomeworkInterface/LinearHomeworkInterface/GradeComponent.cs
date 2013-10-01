@@ -32,7 +32,7 @@ namespace GradeComponent
         }
 
         //Here is the grading method
-        public String Grade(List<float> ActualSolution, float[] ListUserSolutions, List<string> ActualFreeVariables, String[] UserFreeVariables)
+        public String Grade(List<float> ActualSolution, float[] ListUserSolutions, List<string> ActualTextVariables, String[] UserTextVariables)
         {
             //The logic comparison section. If the user enters both solutions correctly the class
             //returns a commendation as a string, otherwise the class returns a string prompting the student
@@ -55,12 +55,13 @@ namespace GradeComponent
             foreach (float i in ListUserSolutions)
             {
                 //first check to see if our current answer from either the user key
-                //or actual answer key is a free solution
-                if (UserFreeVariables[checkAnswer].Equals("f") || ActualFreeVariables[checkAnswer].Equals("f"))
+                //or actual answer key is a free or leading variable
+                if (UserTextVariables[checkAnswer].Equals("f") || ActualTextVariables[checkAnswer].Equals("f")
+                    || UserTextVariables[checkAnswer].Equals("l") || ActualTextVariables[checkAnswer].Equals("l"))
                 {
-                    //if the user free variable matches the actual current free variable, add to the count
-                    //and move on
-                    if(UserFreeVariables[checkAnswer].Equals(ActualFreeVariables.ElementAt(checkAnswer))) {
+                    //if the user free or leading variable matches the actual current free or leading variable,
+                    //add to the count and move on
+                    if(UserTextVariables[checkAnswer].Equals(ActualTextVariables.ElementAt(checkAnswer))) {
                         checkAnswer++;
                     }
                     //otherwise stop the loop- there is no reason to check further at this point since we

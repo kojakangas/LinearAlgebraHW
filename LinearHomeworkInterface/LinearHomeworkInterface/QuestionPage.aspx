@@ -150,13 +150,31 @@ MathJax.Hub.Config({
             $('#var' + index).attr("disabled", "true");
             $('#freeLink' + index).text("Remove");
             $('#freeLink' + index).attr("onclick", "removeFreeVariable(" + index + ")");
+            $('#leadLink' + index).toggle();
         }
 
         function removeFreeVariable(index) {
             $('#var' + index).val("");
             $('#var' + index).removeAttr("disabled");
-            $('#freeLink' + index).text("Set Free Variable");
+            $('#freeLink' + index).text("Set Free Variable ");
             $('#freeLink' + index).attr("onclick", "addFreeVariable(" + index + ")");
+            $('#leadLink' + index).toggle();
+        }
+
+        function addLeadingVariable(index) {
+            $('#var' + index).val("l");
+            $('#var' + index).attr("disabled", "true");
+            $('#leadLink' + index).text("Remove");
+            $('#leadLink' + index).attr("onclick", "removeLeadingVariable(" + index + ")");
+            $('#freeLink' + index).toggle();
+        }
+
+        function removeLeadingVariable(index) {
+            $('#var' + index).val("");
+            $('#var' + index).removeAttr("disabled");
+            $('#leadLink' + index).text(" Set Leading Variable");
+            $('#leadLink' + index).attr("onclick", "addLeadingVariable(" + index + ")");
+            $('#freeLink' + index).toggle();
         }
 
         $(document).ready(function () {
@@ -190,7 +208,7 @@ MathJax.Hub.Config({
                     generatedAnswer = true;
                     $('#matrixHolder').append("<h4>Answer: </h4>");
                     for (var i = 0; i < variables; i++) {
-                        $('#matrixHolder').append("<strong>x<sub>" + (i + 1) + "</sub> = </strong><input id=\"var" + i + "\" onkeypress=\"return validateNumericInput(event)\" class=\"ansbox\" style=\"width: 27px; margin-right: 3px;\"></input><a id=\"freeLink" + i + "\" onclick=\"addFreeVariable(" + i + ")\" tabindex=\"-1\" href=\"#\">Set Free Variable</a></br>");
+                        $('#matrixHolder').append("<strong>x<sub>" + (i + 1) + "</sub> = </strong><input id=\"var" + i + "\" onkeypress=\"return validateNumericInput(event)\" class=\"ansbox\" style=\"width: 27px; margin-right: 3px;\"></input><a id=\"freeLink" + i + "\" onclick=\"addFreeVariable(" + i + ")\" tabindex=\"-1\" href=\"#\">Set Free Variable </a><a id=\"leadLink" + i + "\" onclick=\"addLeadingVariable(" + i + ")\" tabindex=\"-1\" href=\"#\"> Set Leading Variable</a></br>");
                     }
                 }
             });

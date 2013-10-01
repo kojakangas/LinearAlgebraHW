@@ -12,7 +12,7 @@ namespace LinearHomeworkInterface
     public partial class QuestionPage : System.Web.UI.Page
     {
         public static List<float> solution = null;
-        public static List<string> freeSolution = null;
+        public static List<string> textSolution = null;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -20,23 +20,23 @@ namespace LinearHomeworkInterface
             int m = 4;
             int min = -4;
             int max = 4;
-            int freeVars = 1;
+            int freeVars = 0;
             Boolean inconsistent = false;
 
             Random rand = new Random();
             
             solution = new List<float>();
 
-            freeSolution = new List<string>();
+            textSolution = new List<string>();
 
             //Generate a random solution
             for (int rowSol = 0; rowSol < n; rowSol++)
             {
                 solution.Add(rand.Next(min, max + 1));
-                //create blank fields for freeSolution list
+                //create blank fields for textSolution list
                 //so that the system can grade the users
                 //accordingly later
-                freeSolution.Add(" ");
+                textSolution.Add(" ");
             }
 
             float[,] matrix = new float[n, m];
@@ -69,7 +69,7 @@ namespace LinearHomeworkInterface
                     matrix[0, m - 1] += matrix[0, col] + rand.Next(min, max);
                     //if it is the case, however, we'll indicate that for the grading component by adding
                     //the free variable indicator:
-                    freeSolution[0] = "f";
+                    textSolution[0] = "f";
                 }
             }
 
@@ -105,7 +105,7 @@ namespace LinearHomeworkInterface
                         matrix[1, m - 1] += matrix[1, col] + rand.Next(min, max);
                         //if it is the case, however, we'll indicate that for the grading component by adding
                         //the free variable indicator:
-                        freeSolution[1] = "f";
+                        textSolution[1] = "f";
                     }
                 }
 
@@ -173,7 +173,7 @@ namespace LinearHomeworkInterface
                                 matrix[r, m - 1] += matrix[r, c] + rand.Next(min, max);
                                 //if it is the case, however, we'll indicate that for the grading component by adding
                                 //the free variable indicator:
-                                freeSolution[r] = "f";
+                                textSolution[r] = "f";
                             }
                         }
 
@@ -292,10 +292,17 @@ namespace LinearHomeworkInterface
                         matrix[index, t] = (matrixFree[row, t]) * multiplier;
                     }
                     free--;
-                    //add free variable indicator in freeVariable answer array
+                    //add free variable indicator in textVariable answer array
                     //so that the grading component can check and match the free
                     //variable answer
-                    freeSolution[index] = "f";
+                    textSolution[index] = "f";
+                    //if we are not in the first row and the row before the current
+                    //one has a leading variable
+                    if (index != 0 && matrix[index - 1, index] != 0)
+                    {
+                        //add leading variable indicator
+                        textSolution[index - 1] = "l"; 
+                    }
                 }
             }
 
@@ -312,7 +319,7 @@ namespace LinearHomeworkInterface
                     matrixFree[n - 1, t] = matrix[row, t] * multiplier;
                 }
                 //add free variable indicator for a now free variable row
-                freeSolution[n-1] = "f";
+                textSolution[n-1] = "f";
                 Boolean sameSolution = true;
                 while (sameSolution)
                 {
@@ -444,7 +451,7 @@ namespace LinearHomeworkInterface
 
             //have this created object grade the user's solutions against
             //the answers of our generated matrix
-            return grader.Grade(solution, UserSolutions, freeSolution, freeVar);
+            return grader.Grade(solution, UserSolutions, textSolution, freeVar);
         } 
     }
 }
