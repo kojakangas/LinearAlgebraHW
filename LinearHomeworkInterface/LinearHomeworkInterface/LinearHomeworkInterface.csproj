@@ -57,7 +57,9 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Default.aspx" />
+    <Content Include="CreateAssignment.aspx" />
+    <Content Include="StudentHome.aspx" />
+    <Content Include="InstructorHome.aspx" />
     <Content Include="javascript\bootstrap.min.js" />
     <Content Include="javascript\jquery-ui-1.10.3.custom.min.js" />
     <Content Include="javascript\jquery.dataTables.min.js" />
@@ -82,14 +84,29 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
+    <Compile Include="components\MatrixBuilder.cs" />
+    <Compile Include="CreateAssignment.aspx.cs">
+      <DependentUpon>CreateAssignment.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Default.aspx.designer.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
+    <Compile Include="CreateAssignment.aspx.designer.cs">
+      <DependentUpon>CreateAssignment.aspx</DependentUpon>
     </Compile>
-    <Compile Include="GradeComponent.cs" />
+    <Compile Include="StudentHome.aspx.cs">
+      <DependentUpon>StudentHome.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="StudentHome.aspx.designer.cs">
+      <DependentUpon>StudentHome.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="components\GradeComponent.cs" />
+    <Compile Include="InstructorHome.aspx.cs">
+      <DependentUpon>InstructorHome.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="InstructorHome.aspx.designer.cs">
+      <DependentUpon>InstructorHome.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuestionPage.aspx.cs">
       <DependentUpon>QuestionPage.aspx</DependentUpon>

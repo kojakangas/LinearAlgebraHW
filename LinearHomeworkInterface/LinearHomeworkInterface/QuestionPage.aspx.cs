@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using LinearHomeworkInterface.components;
 
 namespace LinearHomeworkInterface
 {
@@ -336,30 +337,6 @@ namespace LinearHomeworkInterface
                 }
             }
 
-
-            /*Currently unused code
-            DataTable dt = new DataTable("matrix");
-
-            for (int u = 0; u < m; u++)
-            {
-                DataColumn dc = new DataColumn();
-                dt.Columns.Add(dc);
-            }
-
-            for (int i = 0; i < n; i++)
-            {
-                DataRow dr = dt.NewRow();
-                for (int j = 0; j < m; j++)
-                {
-                   dr[j] = matrix[i, j];                   
-                }
-                dt.Rows.Add(dr);
-            }
-
-            DataGrid.DataSource = dt;
-            DataGrid.DataBind();
-            */
-
             //Displays the equations using MATHJAX by building a parsable string
             for (int i = 0; i < n; i++)
             {
@@ -445,7 +422,6 @@ namespace LinearHomeworkInterface
                     x++;
                 }
             }
-
             //create our grading object to grade the user's answers
             GradeComponent.Grader grader = new GradeComponent.Grader();
 
