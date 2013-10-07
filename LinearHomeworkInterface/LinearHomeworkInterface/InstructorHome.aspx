@@ -66,7 +66,7 @@
                 <div id="header">
                     <h1>Instructor Home</h1>
 
-                    <a href="createAssignmentPage.html">Create New Assignment</a>
+                    <a href="CreateAssignment.aspx">Create New Assignment</a>
                 </div>
 
                 <div class="span6" style="margin-left: 5px;">

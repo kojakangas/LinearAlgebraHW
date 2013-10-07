@@ -17,8 +17,8 @@ namespace LinearHomeworkInterface
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            int n = 3;
-            int m = 4;
+            int n = 2;
+            int m = 3;
             int min = -4;
             int max = 4;
             int freeVars = 0;

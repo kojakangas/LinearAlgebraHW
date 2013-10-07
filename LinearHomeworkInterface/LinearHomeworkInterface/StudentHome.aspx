@@ -53,7 +53,7 @@
 		</div>
         <div id="content" style="padding-top:50px;">
             <div id="header">
-                <h1>Welcome, User user</h1>
+                <h1>Welcome, Student</h1>
             </div>
 
             <div id="table" style="box-shadow: 2px 2px 6px #666666; border-radius: 5px;">

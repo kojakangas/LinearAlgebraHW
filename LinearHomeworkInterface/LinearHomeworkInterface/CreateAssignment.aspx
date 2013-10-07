@@ -14,13 +14,20 @@
     <script src="javascript/jquery.dataTables.min.js"></script>
 </head>
 <body>
-    <script>        $(document).ready(function () {
+    <script>
+        $(document).ready(function () {
             $('.dataTable').dataTable({
-                "bSort": false,                "bFilter": false,                'sPaginationType': 'full_numbers',                "bAutoWidth": false,                "bJQueryUI": true,                "oLanguage": {
+                "bSort": false,
+                "bFilter": false,
+                'sPaginationType': 'full_numbers',
+                "bAutoWidth": false,
+                "bJQueryUI": true,
+                "oLanguage": {
                     "sEmptyTable": "No questions have been added to this assignment"
                 },
             });
-        });</script>
+        });
+</script>
     <form id="form1" runat="server">
         <div class="container">
             <!--/possibly add class="container" -->
@@ -60,7 +67,8 @@
                         <option value="D">Determinant</option>
                         <option value="EV">Eigen-Value</option>
                     </select>
-                    <a id="assignHomework" class="btn btn-primary" href="#" style="margin-right: 20px; float: right;" type="submit">Assign</a>		<a id="saveQuestions" class="btn" style="margin-right: 20px; float: right;" href="#" type="submit">Save Questions</a>
+                    <a id="assignHomework" class="btn btn-primary" href="#" style="margin-right: 20px; float: right;" type="submit">Assign</a>
+		<a id="saveQuestions" class="btn" style="margin-right: 20px; float: right;" href="#" type="submit">Save Questions</a>
                 </div>
                 <div id="formHolder" class="well span4" style="margin-top: 10px; margin-left: 0px; padding-bottom: 10px;">
                     <div style="margin-bottom: 0px;">
@@ -71,7 +79,8 @@
                             <input id="cols" type="text" class="span1" placeholder="m" /><br />
                             <span>Coefficient Range: </span>
                             <input id="min" type="text" class="span1" placeholder="min" />
-                            - 			
+                            - 
+			
                             <input id="max" type="text" class="span1" placeholder="max" /><br />
                             <span>Free Variables: </span>
                             <input id="freeVars" type="text" class="span2" placeholder="Free Variables" /><br />
@@ -103,26 +112,58 @@
             </div>
         </div>
     </form>
-    <script type="text/javascript">        $(document).ready(function () {
+    <script type="text/javascript">
+        $(document).ready(function () {
             $("#questionType").change(function () {
-                var questionType = $("#questionType option:selected").val();                $("#questionType option:not(:selected)").each(function () {
+                var questionType = $("#questionType option:selected").val();
+                $("#questionType option:not(:selected)").each(function () {
                     $("#" + $(this).val()).hide();
-                });                $("#formHolder").show();                $("#" + questionType).show();
-            });            $("#inconsistent").click(function () {
+                });
+                $("#formHolder").show();
+                $("#" + questionType).show();
+            });
+
+            $("#inconsistent").click(function () {
                 if ($("#inconsistent").is(":checked")) {
-                    $("#freeVars").val("");                    $("#freeVars").attr("disabled", "true");
+                    $("#freeVars").val("");
+                    $("#freeVars").attr("disabled", "true");
                 } else {
                     $("#freeVars").removeAttr("disabled");
                 }
-            });            var questionNumber = 0;            $("#addQuestion").click(function () {
+            });
+
+            var questionNumber = 0;
+
+            $("#addQuestion").click(function () {
                 if ($("#rows").val() != "" && $("#cols").val() != "" && $("#min").val() != "" && $("#max").val() != "") {
-                    questionNumber++;                    var questionType = $("#questionType option:selected").val();                    var freeVars = $("#freeVars").val();                    if (freeVars === "") { freeVars = "0"; }                    var inconsistent;                    if ($("#inconsistent").is(":checked")) { inconsistent = "yes"; } else { inconsistent = "no"; }                    if (questionType === "SoE") {
-                        $("#addedQuestionTable").dataTable().fnAddData([							questionNumber,							"System of Equations",							$("#rows").val(),							$("#cols").val(),							$("#min").val(),							$("#max").val(),							freeVars,							inconsistent]);
+                    questionNumber++;
+                    var questionType = $("#questionType option:selected").val();
+                    var freeVars = $("#freeVars").val();
+                    if (freeVars === "") { freeVars = "0"; }
+                    var inconsistent;
+                    if ($("#inconsistent").is(":checked")) { inconsistent = "yes"; } else { inconsistent = "no"; }
+                    if (questionType === "SoE") {
+                        $("#addedQuestionTable").dataTable().fnAddData([
+							questionNumber,
+							"System of Equations",
+							$("#rows").val(),
+							$("#cols").val(),
+							$("#min").val(),
+							$("#max").val(),
+							freeVars,
+							inconsistent]);
                     }
                 }
-            });            $("#removeLastQuestion").click(function () {
-                if (questionNumber > 0)                    questionNumber--;                $("#addedQuestionTable").dataTable().fnDeleteRow(questionNumber);                $("#removeLastQuestion").attr("name", questionNumber);
             });
-        });	</script>
+
+
+            $("#removeLastQuestion").click(function () {
+                if (questionNumber > 0)
+                    questionNumber--;
+                $("#addedQuestionTable").dataTable().fnDeleteRow(questionNumber);
+                $("#removeLastQuestion").attr("name", questionNumber);
+            });
+        });
+	</script>
 </body>
 </html>
