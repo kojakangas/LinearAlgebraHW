@@ -7,6 +7,11 @@ using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using LinearHomeworkInterface.components;
+using System.Data.SqlClient;
+using System.Data.SqlTypes;
+using System.Data.Sql;
+using System.Data.Linq;
+using MySql.Data.MySqlClient;
 
 namespace LinearHomeworkInterface
 {
@@ -14,14 +19,42 @@ namespace LinearHomeworkInterface
     {
         public static List<float> solution = null;
         public static List<string> textSolution = null;
+        
+        
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            int n = 2;
-            int m = 3;
-            int min = -4;
-            int max = 4;
-            int freeVars = 0;
+            String rows = "";
+            String columns = "";
+            String maximum = "";
+            String minimum = "";
+            String freeVariables = "";
+            MySqlConnection msqcon = new MySqlConnection("server=localhost;User Id=root;Password=r00tr00tr00tr00tr00t;database=ledatabase;Persist Security Info=False;Integrated Security=False");
+            try
+            {
+                msqcon.Open();
+                MySqlDataReader book = null;
+                MySqlCommand msqcmd = new MySqlCommand("SELECT * FROM lequestiones", msqcon);
+                book = msqcmd.ExecuteReader();
+                while (book.Read())
+                {
+                    rows = book["rows"].ToString();
+                    columns = book["columns"].ToString();
+                    minimum = book["min"].ToString();
+                    maximum = book["max"].ToString();
+                    freeVariables = book["freeVariables"].ToString();
+                }
+                msqcon.Close();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            int n = System.Convert.ToInt32(rows);
+            int m = System.Convert.ToInt32(columns) ;
+            int min = System.Convert.ToInt32(minimum);
+            int max = System.Convert.ToInt32(maximum);
+            int freeVars = System.Convert.ToInt32(freeVariables);
             Boolean inconsistent = false;
 
             Random rand = new Random();
