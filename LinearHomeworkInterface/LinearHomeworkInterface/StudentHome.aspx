@@ -1,15 +1,15 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="StudentHome.aspx.cs" Inherits="LinearHomeworkInterface.Default" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="StudentHome.aspx.cs" Inherits="LinearHomeworkInterface.StudentHome" %>
 
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
+<head id="Head1" runat="server">
     <title></title>
     <link href="theme/bootstrap.css" rel="stylesheet" media="screen" />
     <link href="theme/jquery.dataTables.css" rel="stylesheet" media="screen" />
     <link href="theme/jquery-ui-1.10.3.custom.css" rel="stylesheet" media="screen" />
     <script src="http://code.jquery.com/jquery.js"></script>
-    <script src="javascript/bootstrap.min.js"></script>
+    <script src="javascript/bootstrap.js"></script>
     <script src="javascript/jquery-ui-1.10.3.custom.min.js"></script>
     <script src="javascript/jquery.dataTables.min.js"></script>
 </head>
@@ -46,9 +46,9 @@
 						</ul>
 					</li>
 				</ul>
-				<form class="navbar-form pull-right" style="">
-					<button class="btn" style="margin-top: 5px;" type="submit">Sign Out</button>
-				</form>
+				<div class="navbar-form pull-right">
+					<button id="signOut" class="btn" style="margin-top: 5px;">Sign Out</button>
+				</div>
 			</div><!--/.nav-collapse -->
 		</div>
         <div id="content" style="padding-top:50px;">
@@ -90,5 +90,27 @@
             </div>
         </div>
     </div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $("#signOut").click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: "StudentHome.aspx/SignOut",
+                data: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    window.location = "Default.aspx";
+                },
+                error: function (msg) {
+                    alert("Sign Out Failed!");
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>

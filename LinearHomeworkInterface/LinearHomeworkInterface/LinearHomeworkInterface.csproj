@@ -61,14 +61,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="CreateAssignment.aspx" />
-    <Content Include="StudentHome.aspx" />
+    <Content Include="Default.aspx" />
     <Content Include="InstructorHome.aspx" />
+    <Content Include="javascript\bootstrap.js" />
     <Content Include="javascript\bootstrap.min.js" />
     <Content Include="javascript\jquery-ui-1.10.3.custom.min.js" />
     <Content Include="javascript\jquery.dataTables.min.js" />
+    <Content Include="javascript\tooltip.js" />
     <Content Include="QuestionPage.aspx" />
+    <Content Include="StudentHome.aspx" />
     <Content Include="theme\bootstrap.css" />
     <Content Include="theme\images\animated-overlay.gif" />
+    <Content Include="theme\images\axiomz.bmp" />
     <Content Include="theme\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="theme\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="theme\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -96,14 +100,14 @@
     <Compile Include="CreateAssignment.aspx.designer.cs">
       <DependentUpon>CreateAssignment.aspx</DependentUpon>
     </Compile>
-    <Compile Include="StudentHome.aspx.cs">
-      <DependentUpon>StudentHome.aspx</DependentUpon>
+    <Compile Include="components\GradeComponent.cs" />
+    <Compile Include="Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="StudentHome.aspx.designer.cs">
-      <DependentUpon>StudentHome.aspx</DependentUpon>
+    <Compile Include="Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
-    <Compile Include="components\GradeComponent.cs" />
     <Compile Include="InstructorHome.aspx.cs">
       <DependentUpon>InstructorHome.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -118,6 +122,13 @@
     </Compile>
     <Compile Include="QuestionPage.aspx.designer.cs">
       <DependentUpon>QuestionPage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="StudentHome.aspx.cs">
+      <DependentUpon>StudentHome.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="StudentHome.aspx.designer.cs">
+      <DependentUpon>StudentHome.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

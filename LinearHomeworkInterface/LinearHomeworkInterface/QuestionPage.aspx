@@ -9,7 +9,7 @@
     <link href="theme/jquery.dataTables.css" rel="stylesheet" media="screen" />
     <link href="theme/jquery-ui-1.10.3.custom.css" rel="stylesheet" media="screen" />
     <script src="http://code.jquery.com/jquery.js"></script>
-    <script src="javascript/bootstrap.min.js"></script>
+    <script src="javascript/bootstrap.js"></script>
     <script src="javascript/jquery-ui-1.10.3.custom.min.js"></script>
     <script src="javascript/jquery.dataTables.min.js"></script>
     <script type="text/javascript"
