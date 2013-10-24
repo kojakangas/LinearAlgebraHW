@@ -67,7 +67,7 @@
                         <option value="D">Determinant</option>
                         <option value="EV">Eigen-Value</option>
                     </select>
-                    <a id="assignHomework" class="btn btn-primary" href="#" style="margin-right: 20px; float: right;" type="submit">Assign</a>
+                    <a id="assignHomework" class="btn btn-primary" href="#" onclick="assignQuestions()" style="margin-right: 20px; float: right;" type="submit">Assign</a>
 		<a id="saveQuestions" class="btn" style="margin-right: 20px; float: right;" href="#" type="submit">Save Questions</a>
                 </div>
                 <div id="formHolder" class="well span4" style="margin-top: 10px; margin-left: 0px; padding-bottom: 10px;">
@@ -99,12 +99,12 @@
                             <tr>
                                 <th>#</th>
                                 <th>Type</th>
-                                <th>n</th>
-                                <th>m</th>
-                                <th>Min</th>
-                                <th>Max</th>
-                                <th>Free</th>
-                                <th>Inconsistent</th>
+                                <th id="rowstoadd">n</th>
+                                <th id="colstoadd">m</th>
+                                <th id="minstoadd">Min</th>
+                                <th id="maxstoadd">Max</th>
+                                <th id="freestoadd">Free</th>
+                                <th id="inconstoadd">Inconsistent</th>
                             </tr>
                         </thead>
                     </table>
@@ -162,6 +162,56 @@
                     questionNumber--;
                 $("#addedQuestionTable").dataTable().fnDeleteRow(questionNumber);
                 $("#removeLastQuestion").attr("name", questionNumber);
+            });
+
+            //JQuery function activated when "Assign" is clicked
+            $('a#assignHomework').click(function () {
+                //if the user has created at least one question to assign
+                if (questionNumber > 0) {
+                    //create a variable to pass as the parameter for our grading controller
+                    //in the code behind
+                    var params = "";
+                    var vin = new Array();
+                    var tabler;
+                    tabler = $('#addedQuestionTable').dataTable();
+                    //for each answer text the user has created
+                    for (var i = 0; i < questionNumber; i++) {
+                            //add it to the params variable to pass into the grading controller
+                            //the space in the end is supposed to be there to allow the grading
+                            //controller to separate every answer we are passing to the controller
+                        vin[i] = tabler.fnGetData(i);
+                        params = params + vin[i] + "|";
+                    }
+                    //take off the extra break character at the end of our params variable
+                    params = params.substring(0, params.length - 1);
+                    //begin our AJAX call to our WebMethod in the controller
+                    $.ajax({
+                        //must be a POST type of call
+                        type: "POST",
+                        //pass this to the GradeAnswer controller in our code behind
+                        url: "CreateAssignment.aspx/AddAssignment",
+                        //input the params variable as the parameter for our WebMethod
+                        data: "{'ListQuestions': '" + params + "'}",
+                        //must have the following contentType details
+                        contentType: "application/json; charset=utf-8",
+                        //must have the JSON dataType
+                        dataType: "json",
+                        //the next two functions have debug purposes
+                        //if the function executed successfully
+                        success: function (msg) {
+                            //give the result of this call as an alert for the user
+                            alert(msg.d);
+                        },
+                        //if the function encountered an error
+                        error: function (response) {
+                            //replace the page with the stacktrace of the error
+                            //(obviously this shouldn't happen)
+                            $('body', document).html(response.responseText);
+                            //also give an alert with accompanying error message
+                            alert(response.d);
+                        }
+                    });
+                }
             });
         });
 	</script>
