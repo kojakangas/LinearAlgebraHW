@@ -129,7 +129,7 @@ MathJax.Hub.Config({
     <script type="text/javascript">
         function validateNumericInput(evt) {
             var charCode = (evt.which) ? evt.which : evt.keyCode
-            if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 45 && charCode == 190)
+            if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 45)
                 return false;
             return true;
         }
