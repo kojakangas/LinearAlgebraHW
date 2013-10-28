@@ -57,7 +57,7 @@
             </div>
 
             <div id="table" style="box-shadow: 2px 2px 6px #666666; border-radius: 5px;">
-                <table class="dataTable">
+                <table runat="server" id="assignmentTable" class="dataTable">
                     <thead>
                         <tr>
                             <th>Assignment</th>
@@ -67,24 +67,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Homework 1</td>
-                            <td style="text-align: center;">09/03/2013</td>
-                            <td style="text-align: center;">8/10</td>
-                            <td style="text-align: center;">Complete</td>
-                        </tr>
-                        <tr>
-                            <td><a href="QuestionPage.aspx">Homework 2</a></td>
-                            <td style="text-align: center;">09/05/2013</td>
-                            <td style="text-align: center;">--/10</td>
-                            <td style="text-align: center;">Not Started</td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">Homework 3</a></td>
-                            <td style="text-align: center;">09/05/2013</td>
-                            <td style="text-align: center;">--/10</td>
-                            <td style="text-align: center;">Not Started</td>
-                        </tr>
+                        
                     </tbody>
                 </table>
             </div>
