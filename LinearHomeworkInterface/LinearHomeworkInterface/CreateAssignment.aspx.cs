@@ -19,33 +19,20 @@ namespace LinearHomeworkInterface
 
         //our WebMethod for adding an assignment to the database
         [WebMethod]
-        public static string AddAssignment(String ListQuestions)
+        public static string AddAssignment(String ListConstraints, String ListQuestions)
         {
             //create a String array of the answers submitted from the user page
             //splits by space
-            string[] lines = ListQuestions.Split('|');
-            string[] variables = null;
+            string[] lines = ListConstraints.Split('|');
+            string[] questions = ListQuestions.Split('|');
             AssignComponent.Assigner entry = new AssignComponent.Assigner();
-            int rows;
-            int cols;
-            int min;
-            int max;
-            int freeVar;
-            int inconsistent;
-            for (int i = 0; i < lines.Length; i++)
-            {
-                string questionStr = lines[i];
-                variables = questionStr.Split(',');
-                rows = System.Convert.ToInt32(variables[2]);
-                cols = System.Convert.ToInt32(variables[3]);
-                min = System.Convert.ToInt32(variables[4]);
-                max = System.Convert.ToInt32(variables[5]);
-                freeVar = System.Convert.ToInt32(variables[6]);
-                inconsistent = 0;
-                entry.Assign(rows, cols, min, max, freeVar, inconsistent);
-            }
+            //fetch our assignment parameters to pass with our array of questions strings
+            String title = lines[0];
+            int points = System.Convert.ToInt32(lines[1]);
+            String dueDate = lines[2];
             
-            return "Check your database...";
+
+            return entry.Assign(title, points, dueDate, questions);
         } 
     }
 }

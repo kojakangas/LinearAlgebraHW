@@ -12,6 +12,12 @@
     <script src="javascript/bootstrap.min.js"></script>
     <script src="javascript/jquery-ui-1.10.3.custom.min.js"></script>
     <script src="javascript/jquery.dataTables.min.js"></script>
+    <style type="text/css">
+        #GenConstraints {
+            margin-top: 20px;
+            height: 88px;
+        }
+    </style>
 </head>
 <body>
     <script>
@@ -58,7 +64,23 @@
             <div id="content" style="padding-top: 50px;">
                 <div id="header">
                     <h1>New Assignment</h1>
-                </div>
+                    
+                        <div id="GenConstraints">
+                            <span>Assignment Name: </span>
+                            <input id="assignmentname" type="text" class="span2" placeholder="Name"/>
+                            <span>Points Possible: </span>
+                            <input id="points" type="text" class="span2" placeholder="# points" />
+                            <br />
+                            <span>Due Date (Year): </span>
+                            <input id="year" type="text" class="span1" placeholder="####" />
+                            -
+                            <span>Due Date (Month):</span>
+                            <input id="month" type="text" class="span1" placeholder="##" />
+                            -
+                            <span>Due Date (Day):</span>
+                            <input id="day" type="text" class="span1" placeholder="##" />
+                        </div>
+                    
                 <div class="span12">
                     <span>Question Type: </span>
                     <select id="questionType" style="margin-bottom: 0px;">
@@ -171,27 +193,35 @@
                     //create a variable to pass as the parameter for our grading controller
                     //in the code behind
                     var params = "";
+                    //first give our params variable the name, points, and due date for the assignment
+                    params = params + $('#assignmentname').val() + "|" + $('#points').val() + "|" + $('#year').val() + "-" + $('#month').val() + "-" + $('#day').val() + "|";
+                    //then create a variable in which we will pass our string of questions
+                    var questions = "";
+                    //then create an array to fetch our question data from the table
                     var vin = new Array();
                     var tabler;
                     tabler = $('#addedQuestionTable').dataTable();
-                    //for each answer text the user has created
+                    //for each question in the question table
                     for (var i = 0; i < questionNumber; i++) {
-                            //add it to the params variable to pass into the grading controller
-                            //the space in the end is supposed to be there to allow the grading
-                            //controller to separate every answer we are passing to the controller
+                        //for (var j = 0; j < tabler.fnGetData(i).length; j++) {
                         vin[i] = tabler.fnGetData(i);
-                        params = params + vin[i] + "|";
+                        alert("Current row of data is:\n" + vin[i]);
+                        questions = questions + vin[i] + "|";
+                        //}
                     }
                     //take off the extra break character at the end of our params variable
                     params = params.substring(0, params.length - 1);
+                    //do the same thing for our questions variable
+                    questions = questions.substring(0, questions.length - 1);
+                    alert("The questions are:\n" + questions);
                     //begin our AJAX call to our WebMethod in the controller
                     $.ajax({
                         //must be a POST type of call
                         type: "POST",
                         //pass this to the GradeAnswer controller in our code behind
                         url: "CreateAssignment.aspx/AddAssignment",
-                        //input the params variable as the parameter for our WebMethod
-                        data: "{'ListQuestions': '" + params + "'}",
+                        //input the params and questions variables as the parameters for our WebMethod
+                        data: JSON.stringify({ ListConstraints: params, ListQuestions: questions }),
                         //must have the following contentType details
                         contentType: "application/json; charset=utf-8",
                         //must have the JSON dataType
@@ -215,5 +245,7 @@
             });
         });
 	</script>
+    <p>
+        &nbsp;</p>
 </body>
 </html>
