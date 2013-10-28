@@ -188,8 +188,40 @@
 
             //JQuery function activated when "Assign" is clicked
             $('a#assignHomework').click(function () {
-                //if the user has created at least one question to assign
-                if (questionNumber > 0) {
+                //if the instructor has not assigned any questions yet
+                if (questionNumber == 0) {
+                    alert("You must assign at least one question!");
+                }
+                //if the instructor has not given a name for the new assignment
+                else if (!$('#assignmentname').val()) {
+                    alert("Nameless assignments are LAME. Don't be lame!");
+                }
+                //if the instructor has not assigned the number of points in the assignment
+                else if (!$('#points').val()) {
+                    alert("You really think students are motivated to complete POINTless assignments?");
+                }
+                //if the instructor has not entered the year due
+                else if (!$('#year').val()) {
+                    alert("Hmmm, this assignment is not due at any specific year?...");
+                }
+                //if the instructor has not entered the month due
+                else if (!$('#month').val()) {
+                    alert("Your students could complete the assignment at any point of the year...");
+                }
+                //if the instructor has not entered the day due
+                else if (!$('#day').val()) {
+                    alert("Really? There's no specific day in your month due? Try again.");
+                }
+                //if the instructor has entered a month that is not valid for the year
+                else if ($('#month').val() > 12 || $('#month').val() < 1) {
+                    alert("How hard is it to enter a valid month? You didn't pick between 1 and 12? Really?");
+                }
+                //if the instructor has entered a day that is not valid for the month
+                else if ($('#day').val() > 31 || $('#day').val() < 1) {
+                    alert("How hard is it to enter a valid day? You didn't pick between 1 and 31? Really?");
+                }
+                //if the instructor has entered all of the necessary values
+                else {
                     //create a variable to pass as the parameter for our grading controller
                     //in the code behind
                     var params = "";

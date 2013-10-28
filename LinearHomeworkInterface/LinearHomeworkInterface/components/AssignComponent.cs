@@ -19,6 +19,8 @@ namespace AssignComponent
             int i = 0;
             int aid = 0;
             int numstudents = 0;
+            Boolean unsupportedQuestionAttempt = false;
+            int questioniddecrement = 0;
             //if (rows == 2 && col == 3)
             //{
             //    if (freeVar == 0)
@@ -119,7 +121,7 @@ namespace AssignComponent
                         //the appropriate parameters
                         string questionStr = listOfQuestions[j];
                         String[] variables = questionStr.Split(',');
-                        int questionid = System.Convert.ToInt32(variables[0]);
+                        int questionid = System.Convert.ToInt32(variables[0])-questioniddecrement;
                         string type = variables[1];
                         int rows = System.Convert.ToInt32(variables[2]);
                         int cols = System.Convert.ToInt32(variables[3]);
@@ -155,12 +157,16 @@ namespace AssignComponent
                             aid++;
                             SoEIndex++;
                         }
-                        //now we've assigned everything, so we move out of our if and let the last statement close the connection
+                        //ensure our questioniddecrementer remains at 0 for the next question
+                        questioniddecrement = 0;
+                        //now we've assigned everything, so we move out of our if and let the loop continue to the last question
                     }
                     else
                     {
                         //currently our implementation for the other types of questions are
                         //not supported, so they will come in due time.
+                        unsupportedQuestionAttempt = true;
+                        questioniddecrement = 1;
                     }
                 }
                 //close our connection since we're now finished with assignment insertion
@@ -171,7 +177,15 @@ namespace AssignComponent
                 return "An error occurred while creating the assignment: " + error
                     + "The out of bound index was: " + (i);
             }
-            return "Homework successfully assigned.";
+            if (unsupportedQuestionAttempt == false)
+            {
+                return "Homework successfully assigned.";
+            }
+            else
+            {
+                return "The homework was successfully assigned, but the attempt to assign currently unsupported questions was detected. "
+                    + "In the future you will, in fact, be able to assign this type of question. We apologize for the inconvenience.";
+            }
         }
     }
 }
