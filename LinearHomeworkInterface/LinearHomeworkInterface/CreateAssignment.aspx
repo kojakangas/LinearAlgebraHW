@@ -70,6 +70,13 @@
                             <input id="assignmentname" type="text" class="span2" placeholder="Name"/>
                             <span>Points Possible: </span>
                             <input id="points" type="text" class="span2" placeholder="# points" />
+                            
+                            <!--<ASP:TextBox runat="server" ID="txtDate"></ASP:TextBox>--->
+
+                            
+                            <!---<asp:Calendar ID="Calendar1" runat="server"></asp:Calendar>--->
+
+                            
                             <br />
                             <span>Due Date (Year): </span>
                             <input id="year" type="text" class="span1" placeholder="####" />
@@ -83,7 +90,7 @@
                     
                 <div class="span12">
                     <span>Question Type: </span>
-                    <select id="questionType" style="margin-bottom: 0px;">
+                    <select id="questionType" style="margin-bottom: 0px;" name="D1">
                         <option value="SoE">System of Equations</option>
                         <option value="I">Inverse</option>
                         <option value="D">Determinant</option>
