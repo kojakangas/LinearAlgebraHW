@@ -217,7 +217,7 @@ MathJax.Hub.Config({
 
             //JQuery function activated when "Submit Answer" is clicked
             $('#submitAnswer').click(function () {
-                //if the user has generated an answer(s) that are not empty
+                //if the user has generated one or more answers
                 if (generatedAnswer === true) {
                     //create an array to store all the text in every answer text box
                     var variables = $('#variables').val();
