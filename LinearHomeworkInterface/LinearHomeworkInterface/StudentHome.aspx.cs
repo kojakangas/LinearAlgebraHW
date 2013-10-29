@@ -9,6 +9,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.UI.HtmlControls;
 using System.Configuration;
+using System.Text;
 
 namespace LinearHomeworkInterface
 {
@@ -16,12 +17,19 @@ namespace LinearHomeworkInterface
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            String username = Context.User.Identity.Name;
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append("<h1>Welcome, ");
+            sb.Append(username);
+            sb.Append("</h1>");
+            headerltData.Text = sb.ToString();
+
             string connStr = ConfigurationManager.ConnectionStrings["linearhmwkdb"].ConnectionString;
             MySqlConnection msqcon = new MySqlConnection(connStr);
             try
             {
                 msqcon.Open();
-                String username = Context.User.Identity.Name;
                 String idquery = "SELECT user.userID From user WHERE user.username=@username";
                 MySqlCommand msqcmd = new MySqlCommand(idquery, msqcon);
                 msqcmd.Parameters.Add(new MySqlParameter("@username", username));
@@ -30,13 +38,15 @@ namespace LinearHomeworkInterface
                 String userid = idfetch.GetString(0);
                 idfetch.Close();
 
-                String query = "SELECT ha.assignmentID, h.homeworkid, h.dueDate, ha.grade, ha.status, ha.userId FROM hmwkassignment AS ha JOIN homework AS h WHERE ha.homeworkId=h.homeworkid AND ha.userID = @userid ORDER BY ha.assignmentID";
+                String query = "SELECT ha.assignmentID, h.homeworkid, h.dueDate, ha.grade, ha.status, ha.userId, h.title FROM hmwkassignment AS ha JOIN homework AS h WHERE ha.homeworkId=h.homeworkid AND ha.userID = @userid ORDER BY ha.assignmentID";
                 msqcmd = new MySqlCommand(query, msqcon);
                 msqcmd.Parameters.Add(new MySqlParameter("@userid", userid));
                 MySqlDataReader assignments = null;
                 assignments = msqcmd.ExecuteReader();
+                sb = new StringBuilder();
                 while (assignments.Read())
                 {
+                    /*
                     HtmlTableRow tRow = new HtmlTableRow();
                     HtmlTableCell hwName = new HtmlTableCell();
                     hwName.InnerText = assignments.GetString(0);
@@ -52,7 +62,25 @@ namespace LinearHomeworkInterface
                     hwStatus.InnerText = assignments.GetString(4);
                     tRow.Controls.Add(hwStatus);
                     assignmentTable.Rows.Add(tRow);
+                    */
+
+                    sb.Append("<tr>");
+                    sb.Append("<td>");
+                    sb.Append(assignments.GetString(6));
+                    sb.Append("</td>");
+                    sb.Append("<td>");
+                    sb.Append(assignments.GetString(2));
+                    sb.Append("</td>");
+                    sb.Append("<td>");
+                    sb.Append(assignments.GetString(3));
+                    sb.Append("</td>");
+                    sb.Append("<td>");
+                    sb.Append(assignments.GetString(4));
+                    sb.Append("</td>");
+
+                    sb.Append("</tr>");
                 }
+                ltData.Text = sb.ToString();
                 assignments.Close();
             }
             catch (Exception)
