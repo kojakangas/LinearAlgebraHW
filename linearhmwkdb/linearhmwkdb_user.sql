@@ -25,16 +25,16 @@ DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user` (
-  `userid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `userId` bigint(20) NOT NULL AUTO_INCREMENT,
   `first` varchar(45) NOT NULL,
   `last` varchar(45) NOT NULL,
   `username` varchar(45) NOT NULL,
   `password` varchar(45) NOT NULL,
-  `role` varchar(45) NOT NULL DEFAULT 'student',
-  PRIMARY KEY (`userid`),
+  `role` varchar(45) NOT NULL DEFAULT 'S',
+  PRIMARY KEY (`userId`),
   UNIQUE KEY `username_UNIQUE` (`username`),
-  UNIQUE KEY `userid_UNIQUE` (`userid`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+  UNIQUE KEY `usercol_UNIQUE` (`userId`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,7 +43,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'Brendan','Birdsong','bbirdsong','111','S'),(2,'Testy','Tester','ttester','222','S'),(3,'Ryan','Loan','rloan','333','I');
+INSERT INTO `user` VALUES (1,'Brendan','Birdsong','bbirdsong','dc76e9f0c0006e8f919e0c515c66dbba3982f785','S'),(2,'Tyler','Jenkins','tjenkins','dc76e9f0c0006e8f919e0c515c66dbba3982f785','S'),(3,'Scott','Sigman','ssigman','dc76e9f0c0006e8f919e0c515c66dbba3982f785','I'),(4,'Kieran','Ojakangas','kojakangas','dc76e9f0c0006e8f919e0c515c66dbba3982f785','S');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -56,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-10-11 15:40:22
+-- Dump completed on 2013-10-29 17:37:57
