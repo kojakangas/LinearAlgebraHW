@@ -219,8 +219,6 @@ MathJax.Hub.Config({
             $('#submitAnswer').click(function () {
                 //if the user has generated one or more answers
                 if (generatedAnswer === true) {
-                    //create an array to store all the text in every answer text box
-                    var variables = $('#variables').val();
                     //create a variable to pass as the parameter for our grading controller
                     //in the code behind
                     var params = "";
