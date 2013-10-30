@@ -35,10 +35,10 @@
                 <table id="assignmentTable" class="dataTable">
                     <thead>
                         <tr>
-                            <th>Assignment</th>
-                            <th>Due Date</th>
-                            <th>Grade</th>
-                            <th>Status</th>
+                            <th style="text-align: left;">Assignment</th>
+                            <th style="text-align: center; width: 200px;">Due Date</th>
+                            <th style="text-align: center; width: 50px;">Grade</th>
+                            <th style="text-align: center; width: 75px;">Status</th>
                         </tr>
                     </thead>
                     <tbody>

@@ -67,16 +67,16 @@ namespace LinearHomeworkInterface
                     */
 
                     sb.Append("<tr>");
-                    sb.Append("<td>");
+                    sb.Append("<td style=\"text-align: left;\">");
                     sb.Append(assignments.GetString(6));
                     sb.Append("</td>");
-                    sb.Append("<td>");
+                    sb.Append("<td style=\"text-align: center;\">");
                     sb.Append(assignments.GetString(2));
                     sb.Append("</td>");
-                    sb.Append("<td>");
+                    sb.Append("<td style=\"text-align: center;\">");
                     sb.Append(assignments.GetString(3));
                     sb.Append("</td>");
-                    sb.Append("<td>");
+                    sb.Append("<td style=\"text-align: center;\">");
                     sb.Append(assignments.GetString(4));
                     sb.Append("</td>");
 

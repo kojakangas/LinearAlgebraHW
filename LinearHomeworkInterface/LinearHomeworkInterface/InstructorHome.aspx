@@ -21,7 +21,11 @@
                 "bFilter": false,
                 'sPaginationType': 'full_numbers',
                 "bAutoWidth": false,
-                "bJQueryUI": true
+                "bJQueryUI": true,
+                "oLanguage": {
+                    "sInfoEmpty": "",
+                    "sEmptyTable": "No Assignments have been created"
+                }
             });
 
             $('.dataTable-student').dataTable({
@@ -29,7 +33,11 @@
                 "bFilter": false,
                 'sPaginationType': 'full_numbers',
                 "bAutoWidth": false,
-                "bJQueryUI": true
+                "bJQueryUI": true,
+                "oLanguage": {
+                    "sInfoEmpty": "",
+                    "sEmptyTable": "Select a student from the dropdown to view grades..."
+                }
             });
         });
     </script>
@@ -73,24 +81,24 @@
                 </div>
 
                 <div class="span6" style="margin-left: 10px; margin-right: 5px;">
-                    <h3>Students</h3>
+                    <h3 style="margin-left: 10px; float: left;">Students</h3>
+                    <select style="margin-top: 15px; float: right;">
+			            <option>-- Select Student --</option>
+			            <option>Brendan Birdsong</option>
+			            <option>Kieran Ojakangas</option>
+			            <option>Tyler Jenkins</option>
+		            </select>
+		            <div class="span6" style="margin-left: 10px; margin-right: 5px;">
                     <div id="Div1" style="box-shadow: 2px 2px 6px #666666; border-radius: 5px;">
                         <table class="dataTable-student">
                             <thead>
                                 <tr>
-                                    <th style="text-align: left;">Name</th>
+                                    <th style="text-align: right;">Assignment</th>
+                                    <th style="text-align: right;">Grade</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td><a>Brendan Birdsong</a></td>
-                                </tr>
-                                <tr>
-                                    <td><a>Kieran Ojakangas</a></td>
-                                </tr>
-                                <tr>
-                                    <td><a>Tyler Jenkins</a></td>
-                                </tr>
+                                
                             </tbody>
                         </table>
                     </div>
