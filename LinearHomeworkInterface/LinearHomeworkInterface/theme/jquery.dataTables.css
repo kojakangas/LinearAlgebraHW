@@ -14,7 +14,7 @@ table.dataTable thead th {
 	border-bottom: 1px solid black;
 	font-weight: bold;
 	cursor: pointer;
-	*cursor: hand;
+	*cursor: pointer;
 }
 
 table.dataTable tfoot th {
@@ -101,7 +101,7 @@ table.dataTable tr.even td.sorting_3 { background-color: #F9F9FF; }
 	height: 19px;
 	float: left;
 	cursor: pointer;
-	*cursor: hand;
+	*cursor: pointer;
 	color: #111 !important;
 }
 .paginate_disabled_previous:hover,
@@ -160,7 +160,7 @@ table.dataTable tr.even td.sorting_3 { background-color: #F9F9FF; }
 	padding: 2px 5px;
 	margin: 0 3px;
 	cursor: pointer;
-	*cursor: hand;
+	*cursor: pointer;
 	color: #333 !important;
 }
 
@@ -176,7 +176,6 @@ table.dataTable tr.even td.sorting_3 { background-color: #F9F9FF; }
 .paging_full_numbers a.paginate_active {
 	background-color: #99B3FF;
 }
-
 
 /*
  * Processing indicator

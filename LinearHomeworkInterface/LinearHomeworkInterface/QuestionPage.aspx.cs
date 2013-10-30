@@ -29,33 +29,12 @@ namespace LinearHomeworkInterface
             string connStr = ConfigurationManager.ConnectionStrings["linearhmwkdb"].ConnectionString;
             MySqlConnection msqcon = new MySqlConnection(connStr);
 
-            int n = 0;
-            int m = 0;
-            int min = 0;
-            int max = 0;
+            int n = 2;
+            int m = 3;
+            int min = -2;
+            int max = 2;
             int freeVars = 0;
             Boolean inconsistent = false;
-
-            try
-            {
-                msqcon.Open();
-                MySqlDataReader book = null;
-                MySqlCommand msqcmd = new MySqlCommand("SELECT * FROM lequestiones", msqcon);
-                book = msqcmd.ExecuteReader();
-                while (book.Read())
-                {
-                    n = (int)book["rows"];
-                    m = (int)book["columns"];
-                    min = (int)book["min"];
-                    max = (int)book["max"];
-                    freeVars = (int)book["freeVariables"];
-                }
-                msqcon.Close();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
 
             Random rand = new Random();
             
