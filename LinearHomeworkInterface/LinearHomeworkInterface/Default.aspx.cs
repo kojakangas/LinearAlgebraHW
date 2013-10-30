@@ -96,7 +96,21 @@ namespace LinearHomeworkInterface
                 if (user.HasRows)
                 {
                     user.Read();
-                    FormsAuthentication.SetAuthCookie(Username, false);
+                    FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(1,
+                        Username,
+                        DateTime.Now,
+                        DateTime.Now.AddMinutes(30),
+                        false,
+                        user["role"].ToString() + " " + user["first"] + " " + user["last"],
+                        FormsAuthentication.FormsCookiePath);
+
+                    string encTicket = FormsAuthentication.Encrypt(ticket);
+
+                    HttpCookie cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket);
+
+                    HttpContext.Current.Response.Cookies.Add(cookie);
+
+
                     if (user["role"].ToString().Equals("I"))
                     {
                        url = "/InstructorHome.aspx";
@@ -115,6 +129,17 @@ namespace LinearHomeworkInterface
             }
 
             return url;
+        }
+
+
+        [WebMethod]
+        public static void SignOut()
+        {
+            FormsAuthentication.SignOut();
+            if (HttpContext.Current.Request.Cookies["LINALGHW"] != null)
+            {
+                HttpContext.Current.Response.Cookies["LINALGHW"].Expires = DateTime.Now.AddDays(-1);
+            }
         }
     }
 }

@@ -13,13 +13,29 @@ namespace LinearHomeworkInterface
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            this.Check_User();
         }
 
-        [WebMethod]
-        public static void SignOut()
+        protected void Check_User()
         {
-            FormsAuthentication.SignOut();
+            HttpCookie cookie = Request.Cookies["LINALGHW"];
+            FormsAuthenticationTicket t = null;
+            string[] user = null;
+
+            if (cookie != null)
+            {
+                t = FormsAuthentication.Decrypt(cookie.Value);
+                user = t.UserData.ToString().Split(' ');
+            }
+
+            if (t == null)
+            {
+                Server.Transfer("Default.aspx", true);
+            }
+            else if (user[0].Equals("I"))
+            {
+                Server.Transfer("InstructorHome.aspx", true);
+            }
         }
     }
 }

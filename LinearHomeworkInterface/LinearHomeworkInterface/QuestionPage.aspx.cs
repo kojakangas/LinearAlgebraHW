@@ -6,12 +6,13 @@ using System.Web;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using LinearHomeworkInterface.components;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
 using System.Data.Sql;
 using System.Data.Linq;
 using MySql.Data.MySqlClient;
+using System.Web.Security;
+using System.Configuration;
 
 namespace LinearHomeworkInterface
 {
@@ -24,12 +25,15 @@ namespace LinearHomeworkInterface
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            this.Check_User();
+
             String rows = "";
             String columns = "";
             String maximum = "";
             String minimum = "";
             String freeVariables = "";
-            MySqlConnection msqcon = new MySqlConnection("server=localhost;User Id=root;Password=r00tr00tr00tr00tr00t;database=ledatabase;Persist Security Info=False;Integrated Security=False");
+            string connStr = ConfigurationManager.ConnectionStrings["linearhmwkdb"].ConnectionString;
+            MySqlConnection msqcon = new MySqlConnection(connStr);
             try
             {
                 msqcon.Open();
@@ -461,6 +465,28 @@ namespace LinearHomeworkInterface
             //have this created object grade the user's solutions against
             //the answers of our generated matrix
             return grader.Grade(solution, UserSolutions, textSolution, freeVar);
-        } 
+        }
+
+        protected void Check_User()
+        {
+            HttpCookie cookie = Request.Cookies["LINALGHW"];
+            FormsAuthenticationTicket t = null;
+            string[] user = null;
+
+            if (cookie != null)
+            {
+                t = FormsAuthentication.Decrypt(cookie.Value);
+                user = t.UserData.ToString().Split(' ');
+            }
+
+            if (t == null)
+            {
+                Server.Transfer("Default.aspx", true);
+            }
+            else if (user[0].Equals("I"))
+            {
+                Server.Transfer("InstructorHome.aspx", true);
+            }
+        }
     }
 }

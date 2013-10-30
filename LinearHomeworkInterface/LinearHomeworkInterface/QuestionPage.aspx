@@ -264,6 +264,23 @@ MathJax.Hub.Config({
             });
         });
 
+        $("#signOut").click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: "Default.aspx/SignOut",
+                data: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    window.location = "Default.aspx";
+                },
+                error: function (msg) {
+                    alert("Sign Out Failed!");
+                }
+            });
+        });
+
     </script>
 </body>
 </html>

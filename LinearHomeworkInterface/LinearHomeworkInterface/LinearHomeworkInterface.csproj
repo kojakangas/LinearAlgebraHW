@@ -88,7 +88,9 @@
     <Content Include="theme\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="theme\jquery-ui-1.10.3.custom.css" />
     <Content Include="theme\jquery.dataTables.css" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="components\AssignComponent.cs" />

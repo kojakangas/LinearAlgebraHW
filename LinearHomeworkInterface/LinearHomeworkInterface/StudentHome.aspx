@@ -98,7 +98,7 @@
             e.preventDefault();
             $.ajax({
                 type: "POST",
-                url: "StudentHome.aspx/SignOut",
+                url: "Default.aspx/SignOut",
                 data: "",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
