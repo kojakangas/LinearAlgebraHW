@@ -66,18 +66,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Homework 1</td>
-                                    <td style="text-align: center;">Completed</td>
-                                </tr>
-                                <tr>
-                                    <td><a href="#">Homework 2</a></td>
-                                    <td style="text-align: center;">Assigned</td>
-                                </tr>
-                                <tr>
-                                    <td><a href="#">Homework 3</a></td>
-                                    <td style="text-align: center;">Not Assigned</td>
-                                </tr>
+                                <asp:Literal runat="server" ID="ltData"></asp:Literal>
                             </tbody>
                         </table>
                     </div>

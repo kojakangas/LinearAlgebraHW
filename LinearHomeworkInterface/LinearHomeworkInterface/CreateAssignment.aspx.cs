@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Security;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using LinearHomeworkInterface.components;
 
 namespace LinearHomeworkInterface
 {
@@ -40,14 +42,25 @@ namespace LinearHomeworkInterface
 
         //our WebMethod for adding an assignment to the database
         [WebMethod]
-        public static string AddAssignment(String ListQuestions)
+        public static string AddAssignment(String ListConstraints, String ListQuestions)
         {
             //create a String array of the answers submitted from the user page
             //splits by space
-            string[] lines = ListQuestions.Split(' ');
-
+            string[] lines = ListConstraints.Split('|');
+            string[] questions = ListQuestions.Split('|');
+            AssignComponent.Assigner entry = new AssignComponent.Assigner();
+            //fetch our assignment parameters to pass with our array of questions strings
+            String title = lines[0];
+            int points = System.Convert.ToInt32(lines[1]);
+            String dueDate = lines[2];
             
+<<<<<<< HEAD
             return "This button did something that is not implemented yet.";
         }
+=======
+
+            return entry.Assign(title, points, dueDate, questions);
+        } 
+>>>>>>> 366f6977495386e23f00c98f62cbe801f33ea11b
     }
 }

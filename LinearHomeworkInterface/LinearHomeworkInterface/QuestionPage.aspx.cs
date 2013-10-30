@@ -25,6 +25,7 @@ namespace LinearHomeworkInterface
 
         protected void Page_Load(object sender, EventArgs e)
         {
+<<<<<<< HEAD
             this.Check_User();
 
             String rows = "";
@@ -34,6 +35,16 @@ namespace LinearHomeworkInterface
             String freeVariables = "";
             string connStr = ConfigurationManager.ConnectionStrings["linearhmwkdb"].ConnectionString;
             MySqlConnection msqcon = new MySqlConnection(connStr);
+=======
+            int n = 0;
+            int m = 0;
+            int min = 0;
+            int max = 0;
+            int freeVars = 0;
+            Boolean inconsistent = false;
+
+            MySqlConnection msqcon = new MySqlConnection("server=localhost;User Id=root;Password=r00tr00tr00tr00tr00t;database=ledatabase;Persist Security Info=False;Integrated Security=False");
+>>>>>>> 366f6977495386e23f00c98f62cbe801f33ea11b
             try
             {
                 msqcon.Open();
@@ -42,11 +53,11 @@ namespace LinearHomeworkInterface
                 book = msqcmd.ExecuteReader();
                 while (book.Read())
                 {
-                    rows = book["rows"].ToString();
-                    columns = book["columns"].ToString();
-                    minimum = book["min"].ToString();
-                    maximum = book["max"].ToString();
-                    freeVariables = book["freeVariables"].ToString();
+                    n = (int)book["rows"];
+                    m = (int)book["columns"];
+                    min = (int)book["min"];
+                    max = (int)book["max"];
+                    freeVars = (int)book["freeVariables"];
                 }
                 msqcon.Close();
             }
@@ -54,12 +65,6 @@ namespace LinearHomeworkInterface
             {
                 throw;
             }
-            int n = System.Convert.ToInt32(rows);
-            int m = System.Convert.ToInt32(columns) ;
-            int min = System.Convert.ToInt32(minimum);
-            int max = System.Convert.ToInt32(maximum);
-            int freeVars = System.Convert.ToInt32(freeVariables);
-            Boolean inconsistent = false;
 
             Random rand = new Random();
             

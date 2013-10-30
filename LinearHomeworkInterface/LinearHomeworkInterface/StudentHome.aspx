@@ -14,17 +14,6 @@
     <script src="javascript/jquery.dataTables.min.js"></script>
 </head>
 <body>
-    <script>
-        $(document).ready(function () {
-            $('.dataTable').dataTable({
-                "bJQueryUI": true,
-                "bSort": false,
-                "bFilter": true,
-                'sPaginationType': 'full_numbers',
-                "bAutoWidth": false
-            });
-        });
-    </script>
     <div class="container">
         <!--/possibly add class="container" -->
         <div class="navbar-inner" style="position: fixed; width: 900px; z-index: 1000;">
@@ -53,11 +42,11 @@
 		</div>
         <div id="content" style="padding-top:50px;">
             <div id="header">
-                <h1>Welcome, Student</h1>
+                <asp:Literal runat="server" ID="headerltData"></asp:Literal>
             </div>
 
             <div id="table" style="box-shadow: 2px 2px 6px #666666; border-radius: 5px;">
-                <table class="dataTable">
+                <table id="assignmentTable" class="dataTable">
                     <thead>
                         <tr>
                             <th>Assignment</th>
@@ -67,24 +56,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Homework 1</td>
-                            <td style="text-align: center;">09/03/2013</td>
-                            <td style="text-align: center;">8/10</td>
-                            <td style="text-align: center;">Complete</td>
-                        </tr>
-                        <tr>
-                            <td><a href="QuestionPage.aspx">Homework 2</a></td>
-                            <td style="text-align: center;">09/05/2013</td>
-                            <td style="text-align: center;">--/10</td>
-                            <td style="text-align: center;">Not Started</td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">Homework 3</a></td>
-                            <td style="text-align: center;">09/05/2013</td>
-                            <td style="text-align: center;">--/10</td>
-                            <td style="text-align: center;">Not Started</td>
-                        </tr>
+                        <asp:Literal runat="server" ID="ltData"></asp:Literal>
                     </tbody>
                 </table>
             </div>
@@ -109,6 +81,13 @@
                     alert("Sign Out Failed!");
                 }
             });
+        });
+        $('#assignmentTable').dataTable({
+            "bJQueryUI": true,
+            "bSort": false,
+            "bFilter": true,
+            'sPaginationType': 'full_numbers',
+            "bAutoWidth": false
         });
     });
 </script>
