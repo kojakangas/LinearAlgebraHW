@@ -26,12 +26,16 @@ DROP TABLE IF EXISTS `question`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `question` (
   `questionId` bigint(20) NOT NULL AUTO_INCREMENT,
-  `number` int(11) NOT NULL,
-  `wording` varchar(255) NOT NULL,
-  `pointValue` float NOT NULL,
   `homeworkId` bigint(20) NOT NULL,
-  `parameterId` bigint(20) NOT NULL,
-  `solutionId` bigint(20) NOT NULL,
+  `number` int(11) NOT NULL,
+  `pointValue` float NOT NULL DEFAULT '1',
+  `type` varchar(45) NOT NULL,
+  `rows` int(11) NOT NULL,
+  `columns` int(11) NOT NULL,
+  `min` int(11) NOT NULL,
+  `max` int(11) NOT NULL,
+  `freeVars` int(11) NOT NULL DEFAULT '0',
+  `inconsistent` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`questionId`),
   UNIQUE KEY `questionId_UNIQUE` (`questionId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
@@ -43,7 +47,7 @@ CREATE TABLE `question` (
 
 LOCK TABLES `question` WRITE;
 /*!40000 ALTER TABLE `question` DISABLE KEYS */;
-INSERT INTO `question` VALUES (1,1,'Do',1,1,1,1),(2,2,'This',1,1,2,2),(3,3,'Problem',1,1,3,3),(4,1,'2Do',1,2,4,4),(5,2,'2This',1,2,5,5),(6,3,'2Problem',1,2,6,6);
+INSERT INTO `question` VALUES (1,1,1,1,'SoE',2,3,-2,2,0,0),(2,1,2,1,'SoE',2,3,-2,2,0,0),(3,1,3,1,'SoE',2,3,-2,2,0,0),(4,2,1,1,'SoE',2,3,-2,2,0,0),(5,2,2,1,'SoE',2,3,-2,2,0,0),(6,2,3,1,'SoE',2,3,-2,2,0,0);
 /*!40000 ALTER TABLE `question` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -56,4 +60,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-10-11 15:40:22
+-- Dump completed on 2013-10-29 17:37:56

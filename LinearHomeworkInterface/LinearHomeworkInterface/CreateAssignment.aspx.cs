@@ -7,7 +7,6 @@ using System.Web.Security;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using LinearHomeworkInterface.components;
 
 namespace LinearHomeworkInterface
 {
@@ -53,14 +52,8 @@ namespace LinearHomeworkInterface
             String title = lines[0];
             int points = System.Convert.ToInt32(lines[1]);
             String dueDate = lines[2];
-            
-<<<<<<< HEAD
-            return "This button did something that is not implemented yet.";
-        }
-=======
 
             return entry.Assign(title, points, dueDate, questions);
         } 
->>>>>>> 366f6977495386e23f00c98f62cbe801f33ea11b
     }
 }

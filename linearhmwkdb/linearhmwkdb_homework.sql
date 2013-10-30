@@ -29,6 +29,7 @@ CREATE TABLE `homework` (
   `title` varchar(45) NOT NULL,
   `points` varchar(45) NOT NULL,
   `dueDate` datetime NOT NULL,
+  `status` varchar(45) NOT NULL DEFAULT 'Assigned',
   PRIMARY KEY (`homeworkid`),
   UNIQUE KEY `homeworkid_UNIQUE` (`homeworkid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
@@ -40,7 +41,7 @@ CREATE TABLE `homework` (
 
 LOCK TABLES `homework` WRITE;
 /*!40000 ALTER TABLE `homework` DISABLE KEYS */;
-INSERT INTO `homework` VALUES (1,'Homework 1','10','2013-10-30 00:00:00'),(2,'Homework 2','15','2013-11-05 00:00:00');
+INSERT INTO `homework` VALUES (1,'Homework 1','3','2013-10-30 00:00:00','Assigned'),(2,'Homework 2','3','2013-11-05 00:00:00','Assigned');
 /*!40000 ALTER TABLE `homework` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-10-11 15:40:22
+-- Dump completed on 2013-10-29 17:37:57

@@ -25,17 +25,10 @@ namespace LinearHomeworkInterface
 
         protected void Page_Load(object sender, EventArgs e)
         {
-<<<<<<< HEAD
             this.Check_User();
-
-            String rows = "";
-            String columns = "";
-            String maximum = "";
-            String minimum = "";
-            String freeVariables = "";
             string connStr = ConfigurationManager.ConnectionStrings["linearhmwkdb"].ConnectionString;
             MySqlConnection msqcon = new MySqlConnection(connStr);
-=======
+
             int n = 0;
             int m = 0;
             int min = 0;
@@ -43,8 +36,6 @@ namespace LinearHomeworkInterface
             int freeVars = 0;
             Boolean inconsistent = false;
 
-            MySqlConnection msqcon = new MySqlConnection("server=localhost;User Id=root;Password=r00tr00tr00tr00tr00t;database=ledatabase;Persist Security Info=False;Integrated Security=False");
->>>>>>> 366f6977495386e23f00c98f62cbe801f33ea11b
             try
             {
                 msqcon.Open();

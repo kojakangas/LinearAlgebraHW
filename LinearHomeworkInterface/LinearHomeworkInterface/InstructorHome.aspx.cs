@@ -17,9 +17,8 @@ namespace LinearHomeworkInterface
 
         protected void Page_Load(object sender, EventArgs e)
         {
-<<<<<<< HEAD
             this.Check_User();
-=======
+
             string connStr = ConfigurationManager.ConnectionStrings["linearhmwkdb"].ConnectionString;
             MySqlConnection msqcon = new MySqlConnection(connStr);
             try
@@ -49,7 +48,6 @@ namespace LinearHomeworkInterface
             {
                 throw;
             }
->>>>>>> 366f6977495386e23f00c98f62cbe801f33ea11b
         }
 
         protected void Check_User()
