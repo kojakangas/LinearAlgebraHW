@@ -150,7 +150,15 @@ namespace MatrixBuilder
         }
 
         return matrix;
-    }
+        }
+
+        public float[] generateRandomVector(int size, int min, int max)
+        {
+            float[] vector = new float[size];
+            for (int i = 0; i < size; i++)
+                vector[i] = rand.Next(min,max);
+            return vector;
+        }
 
         public float[,] reduceMatrix(float[,] matrix)
         {

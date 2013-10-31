@@ -20,6 +20,7 @@ namespace LinearHomeworkInterface
     {
         public static List<float> solution = null;
         public static List<string> textSolution = null;
+        Random rand = new Random();
         
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -29,11 +30,11 @@ namespace LinearHomeworkInterface
             int m = 4;
             int min = -2;
             int max = 2;
-            //int freeVars = 0;
+            int numOfFreeVars = 0;
+            bool inconsistent = false;
+            string type = "SoE";
             //Boolean inconsistent = false;
             
-            MatrixBuilder.MatrixOperations mb = new MatrixBuilder.MatrixOperations();
-            Random rand = new Random();
             solution = new List<float>();
 
             float[] answer = new float[n];
@@ -42,8 +43,7 @@ namespace LinearHomeworkInterface
                 answer[i] = rand.Next(min, max);
                 solution.Add(answer[i]);
             }
-
-            float[,] matrix = mb.generateUniqueSolutionMatrix(n, m, min, max, answer);
+            float[,] matrix = this.Create_Problem(n, m, min, max, numOfFreeVars, inconsistent, type, answer);
 
             //Displays the equations using MATHJAX by building a parsable string
             for (int i = 0; i < n; i++)
@@ -87,7 +87,53 @@ namespace LinearHomeworkInterface
                 question.Text = question.Text + expression;
             }
         }
-       
+
+        public float[,] Create_Problem(int n, int m, int min, int max, int numOfFreeVars, bool inconsistent, string type, float[] answer)
+        {
+            //These should be moved out of method to be global
+            float[,] matrix = null;
+
+            MatrixBuilder.MatrixOperations mb = new MatrixBuilder.MatrixOperations();
+
+            if (type.Equals("SoE")) {
+                if (n <= m && !inconsistent && numOfFreeVars <= 0) {//has unique solution if n = m + 1; will have free var if n < m + 1
+                    matrix = mb.generateUniqueSolutionMatrix(n, m, min, max, answer);
+                } else if (n <= m && inconsistent && numOfFreeVars <= 0) {//inconsistent matrix
+                    matrix = mb.generateInconsistentMatrix(n, m, min, max);
+                } else if (n <= m && !inconsistent && numOfFreeVars > 0) {//free variable matrix
+                    matrix = mb.generateMatrixWithFreeVariables(n, m, min, max, answer, numOfFreeVars);
+                } else if (n > m && !inconsistent) {//will have free variables = to n - m + 1 + # of free variables
+                    matrix = mb.generateMatrixWithFreeVariables(n, m, min, max, answer, n - m + 1 + numOfFreeVars);
+                } else if (n > m && inconsistent) {//not sure 
+                    //Current does infinite loop
+                    //matrix = generateInconsistentMatrix(n, m, min, max);
+                }
+
+                //Do the parsing and text adding for question
+            } else if (type.Equals("RtI")) {
+                matrix = mb.generateRandomIdentityMatrix(n, min, max);
+
+                //Do the parsing and text adding for question
+            } else if (type.Equals("DP")) {
+                float[] vector1 = mb.generateRandomVector(n, min, max);
+                float[] vector2 = mb.generateRandomVector(n, min, max);
+
+                //Do the parsing and text adding for question
+            } else if (type.Equals("D")) {
+                matrix = mb.generateRandomIdentityMatrix(n, min, max);
+
+                //Do the parsing and text adding for question
+
+            } else if (type.Equals("I")) {
+                matrix = mb.generateRandomIdentityMatrix(n, min, max);
+
+                //Do the parsing and text adding for question
+            }
+
+            return matrix;
+        }
+
+
         //our WebMethod for checking the user's solution(s)
         [WebMethod]
         public static string GradeAnswer(String ListPassingSolutions)
