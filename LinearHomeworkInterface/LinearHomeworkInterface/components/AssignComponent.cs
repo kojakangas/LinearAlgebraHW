@@ -13,7 +13,7 @@ namespace AssignComponent
         }
 
         //Here is the logic to assign the problems through SQL connection strings
-        public String Assign(String title, int points, String dueDate, String[] listOfQuestions)
+        public String Assign(String title, String dueDate, String[] listOfQuestions)
         {
             //instance variables we will need
             int hwid = 0;
@@ -22,8 +22,9 @@ namespace AssignComponent
             int numstudents = 0;
             Boolean unsupportedQuestionAttempt = false;
             int questioniddecrement = 0;
+            int points = 0;
             //first we establish our connection string to our database
-            MySqlConnection msqcon = new MySqlConnection("server=localhost;User Id=root;Password=r00tr00tr00tr00tr00t;database=linearhmwkdb");
+            MySqlConnection msqcon = new MySqlConnection("server=localhost;User Id=root;Password=root;database=linearhmwkdb");
             try
             {
                 //open the connection
@@ -60,10 +61,8 @@ namespace AssignComponent
                     i++;
                 }
                 studentidbook.Close();
-                //insert the new assigned homework into the homework table with values passed from the instructor
-                MySqlCommand msqcom = new MySqlCommand("INSERT INTO homework (homeworkid, title, points, dueDate, status) " +
-                "Values (" + hwid + ", '" + title + "', " + points + ", '" + dueDate + "', 'Assigned')", msqcon);
-                msqcom.ExecuteNonQuery();
+                //create our MySql command to handle everything else
+                MySqlCommand msqcom = new MySqlCommand();
                 //now assign the homework assignment to each student
                 for (int j = 0; j < studentid.Length; j++)
                 {
@@ -77,7 +76,8 @@ namespace AssignComponent
                 for (int j = 0; j < listOfQuestions.Length; j++)
                 {
                     //if we are dealing with a System of Equations question
-                    if (listOfQuestions[j].Contains("System of Equations"))
+                    if (listOfQuestions[j].Contains("SoE") || listOfQuestions[j].Contains("RtI") || listOfQuestions[j].Contains("DP")
+                        || listOfQuestions[j].Contains("D") || listOfQuestions[j].Contains("I"))
                     {
                         //split our question into separate strings and convert them to
                         //the appropriate parameters
@@ -112,16 +112,14 @@ namespace AssignComponent
                         qid++;
                         //now we need to decrement the assignmentid back for each assignment we processed for each student
                         aid = aid-studentid.Length;
-                        //now insert the question into the question table for each student (hence the assignmentId)
-                        for (int k = 0; k < studentid.Length; k++)
-                        {
-                            msqcom = new MySqlCommand("INSERT INTO question (questionId, homeworkId, number, pointValue, type, rows, columns, min, max, freeVars, inconsistent) " +
-                            "Values (" + qid + ", " + hwid + ", " + questionid + ", " + 1 + ", '" + type + "', " + rows + ", " + cols + ", " + min + ", " + max + ", " + freeVar + ", " + inconsistent + ")", msqcon);
-                            msqcom.ExecuteNonQuery();
-                            aid++;
-                            qid++;
-                            questionid++;
-                        }
+                        //now insert the question into the question table
+                        msqcom = new MySqlCommand("INSERT INTO question (questionId, homeworkId, number, pointValue, type, rows, columns, min, max, freeVars, inconsistent) " +
+                        "Values (" + qid + ", " + hwid + ", " + questionid + ", " + 1 + ", '" + type + "', " + rows + ", " + cols + ", " + min + ", " + max + ", " + freeVar + ", " + inconsistent + ")", msqcon);
+                        msqcom.ExecuteNonQuery();
+                        aid++;
+                        qid++;
+                        questionid++;
+                        points++;
                         //ensure our questioniddecrementer remains at 0 for the next question
                         questioniddecrement = 0;
                         //now we've assigned everything, so we move out of our if and let the loop continue to the last question
@@ -134,6 +132,10 @@ namespace AssignComponent
                         questioniddecrement = 1;
                     }
                 }
+                //insert the new assigned homework into the homework table with values passed from the instructor
+                msqcom = new MySqlCommand("INSERT INTO homework (homeworkid, title, points, dueDate, status) " +
+                "Values (" + hwid + ", '" + title + "', " + points + ", '" + dueDate + "', 'Assigned')", msqcon);
+                msqcom.ExecuteNonQuery();
                 //close our connection since we're now finished with assignment insertion
                 msqcon.Close();
             }

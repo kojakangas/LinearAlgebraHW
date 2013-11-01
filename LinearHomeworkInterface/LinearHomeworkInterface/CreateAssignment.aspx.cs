@@ -7,6 +7,8 @@ using System.Web.Security;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using AssignComponent;
+using System.Configuration;
 
 namespace LinearHomeworkInterface
 {
@@ -50,10 +52,9 @@ namespace LinearHomeworkInterface
             AssignComponent.Assigner entry = new AssignComponent.Assigner();
             //fetch our assignment parameters to pass with our array of questions strings
             String title = lines[0];
-            int points = System.Convert.ToInt32(lines[1]);
-            String dueDate = lines[2];
-
-            return entry.Assign(title, points, dueDate, questions);
+            String dueDate = lines[1];
+            return entry.Assign(title, dueDate, questions);
+           
         } 
     }
 }
