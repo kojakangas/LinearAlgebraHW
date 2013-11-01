@@ -42,7 +42,7 @@ CREATE TABLE `hmwkassignment` (
 
 LOCK TABLES `hmwkassignment` WRITE;
 /*!40000 ALTER TABLE `hmwkassignment` DISABLE KEYS */;
-INSERT INTO `hmwkassignment` VALUES (1,1,0,'Assigned',1,1),(2,1,0,'Assigned',1,2),(3,2,0,'Assigned',1,1),(4,2,0,'Assigned',1,2);
+INSERT INTO `hmwkassignment` VALUES (1,1,0,'Late',1,1),(2,1,0,'Complete',1,2),(3,2,0,'In Progress',1,1),(4,2,0,'Assigned',1,2);
 /*!40000 ALTER TABLE `hmwkassignment` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -55,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-10-29 17:37:56
+-- Dump completed on 2013-10-31 17:24:17
