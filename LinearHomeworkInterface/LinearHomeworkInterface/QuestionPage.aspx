@@ -8,7 +8,7 @@
     <link href="theme/bootstrap.css" rel="stylesheet" media="screen" />
     <link href="theme/jquery.dataTables.css" rel="stylesheet" media="screen" />
     <link href="theme/jquery-ui-1.10.3.custom.css" rel="stylesheet" media="screen" />
-    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="javascript/jquery.js"></script>
     <script src="javascript/bootstrap.js"></script>
     <script src="javascript/jquery-ui-1.10.3.custom.min.js"></script>
     <script src="javascript/jquery.dataTables.min.js"></script>
@@ -65,6 +65,10 @@ MathJax.Hub.Config({
                                     <li>
                                         <input id="variables" type="text" onkeypress="return validateNumericInput(event)" class="span10" style="float: left; margin-left: 13px" placeholder="# of elements" />
                                     </li>
+                                    <li style="margin-bottom: 5px;">
+	                                    <span style="margin-left:13px;">Inconsistent: </span>
+	                                    <input id="inconsistent" type="checkbox" style="margin-bottom: 5px;" />
+                                    </li>
                                     <li><a id="makeAnswers" class="btn" style="margin: 0px 5px 5px 5px;">Create</a></li>
                                 </ul>
                             </li>
@@ -74,6 +78,28 @@ MathJax.Hub.Config({
                 </div>
                 <!--/span-->
                 <div class="span9">
+                    <div class="pagination pagination-centered" style="margin-top: 3px; margin-bottom: 3px;">
+	                    <ul>
+		                    <li class="disabled"><a href="#"><<</a></li>
+		                    <li class="active"><a href="#">1</a></li>
+		                    <li><a href="#">2</a></li>
+		                    <li><a href="#">3</a></li>
+		                    <li><a href="#">4</a></li>
+		                    <li><a href="#">5</a></li>
+		                    <li><a href="#">6</a></li>
+		                    <li><a href="#">7</a></li>
+		                    <li><a href="#">8</a></li>
+		                    <li><a href="#">9</a></li>
+		                    <li><a href="#">10</a></li>
+		                    <li><a href="#">11</a></li>
+		                    <li><a href="#">12</a></li>
+		                    <li><a href="#">13</a></li>
+		                    <li><a href="#">14</a></li>
+		                    <li><a href="#">15</a></li>
+		                    <li><a href="#">16</a></li>
+		                    <li><a href="#">>></a></li>
+	                    </ul>
+                    </div>                    
                     <div class="hero-unit" style="padding: 10px; margin-bottom: 0px;">
                         <h3 style="margin: 0px;">Question 1</h3>
                         <p style="margin: 0px;">Solve the system of linear equations by using elementary row operations.</p>
@@ -258,25 +284,50 @@ MathJax.Hub.Config({
                     }
                 }
             });
-        });
 
-        $("#signOut").click(function (e) {
-            e.preventDefault();
-            $.ajax({
-                type: "POST",
-                url: "Default.aspx/SignOut",
-                data: "",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (msg) {
-                    window.location = "Default.aspx";
-                },
-                error: function (msg) {
-                    alert("Sign Out Failed!");
+            $("#signOut").click(function (e) {
+                e.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "Default.aspx/SignOut",
+                    data: "",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (msg) {
+                        window.location = "Default.aspx";
+                    },
+                    error: function (msg) {
+                        alert("Sign Out Failed!");
+                    }
+                });
+            });
+
+            $('#inconsistent').click(function () {
+                if ($("#inconsistent").is(":checked")) {
+                    $("#variables").val("");
+                    $("#variables").attr("disabled", "true");
+                } else {
+                    $("#variables").removeAttr("disabled");
+                }
+            });
+
+
+            $('#makeAnswers').click(function () {
+                var variables = $('#variables').val();
+                if (!(variables === "") && generatedAnswer === false) {
+                    generatedAnswer = true;
+                    $('#matrixHolder').append("<h4>Answer: </h4>");
+                    for (var i = 0; i < variables; i++) {
+                        $('#matrixHolder').append("<strong>x<sub>" + (i + 1) + "</sub> = </strong><input id=\"var" + i + "\" onkeypress=\"return validateNumericInput(event)\" style=\"width: 27px; margin-right: 3px;\"></input><a id=\"freeLink" + i + "\" onclick=\"addFreeVariable(" + i + ")\" href=\"#\">Set Free Variable</a></br>");
+                    }
+                } else if ($("#inconsistent").is(":checked")) {
+                    generatedAnswer = true;
+                    $('#matrixHolder').append("<h4>Answer: </h4>");
+                    $("#matrixHolder").append("<div style=\"margin-bottom: 10px;\"><span>The matrix is inconsistent.</span><input id=\"inconsistentAnswer\" type=\"checkbox\" checked=\"true\" style=\"display:none;\" /></div>");
+
                 }
             });
         });
-
     </script>
 </body>
 </html>

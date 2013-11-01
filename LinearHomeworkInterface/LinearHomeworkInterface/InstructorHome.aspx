@@ -8,7 +8,7 @@
     <link href="theme/bootstrap.css" rel="stylesheet" media="screen" />
     <link href="theme/jquery.dataTables.css" rel="stylesheet" media="screen" />
     <link href="theme/jquery-ui-1.10.3.custom.css" rel="stylesheet" media="screen" />
-    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="javascript/jquery.js"></script>
     <script src="javascript/bootstrap.min.js"></script>
     <script src="javascript/jquery-ui-1.10.3.custom.min.js"></script>
     <script src="javascript/jquery.dataTables.min.js"></script>
@@ -39,7 +39,15 @@
                     "sEmptyTable": "Select a student from the dropdown to view grades..."
                 }
             });
+
+
+            $('#studentNameDropdown').change(function () {
+                alert('Handler for .change() called.');
+                var id = $get("#studentNameDropdown").value;
+                PageMethods.UpdateStudentGradeTable(id);
+            });
         });
+
     </script>
     <form id="form1" runat="server">
         <div class="container">
@@ -82,11 +90,9 @@
 
                 <div class="span6" style="margin-left: 10px; margin-right: 5px;">
                     <h3 style="margin-left: 10px; float: left;">Students</h3>
-                    <select style="margin-top: 15px; float: right;">
-			            <option>-- Select Student --</option>
-			            <option>Brendan Birdsong</option>
-			            <option>Kieran Ojakangas</option>
-			            <option>Tyler Jenkins</option>
+                    <select id="studentNameDropdown" style="margin-top: 15px; float: right;">
+			            <option value="0" selected="selected" disabled="disabled">-- Select Student --</option>
+                        <asp:Literal runat="server" ID="StudentListLiteral"></asp:Literal>
 		            </select>
 		            <div class="span6" style="margin-left: 10px; margin-right: 5px;">
                     <div id="Div1" style="box-shadow: 2px 2px 6px #666666; border-radius: 5px;">
@@ -98,7 +104,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                
+                                <asp:Literal runat="server" ID="StudentGradeLiteral"></asp:Literal>
                             </tbody>
                         </table>
                     </div>

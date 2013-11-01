@@ -19,18 +19,38 @@ namespace LinearHomeworkInterface
         {
             this.Check_User();
 
+            //fetch username
             String username = Context.User.Identity.Name;
 
+            //set name for page header
+            String headername = username;
+            HttpCookie cookie = Request.Cookies["LINALGHW"];
+            FormsAuthenticationTicket t = null;
+            string[] user = null;
+
+            if (cookie != null)
+            {
+                t = FormsAuthentication.Decrypt(cookie.Value);
+                user = t.UserData.ToString().Split(' ');
+                if ((!user[1].Equals(null)) && (!user[2].Equals(null)))
+                {
+                    headername = user[1] + " " + user[2];
+                }
+            }
+
+            //make header
             StringBuilder sb = new StringBuilder();
             sb.Append("<h1>Welcome, ");
-            sb.Append(username);
+            sb.Append(headername);
             sb.Append("</h1>");
             headerltData.Text = sb.ToString();
 
+            //set up connection, do stuff
             string connStr = ConfigurationManager.ConnectionStrings["linearhmwkdb"].ConnectionString;
             MySqlConnection msqcon = new MySqlConnection(connStr);
             try
             {
+                //fetch user id from username
                 msqcon.Open();
                 String idquery = "SELECT user.userID From user WHERE user.username=@username";
                 MySqlCommand msqcmd = new MySqlCommand(idquery, msqcon);
@@ -40,50 +60,56 @@ namespace LinearHomeworkInterface
                 String userid = idfetch.GetString(0);
                 idfetch.Close();
 
-                String query = "SELECT ha.assignmentID, h.homeworkid, h.dueDate, ha.grade, ha.status, ha.userId, h.title FROM hmwkassignment AS ha JOIN homework AS h WHERE ha.homeworkId=h.homeworkid AND ha.userID = @userid ORDER BY ha.assignmentID";
+                //fetch current homework assignments
+                String query = "SELECT  h.title, h.dueDate, ha.grade, ha.status, h.homeworkid FROM hmwkassignment AS ha JOIN homework AS h WHERE ha.homeworkId=h.homeworkid AND ha.userID = @userid ORDER BY ha.assignmentID";
                 msqcmd = new MySqlCommand(query, msqcon);
                 msqcmd.Parameters.Add(new MySqlParameter("@userid", userid));
                 MySqlDataReader assignments = null;
                 assignments = msqcmd.ExecuteReader();
+                //build contents of table to display assignments
                 sb = new StringBuilder();
                 while (assignments.Read())
                 {
-                    /*
-                    HtmlTableRow tRow = new HtmlTableRow();
-                    HtmlTableCell hwName = new HtmlTableCell();
-                    hwName.InnerText = assignments.GetString(0);
-                    tRow.Controls.Add(hwName);
-                    HtmlTableCell hwDueDate = new HtmlTableCell();
-                    hwDueDate.InnerText = assignments.GetString(2);
-                    tRow.Controls.Add(hwDueDate);
-                    HtmlTableCell hwGrade = new HtmlTableCell();
-                    hwGrade.InnerText = assignments.GetString(3);
-                    tRow.Controls.Add(hwGrade);
-                    assignmentTable.Rows.Add(tRow);
-                    HtmlTableCell hwStatus = new HtmlTableCell();
-                    hwStatus.InnerText = assignments.GetString(4);
-                    tRow.Controls.Add(hwStatus);
-                    assignmentTable.Rows.Add(tRow);
-                    */
+                    //find out if current assignment is available to work
+                    bool available = false;
+                    /*if(0>System.DateTime.Compare(System.DateTime.Now,assignments.GetDateTime(1))){*/
+                    if(assignments.GetString(3).Equals("Assigned"))
+                    {
+                        available = true;
+                    }
 
                     sb.Append("<tr>");
+                    //title, is a link if available to work currently
                     sb.Append("<td style=\"text-align: left;\">");
-                    sb.Append(assignments.GetString(6));
+                    if (available)
+                    {
+                        sb.Append("<a href = \"QuestionPage.aspx?assign=" + assignments.GetString(4) + "\">");
+                        sb.Append(assignments.GetString(0));
+                        sb.Append("</a>");
+                    }
+                    else
+                    {
+                        sb.Append(assignments.GetString(0));
+                    }
                     sb.Append("</td>");
+                    //due date
+                    sb.Append("<td style=\"text-align: center;\">");
+                    sb.Append(assignments.GetString(1));
+                    sb.Append("</td>");
+                    //grade
                     sb.Append("<td style=\"text-align: center;\">");
                     sb.Append(assignments.GetString(2));
                     sb.Append("</td>");
+                    //status
                     sb.Append("<td style=\"text-align: center;\">");
                     sb.Append(assignments.GetString(3));
-                    sb.Append("</td>");
-                    sb.Append("<td style=\"text-align: center;\">");
-                    sb.Append(assignments.GetString(4));
                     sb.Append("</td>");
 
                     sb.Append("</tr>");
                 }
                 ltData.Text = sb.ToString();
                 assignments.Close();
+                msqcon.Close();
             }
             catch (Exception)
             {

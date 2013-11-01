@@ -41,7 +41,7 @@ CREATE TABLE `homework` (
 
 LOCK TABLES `homework` WRITE;
 /*!40000 ALTER TABLE `homework` DISABLE KEYS */;
-INSERT INTO `homework` VALUES (1,'Homework 1','3','2013-10-30 00:00:00','Assigned'),(2,'Homework 2','3','2013-11-05 00:00:00','Assigned');
+INSERT INTO `homework` VALUES (1,'Homework 1','3','2013-10-30 00:00:00','Complete'),(2,'Homework 2','3','2013-11-07 17:20:00','Assigned');
 /*!40000 ALTER TABLE `homework` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +54,18 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-10-29 17:37:57
+-- UPDATES PAST DUE HOMEWORK AND HMWKASSIGNMENT
+SET GLOBAL event_scheduler = ON;
+
+DELIMITER |
+
+ALTER EVENT `update_homework` 
+ON SCHEDULE EVERY 1 DAY STARTS CURDATE() + INTERVAL 10 HOUR
+DO BEGIN
+	UPDATE linearhmwkdb.homework SET status = "Complete" WHERE dueDate <= NOW();
+	UPDATE linearhmwkdb.hmwkassignment hw SET status = "Late" WHERE (SELECT status from linearhmwkdb.homework where homeworkId = hw.homeworkId) = "Complete" && status != "Complete";
+
+END|
+DELIMITER ;
+
+-- Dump completed on 2013-10-31 17:24:18

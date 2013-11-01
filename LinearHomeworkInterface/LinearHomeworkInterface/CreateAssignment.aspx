@@ -8,7 +8,7 @@
     <link href="theme/bootstrap.css" rel="stylesheet" media="screen" />
     <link href="theme/jquery.dataTables.css" rel="stylesheet" media="screen" />
     <link href="theme/jquery-ui-1.10.3.custom.css" rel="stylesheet" media="screen" />
-    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="javascript/jquery.js"></script>
     <script src="javascript/bootstrap.min.js"></script>
     <script src="javascript/jquery-ui-1.10.3.custom.min.js"></script>
     <script src="javascript/jquery.dataTables.min.js"></script>
@@ -21,7 +21,7 @@
 					<li style="float: left; padding: 0 20px 0 0;"><a href="/InstructorHome.aspx">Home</a></li>
 				</ul>
 				<form class="navbar-form pull-right" style="">
-					<button id="signOut" class="btn" style="margin-top: 5px;" type="submit">Sign Out</button>
+                    <button id="signOut" class="btn" style="margin-top: 5px;" type="submit">Sign Out</button>
 				</form>
 			</div><!--/.nav-collapse -->
 		</div>
@@ -31,17 +31,17 @@
 			<h1>New Assignment</h1>
 		</div>	
 		<div class="span12">
-		<a id="assignHomework" class="btn btn-primary" style="margin-right: 20px; float: right;" href="#" type="submit">Assign Homework</a>
+		<a id="assignHomework" class="btn btn-primary" style="margin-right: 20px; float: right;" href="#" type="submit">Assign Homework</a
 		</div>
 		<div id="formHolder" class="span4" style="margin-top:10px; margin-left: 0px; padding-bottom: 10px;">
-		<form class="well span4" style="margin-bottom: 10px; padding: 0px 20px 0px 10px; height: 190px;">
+		<form class="well span4" style="margin-bottom: 10px; padding: 0px 20px 0px 10px; height: 130px;">
 			<h4>Homework Details</h4>
 			<span style="margin-right: 13px;">Title: </span><input id="title" data-placement="right" data-toggle="tooltip" type="text" placeholder="Homework Title" /><br />
-			<span>Points: </span><input id="points" data-placement="right" data-toggle="tooltip" type="text" placeholder="Points Possible" /><br />
+			<%--<span>Points: </span><input id="points" data-placement="right" data-toggle="tooltip" type="text" placeholder="Points Possible" /><br />--%>
 			<span style="margin-right: 13px;">Due: </span><input id="dueDate" data-placement="right" data-toggle="tooltip" type="text" onkeypress="return validateNoInput(event)" placeholder="Due Date"/>
 		</form>
 		<form class="well span4" style="padding-right:10px;">
-			<span>Question Type: </span>
+			<span>Question Type:  </span>
 			<select id="questionType" style="margin-bottom: 5px;">
 				<option value="SoE">System of Equations</option>
 				<option value="RtI">Reduce to Identity</option>
@@ -309,12 +309,12 @@
 	                $("#title").addClass("error");
 	                $("#title").tooltip({ trigger: "manual", title: "Required" });
 	                $("#title").tooltip("show");
-	            } else if (!$("#points").val().trim()) {
-	                $("#points").trigger("focus");
-	                $("#points").addClass("error");
-	                $("#points").tooltip({ trigger: "manual", title: "Required" });
-	                $("#points").tooltip("show");
-	            } else if (!$("#dueDate").val().trim()) {
+	            } /*else if (!$("#points").val().trim()) {
+	            //    $("#points").trigger("focus");
+	            //    $("#points").addClass("error");
+	            //    $("#points").tooltip({ trigger: "manual", title: "Required" });
+	            //    $("#points").tooltip("show");
+	            }*/ else if (!$("#dueDate").val().trim()) {
 	                $("#dueDate").trigger("focus");
 	                $("#dueDate").addClass("error");
 	                $("#dueDate").tooltip({ trigger: "manual", title: "Required" });
@@ -416,4 +416,3 @@
 	  }
     </style>
 </body>
-</html>
