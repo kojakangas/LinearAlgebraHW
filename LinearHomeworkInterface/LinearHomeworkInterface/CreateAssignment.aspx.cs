@@ -49,12 +49,14 @@ namespace LinearHomeworkInterface
             //splits by space
             string[] lines = ListConstraints.Split('|');
             string[] questions = ListQuestions.Split('|');
+            //create instance of AssignComponent through which to assign the assignment
             AssignComponent.Assigner entry = new AssignComponent.Assigner();
             //fetch our assignment parameters to pass with our array of questions strings
             String title = lines[0];
             String dueDate = lines[1];
+            //pass fetched parameters to instance of AssignComponent, return string indicating
+            //success of assignment creation
             return entry.Assign(title, dueDate, questions);
-           
         } 
     }
 }

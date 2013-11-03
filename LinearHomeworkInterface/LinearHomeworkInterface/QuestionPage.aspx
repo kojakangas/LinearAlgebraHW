@@ -4,7 +4,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title></title>
+    <title>Student Assignment Questions</title>
     <link href="theme/bootstrap.css" rel="stylesheet" media="screen" />
     <link href="theme/jquery.dataTables.css" rel="stylesheet" media="screen" />
     <link href="theme/jquery-ui-1.10.3.custom.css" rel="stylesheet" media="screen" />
@@ -106,7 +106,7 @@ MathJax.Hub.Config({
                         <div id="questiondisplay">
                             <asp:Label ID="question" runat="server" />
                         </div>
-                        <asp:DataGrid ID="DataGrid" ShowHeader="False" RowHeadersVisible="false" GridLines="None" runat="server" AutoGenerateColumns="true"></asp:DataGrid>
+                        <asp:DataGrid ID="DataGrid" ShowHeader="False" GridLines="None" runat="server" AutoGenerateColumns="true"></asp:DataGrid>
                     </div>
                     <form id="form1" runat="server">
                         <div id="matrixHolder" style="display: inline-block; width: 100%;">

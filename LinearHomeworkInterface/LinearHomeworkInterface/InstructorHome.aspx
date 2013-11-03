@@ -78,7 +78,7 @@
                             <thead>
                                 <tr>
                                     <th>Assignment</th>
-                                    <th>Status</th>
+                                    <th>Deadline</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -109,7 +109,7 @@
                         </table>
                     </div>
                 </div>
-
+              </div>
             </div>
         </div>
     </form>

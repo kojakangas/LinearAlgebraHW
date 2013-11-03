@@ -169,10 +169,9 @@
 	            }
 	        });
 
+            //not 100% sure if this instance is needed or not
 	        var date = new Date();
-	        //date.setDate(date.getDate() + 7);
-	        //var dateString = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
-	        //$("#dueDate").val(dateString);
+	        
 
 	        $("#dueDate").datepicker({
 	            changeMonth: true,
@@ -327,29 +326,32 @@
 	                //create a variable to pass as the parameter for our grading controller
 	                //in the code behind
 	                var params = "";
-	                //first give our params variable the name, points, and due date for the assignment
+	                //first give our params variable the name and due date for the assignment
 	                params = params + $('#title').val() + "|" + dueDate + "|";
 	                //then create a variable in which we will pass our string of questions
 	                var questions = "";
 	                //then create an array to fetch our question data from the table
 	                var vin = new Array();
+                    //create our reference to manipulate the Datatable on the page
 	                var tabler;
 	                tabler = $('#addedQuestionTable').dataTable();
 	                //for each question in the question table
 	                for (var i = 0; i < questionNumber; i++) {
+                        //get the current selected row of data from our JQuery Datatable
 	                    vin[i] = tabler.fnGetData(i);
+	                    //append the fetched row into our string to pass our questions for the
+                        //assignment
 	                    questions = questions + vin[i] + "|";
 	                }
 	                //take off the extra break character at the end of our params variable
 	                params = params.substring(0, params.length - 1);
 	                //do the same thing for our questions variable
 	                questions = questions.substring(0, questions.length - 1);
-	                //alert("The questions are:\n" + questions);
 	                //begin our AJAX call to our WebMethod in the controller
 	                $.ajax({
 	                    //must be a POST type of call
 	                    type: "POST",
-	                    //pass this to the GradeAnswer controller in our code behind
+	                    //pass this to the AddAssignment controller in our code behind
 	                    url: "CreateAssignment.aspx/AddAssignment",
 	                    //input the params and questions variables as the parameters for our WebMethod
 	                    data: JSON.stringify({ ListConstraints: params, ListQuestions: questions}),
@@ -360,8 +362,9 @@
 	                    //the next two functions have debug purposes
 	                    //if the function executed successfully
 	                    success: function (msg) {
-	                        //give the result of this call as an alert for the user
+	                        //give the result of this call as an alert for the instructor
 	                        alert(msg.d);
+                            //redirect browser to the instructor's homepage
 	                        window.location.href = "InstructorHome.aspx";
 	                    },
 	                    //if the function encountered an error
@@ -416,3 +419,4 @@
 	  }
     </style>
 </body>
+</html>
