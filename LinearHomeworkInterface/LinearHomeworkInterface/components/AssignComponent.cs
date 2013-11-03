@@ -23,26 +23,59 @@ namespace AssignComponent
             Boolean unsupportedQuestionAttempt = false;
             int questioniddecrement = 0;
             int points = 0;
+            int PKincrement = 0;
+            int qid = 0;
             //first we establish our connection string to our database
             MySqlConnection msqcon = new MySqlConnection("server=localhost;User Id=root;Password=root;database=linearhmwkdb");
             try
             {
                 //open the connection
                 msqcon.Open();
-                //first we need to fetch the latest homeworkid so we can increment it properly later
-                MySqlCommand msqcheck = new MySqlCommand("SELECT * FROM homework ORDER BY homeworkid DESC LIMIT 1", msqcon);
-                MySqlDataReader hwidbook = msqcheck.ExecuteReader();
-                hwidbook.Read();
-                hwid = System.Convert.ToInt32(hwidbook["homeworkid"]);
-                hwidbook.Close();
-                //increment the homeworkId so that it reflects the NEXT homework we're about to assign rather than the previous already assigned HW
-                hwid++;
-                //then we need to fetch the latest assignmentid so we can increment it properly later
-                msqcheck = new MySqlCommand("SELECT * FROM hmwkassignment ORDER BY assignmentId DESC LIMIT 1", msqcon);
-                MySqlDataReader aidbook = msqcheck.ExecuteReader();
-                aidbook.Read();
-                aid = System.Convert.ToInt32(aidbook["assignmentId"]);
-                aidbook.Close();
+                //we now check how many rows we have in our homework table
+                MySqlCommand msqcheck = new MySqlCommand("SELECT COUNT(*) FROM homework", msqcon);
+                MySqlDataReader numhwsbook = msqcheck.ExecuteReader();
+                numhwsbook.Read();
+                PKincrement = System.Convert.ToInt32(numhwsbook["COUNT(*)"]);
+                numhwsbook.Close();
+                //if there are currently no rows of data in our homework table
+                if(PKincrement == 0){
+                    //we simply set our hwid to 1, inserting our first row of data later
+                    hwid = 1;
+                }
+                //in all other cases
+                else{
+                    //first we need to fetch the latest homeworkid so we can increment it properly later
+                    msqcheck = new MySqlCommand("SELECT * FROM homework ORDER BY homeworkid DESC LIMIT 1", msqcon);
+                    MySqlDataReader hwidbook = msqcheck.ExecuteReader();
+                    hwidbook.Read();
+                    hwid = System.Convert.ToInt32(hwidbook["homeworkid"]);
+                    hwidbook.Close();
+                    //increment the homeworkId so that it reflects the NEXT homework we're about to assign rather than the previous already assigned HW
+                    hwid++;
+                }
+                //we now check how many rows we have in our hmwkassignment table
+                msqcheck = new MySqlCommand("SELECT COUNT(*) FROM hmwkassignment", msqcon);
+                MySqlDataReader numassbook = msqcheck.ExecuteReader();
+                numassbook.Read();
+                PKincrement = System.Convert.ToInt32(numassbook["COUNT(*)"]);
+                numassbook.Close();
+                //if there are currently no rows of data in our hmwkassignment table
+                if (PKincrement == 0)
+                {
+                    //we simply set our aid to 1, inserting our first row of data later
+                    aid = 1;
+                }
+                else
+                {
+                    //we need to fetch the latest assignmentid so we can increment it properly later
+                    msqcheck = new MySqlCommand("SELECT * FROM hmwkassignment ORDER BY assignmentId DESC LIMIT 1", msqcon);
+                    MySqlDataReader aidbook = msqcheck.ExecuteReader();
+                    aidbook.Read();
+                    aid = System.Convert.ToInt32(aidbook["assignmentId"]);
+                    aidbook.Close();
+                    //increment the assignmentId so that it reflects the NEXT assignment we're about to assign rather than the previous already assigned HW
+                    aid++;
+                }
                 //we need to know how many students we have so that we can add the assignment to every student
                 msqcheck = new MySqlCommand("SELECT COUNT(*) FROM user WHERE role = 'S'", msqcon);
                 MySqlDataReader numstudentbook = msqcheck.ExecuteReader();
@@ -67,7 +100,7 @@ namespace AssignComponent
                 for (int j = 0; j < studentid.Length; j++)
                 {
                     msqcom = new MySqlCommand("INSERT INTO hmwkassignment (assignmentId, homeworkId, grade, status, currentQuestion, userId) " +
-                    "Values (" + (aid + 1) + ", " + hwid + ", " + 0 + ", 'Assigned'," + 1 + ", " + studentid[j] + ")", msqcon);
+                    "Values (" + aid + ", " + hwid + ", " + 0 + ", 'Assigned'," + 1 + ", " + studentid[j] + ")", msqcon);
                     msqcom.ExecuteNonQuery();
                     aid++;
                 }
@@ -99,24 +132,34 @@ namespace AssignComponent
                         {
                             inconsistent = 0;
                         }
-                        //then we need to insert the question into the soe table and give
+                        //then we need to insert the question into the question table and give
                         //it the other appropriate assignment values
-                        //start with reading latest SoEindex to put question into SoE table
-                        int qid;
-                        msqcheck = new MySqlCommand("SELECT * FROM question ORDER BY questionId DESC LIMIT 1", msqcon);
-                        MySqlDataReader questionbook = msqcheck.ExecuteReader();
-                        questionbook.Read();
-                        qid = System.Convert.ToInt32(questionbook["questionId"]);
-                        questionbook.Close();
-                        //increment the questionId so that it reflects the current question we're about to assign
-                        qid++;
-                        //now we need to decrement the assignmentid back for each assignment we processed for each student
-                        aid = aid-studentid.Length;
+                        //we now check how many rows we have in our question table
+                        msqcheck = new MySqlCommand("SELECT COUNT(*) FROM question", msqcon);
+                        MySqlDataReader numquebook = msqcheck.ExecuteReader();
+                        numquebook.Read();
+                        PKincrement = System.Convert.ToInt32(numquebook["COUNT(*)"]);
+                        numquebook.Close();
+                        //if there are currently no rows of data in our hmwkassignment table
+                        if (PKincrement == 0)
+                        {
+                            //we simply set our aid to 1, inserting our first row of data later
+                            qid = 1;
+                        }
+                        else
+                        {
+                            msqcheck = new MySqlCommand("SELECT * FROM question ORDER BY questionId DESC LIMIT 1", msqcon);
+                            MySqlDataReader questionbook = msqcheck.ExecuteReader();
+                            questionbook.Read();
+                            qid = System.Convert.ToInt32(questionbook["questionId"]);
+                            questionbook.Close();
+                            //increment the questionId so that it reflects the current question we're about to assign
+                            qid++;
+                        }
                         //now insert the question into the question table
                         msqcom = new MySqlCommand("INSERT INTO question (questionId, homeworkId, number, pointValue, type, rows, columns, min, max, freeVars, inconsistent) " +
                         "Values (" + qid + ", " + hwid + ", " + questionid + ", " + 1 + ", '" + type + "', " + rows + ", " + cols + ", " + min + ", " + max + ", " + freeVar + ", " + inconsistent + ")", msqcon);
                         msqcom.ExecuteNonQuery();
-                        aid++;
                         qid++;
                         questionid++;
                         points++;

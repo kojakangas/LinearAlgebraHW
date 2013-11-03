@@ -4,7 +4,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title></title>
+    <title>Create Student Assignment</title>
     <link href="theme/bootstrap.css" rel="stylesheet" media="screen" />
     <link href="theme/jquery.dataTables.css" rel="stylesheet" media="screen" />
     <link href="theme/jquery-ui-1.10.3.custom.css" rel="stylesheet" media="screen" />
@@ -31,7 +31,7 @@
 			<h1>New Assignment</h1>
 		</div>	
 		<div class="span12">
-		<a id="assignHomework" class="btn btn-primary" style="margin-right: 20px; float: right;" href="#" type="submit">Assign Homework</a
+		<a id="assignHomework" class="btn btn-primary" style="margin-right: 20px; float: right;" href="#" type="submit">Assign Homework</a>
 		</div>
 		<div id="formHolder" class="span4" style="margin-top:10px; margin-left: 0px; padding-bottom: 10px;">
 		<form class="well span4" style="margin-bottom: 10px; padding: 0px 20px 0px 10px; height: 130px;">
