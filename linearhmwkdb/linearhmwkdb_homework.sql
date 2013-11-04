@@ -57,9 +57,11 @@ UNLOCK TABLES;
 -- UPDATES PAST DUE HOMEWORK AND HMWKASSIGNMENT
 SET GLOBAL event_scheduler = ON;
 
+DROP EVENT IF EXISTS `update_homework`;
+
 DELIMITER |
 
-ALTER EVENT `update_homework` 
+CREATE EVENT `update_homework` 
 ON SCHEDULE EVERY 1 DAY STARTS CURDATE() + INTERVAL 10 HOUR
 DO BEGIN
 	UPDATE linearhmwkdb.homework SET status = "Complete" WHERE dueDate <= NOW();
