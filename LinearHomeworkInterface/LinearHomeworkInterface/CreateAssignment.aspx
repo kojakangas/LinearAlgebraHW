@@ -18,7 +18,7 @@
 	<div class="navbar-inner" style="position: fixed; width: 900px; z-index: 1000;">
 			<div class="nav-collapse collapse">
 				<ul class="nav" style="float: left; margin: 10px 0 0px 0;">
-					<li style="float: left; padding: 0 20px 0 0;"><a href="/InstructorHome.aspx">Home</a></li>
+					<li style="float: left; padding: 0 20px 0 0;"><a href="InstructorHome.aspx">Home</a></li>
 				</ul>
 				<form class="navbar-form pull-right" style="">
                     <button id="signOut" class="btn" style="margin-top: 5px;" type="submit">Sign Out</button>
@@ -94,8 +94,8 @@
 				<input id="minI" type="text" class="span1" maxlength="3"  onkeypress="return validateNumericInputAllowMinus(event)" placeholder="min"/> - 
 				<input id="maxI" type="text" class="span1" maxlength="3"  onkeypress="return validateNumericInputAllowMinus(event)" placeholder="max"/>
 			</div>
-			
-			<a id="addQuestion" class="btn btn-primary" href="#" style="margin-top: 15px;" type="submit">Add Question</a>
+			<br />
+			<a id="addQuestion" class="btn btn-primary" href="#" style="margin-top: -50px"; type="submit">Add Question</a>
 		</form>
 		</div>
 		

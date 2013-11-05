@@ -113,11 +113,11 @@ namespace LinearHomeworkInterface
 
                     if (user["role"].ToString().Equals("I"))
                     {
-                       url = "/InstructorHome.aspx";
+                       url = "InstructorHome.aspx";
                     }
                     else
                     {
-                        url = "/StudentHome.aspx";
+                        url = "StudentHome.aspx";
                     }
                 }
 
