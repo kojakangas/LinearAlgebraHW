@@ -43,8 +43,20 @@
 
             $('#studentNameDropdown').change(function () {
                 alert('Handler for .change() called.');
-                var id = $get("#studentNameDropdown").value;
-                PageMethods.UpdateStudentGradeTable(id);
+                $.ajax({
+                    type: "POST",
+                    url: "InstructorHome.aspx/UpdateStudentGradeTable",
+                    data: "{'UserID': '" + $("#studentNameDropdown").val() + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (rows) {
+                        $('#gradeTableBody').empty();
+                        $('#gradeTableBody').html(rows);
+                    },
+                    error: function (msg) {
+                        alert("Could not retrieve student grades!");
+                    }
+                });
             });
         });
 
@@ -103,7 +115,7 @@
                                     <th style="text-align: right;">Grade</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="gradeTableBody">
                                 <asp:Literal runat="server" ID="StudentGradeLiteral"></asp:Literal>
                             </tbody>
                         </table>

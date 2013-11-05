@@ -121,13 +121,35 @@ namespace LinearHomeworkInterface
         }
 
         [WebMethod]
-        protected static void UpdateStudentGradeTable(String userId)
+        protected static String UpdateStudentGradeTable(String UserID)
         {
             string connStr = ConfigurationManager.ConnectionStrings["linearhmwkdb"].ConnectionString;
             MySqlConnection msqcon = new MySqlConnection(connStr);
             try
             {
-                
+                msqcon.Open();
+                String query = "SELECT h.title, ha.grade FROM hmwkassignment AS ha JOIN homework AS h WHERE ha.homeworkId=h.homeworkid AND ha.userID = @userid ORDER BY h.homeworkid";
+                MySqlCommand msqcmd = new MySqlCommand(query, msqcon);
+                msqcmd.Parameters.Add(new MySqlParameter("@userid", UserID));
+                MySqlDataReader studentGrades = null;
+                studentGrades = msqcmd.ExecuteReader();
+                //build table
+                StringBuilder sb = new StringBuilder();
+                while (studentGrades.Read())
+                {
+                    sb.Append("<tr>");
+                    sb.Append("<td>");
+                    sb.Append(studentGrades.GetString(0));
+                    sb.Append("</td>");
+                    sb.Append("<td>");
+                    sb.Append(studentGrades.GetString(1));
+                    sb.Append("</td>");
+
+                    sb.Append("</tr>");
+                }
+                //StudentGradeLiteral.Text = sb.ToString();
+                studentGrades.Close();
+                return sb.ToString();
             }
             catch (Exception)
             {
