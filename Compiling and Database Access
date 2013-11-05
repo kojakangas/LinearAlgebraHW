@@ -1,0 +1,15 @@
+Datapath for mounting the network drive for compiling (must be on campus):
+
+\\dufs1\mcs-share\LinearAlgebraHW
+
+-:Information for Accessing Project Database:-
+
+Username: LinAlgUser
+
+Password: matrixdevelopment
+
+Port: 3306
+
+Server: mcs.drury.edu
+
+Database: linearhmwkdb
