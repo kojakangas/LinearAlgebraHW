@@ -169,22 +169,32 @@ namespace MatrixBuilder
             //For each column reduce the coefficients under it to 0
             for (int col = 0; col < numOfRows; col++)
             {
+                int tRow = col;
                 //Handles when n >= m
                 if (numOfCols <= col)
                 {
                     break;
                 }
 
+                if (zeroColumn == true && numOfRows + 1 < numOfCols)
+                {
+                    tRow -= 1;
+                }
+                else if (tRow == numOfRows && numOfRows + 1 < numOfCols)
+                {
+                    break;
+                }
+
                 zeroColumn = false;
                 //if the current diagonal = 0 then swap rows until it doesn't
-                if (matrix[col,col] == 0)
+                if (matrix[tRow, col] == 0)
                 {
                     int index = col;
-                    while (matrix[col,col] == 0)
+                    while (matrix[tRow, col] == 0)
                     {
                         if (index < numOfRows - 1)
                         {
-                            matrix = rowSwap(col, index + 1, matrix);
+                            matrix = rowSwap(tRow, index + 1, matrix);
                             index++;
                         }
                         else
@@ -192,7 +202,7 @@ namespace MatrixBuilder
                             int pivotRow = checkForPivotRowAbove(col, matrix);
                             if (pivotRow != -1)
                             {
-                                matrix = rowSwap(col, pivotRow, matrix);
+                                matrix = rowSwap(tRow, pivotRow, matrix);
                             }
                             else
                             {
@@ -206,9 +216,9 @@ namespace MatrixBuilder
                 if (!zeroColumn)
                 {
                     //Makes the current diagonal = 1
-                    if (matrix[col,col] != 1)
+                    if (matrix[tRow, col] != 1)
                     {
-                        matrix = timesScalar(1 / matrix[col,col], col, matrix);
+                        matrix = timesScalar(1 / matrix[tRow, col], tRow, matrix);
                     }
 
                     //This is what reduces the coefficients under the current column to 0
@@ -219,7 +229,7 @@ namespace MatrixBuilder
                         if (!(Math.Abs(matrix[row,col]) < offset) && row != col)
                         {
                             float scalar = matrix[row,col] * (-1);
-                            matrix = addMultipleOfRow(scalar, col, row, matrix);
+                            matrix = addMultipleOfRow(scalar, tRow, row, matrix);
                             for (int i = 0; i < numOfCols; i++)
                             {
                                 if (Math.Abs(matrix[row,i]) < offset)
@@ -626,6 +636,75 @@ namespace MatrixBuilder
             }
 
             return newArray;
+        }
+
+        public int countOperationsNeeded(float[,] matrix) {
+        int numOfRows = matrix.GetLength(0);
+        int numOfCols = matrix.GetLength(1);
+        int numOfRowOps = 0;
+        bool zeroColumn = false;
+
+        //For each column reduce the coefficients under it to 0
+        for (int col = 0; col < numOfCols - 1; col++) {
+            //Handles when n >= m
+            int tRow = col;
+            if (numOfCols <= col) {
+                break;
+            }
+            if (zeroColumn == true && numOfRows + 1 < numOfCols) {
+                tRow -= 1;
+            } else if (tRow == numOfRows && numOfRows + 1 < numOfCols) {
+                break;
+            }
+
+            zeroColumn = false;
+            //if the current diagonal = 0 then swap rows until it doesn't
+            if (matrix[tRow,col] == 0) {
+                int index = col;
+                while (matrix[tRow,col] == 0) {
+                    if (index < numOfRows - 1) {
+                        matrix = rowSwap(tRow, index + 1, matrix);
+                        numOfRowOps++;
+                        index++;
+                    } else {
+                        int pivotRow = checkForPivotRowAbove(col, matrix);
+                        if (pivotRow != -1) {
+                            matrix = rowSwap(tRow, pivotRow, matrix);
+                            numOfRowOps++;
+                        } else {
+                            zeroColumn = true;
+                        }
+                        break;
+                    }
+                }
+            }
+
+            if (!zeroColumn) {
+                //Makes the current diagonal = 1
+                if (matrix[tRow,col] != 1) {
+                    matrix = timesScalar(1 / matrix[tRow,col], tRow, matrix);
+                    numOfRowOps++;
+                }
+
+                //This is what reduces the coefficients under the current column to 0
+                //by multiplying the current row by the first coefficient of the next
+                //row and changing the sign.
+                for (int row = 0; row < numOfRows; row++) {
+                    if (!(Math.Abs(matrix[row,col]) <= offset) && row != col) {
+                        float scalar = matrix[row,col] * (-1);
+                        matrix = addMultipleOfRow(scalar, tRow, row, matrix);
+                        numOfRowOps++;
+                        for (int i = 0; i < numOfCols; i++) {
+                            if (Math.Abs(matrix[row,i]) < offset) {
+                                matrix[row,i] = 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return numOfRowOps;
         }
     }
 }
