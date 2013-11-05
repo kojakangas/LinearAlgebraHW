@@ -42,7 +42,6 @@
 
 
             $('#studentNameDropdown').change(function () {
-                alert('Handler for .change() called.');
                 $.ajax({
                     type: "POST",
                     url: "InstructorHome.aspx/UpdateStudentGradeTable",
@@ -50,8 +49,10 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (rows) {
-                        $('#gradeTableBody').empty();
-                        $('#gradeTableBody').html(rows);
+                        $('#studentGradeTable').dataTable().fnClearTable();
+                        $.each(rows, function (index, value) {
+                            $('#studentGradeTable').dataTable().fnAddData([value[0], value[1]]);
+                        })
                     },
                     error: function (msg) {
                         alert("Could not retrieve student grades!");
@@ -108,7 +109,7 @@
 		            </select>
 		            <div class="span6" style="margin-left: 10px; margin-right: 5px;">
                     <div id="Div1" style="box-shadow: 2px 2px 6px #666666; border-radius: 5px;">
-                        <table class="dataTable-student">
+                        <table id="studentGradeTable" class="dataTable-student">
                             <thead>
                                 <tr>
                                     <th style="text-align: right;">Assignment</th>
@@ -116,7 +117,7 @@
                                 </tr>
                             </thead>
                             <tbody id="gradeTableBody">
-                                <asp:Literal runat="server" ID="StudentGradeLiteral"></asp:Literal>
+
                             </tbody>
                         </table>
                     </div>

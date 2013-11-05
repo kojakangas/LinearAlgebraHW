@@ -121,35 +121,51 @@ namespace LinearHomeworkInterface
         }
 
         [WebMethod]
-        protected static String UpdateStudentGradeTable(String UserID)
+        public static String[][] UpdateStudentGradeTable(String UserID)
         {
             string connStr = ConfigurationManager.ConnectionStrings["linearhmwkdb"].ConnectionString;
             MySqlConnection msqcon = new MySqlConnection(connStr);
             try
             {
                 msqcon.Open();
-                String query = "SELECT h.title, ha.grade FROM hmwkassignment AS ha JOIN homework AS h WHERE ha.homeworkId=h.homeworkid AND ha.userID = @userid ORDER BY h.homeworkid";
+                String query = "SELECT h.title, ha.grade, h.points FROM hmwkassignment AS ha JOIN homework AS h WHERE ha.homeworkId=h.homeworkid AND ha.userID = @userid ORDER BY h.homeworkid";
                 MySqlCommand msqcmd = new MySqlCommand(query, msqcon);
                 msqcmd.Parameters.Add(new MySqlParameter("@userid", UserID));
                 MySqlDataReader studentGrades = null;
                 studentGrades = msqcmd.ExecuteReader();
                 //build table
                 StringBuilder sb = new StringBuilder();
-                while (studentGrades.Read())
-                {
-                    sb.Append("<tr>");
-                    sb.Append("<td>");
-                    sb.Append(studentGrades.GetString(0));
-                    sb.Append("</td>");
-                    sb.Append("<td>");
-                    sb.Append(studentGrades.GetString(1));
-                    sb.Append("</td>");
+                if(studentGrades.HasRows){
+                    while (studentGrades.Read())
+                    {
+                        /*sb.Append("<tr>");
+                        sb.Append("<td>");
+                        sb.Append(studentGrades.GetString(0));
+                        sb.Append("</td>");
+                        sb.Append("<td>");
+                        sb.Append(studentGrades.GetString(1));
+                        sb.Append("</td>");
 
-                    sb.Append("</tr>");
+                        sb.Append("</tr>");*/
+                        sb.Append(studentGrades.GetString(0));
+                        sb.Append(',');
+                        sb.Append(studentGrades.GetString(1));
+                        sb.Append('/'+studentGrades.GetString(2));
+                        sb.Append(';');
+                    }
+                    //StudentGradeLiteral.Text = sb.ToString();
+                    studentGrades.Close();
+                    String result = sb.ToString();
+                    result = result.Remove(result.Length - 1);
+                    String[] strings = result.Split(';');
+                    String[][] strings2 = new String[strings.Length][];
+                    for (int i = 0; i < strings.Length; i++)
+                    {
+                        strings2[i] = strings[i].Split(',');
+                    }
+                    return strings2;
                 }
-                //StudentGradeLiteral.Text = sb.ToString();
-                studentGrades.Close();
-                return sb.ToString();
+                else return null;
             }
             catch (Exception)
             {

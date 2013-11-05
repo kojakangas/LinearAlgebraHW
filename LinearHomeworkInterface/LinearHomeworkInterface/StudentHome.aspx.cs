@@ -61,7 +61,7 @@ namespace LinearHomeworkInterface
                 idfetch.Close();
 
                 //fetch current homework assignments
-                String query = "SELECT  h.title, h.dueDate, ha.grade, ha.status, h.homeworkid FROM hmwkassignment AS ha JOIN homework AS h WHERE ha.homeworkId=h.homeworkid AND ha.userID = @userid ORDER BY ha.assignmentID";
+                String query = "SELECT  h.title, h.dueDate, ha.grade, ha.status, h.homeworkid, h.points FROM hmwkassignment AS ha JOIN homework AS h WHERE ha.homeworkId=h.homeworkid AND ha.userID = @userid ORDER BY ha.assignmentID";
                 msqcmd = new MySqlCommand(query, msqcon);
                 msqcmd.Parameters.Add(new MySqlParameter("@userid", userid));
                 MySqlDataReader assignments = null;
@@ -73,7 +73,7 @@ namespace LinearHomeworkInterface
                     //find out if current assignment is available to work
                     bool available = false;
                     /*if(0>System.DateTime.Compare(System.DateTime.Now,assignments.GetDateTime(1))){*/
-                    if(assignments.GetString(3).Equals("Assigned"))
+                    if (assignments.GetString(3).Equals("Assigned") || assignments.GetString(3).Equals("In Progress"))
                     {
                         available = true;
                     }
@@ -99,6 +99,7 @@ namespace LinearHomeworkInterface
                     //grade
                     sb.Append("<td style=\"text-align: center;\">");
                     sb.Append(assignments.GetString(2));
+                    sb.Append('/' + assignments.GetString(5));
                     sb.Append("</td>");
                     //status
                     sb.Append("<td style=\"text-align: center;\">");
