@@ -71,9 +71,9 @@
     <Content Include="javascript\jquery.dataTables.min.js" />
     <Content Include="javascript\tooltip.js" />
     <Content Include="QuestionPage.aspx" />
-    <Content Include="theme\bootstrap.css" />
     <Content Include="theme\images\animated-overlay.gif" />
     <Content Include="theme\images\axiomz.bmp" />
+    <Content Include="theme\bootstrap.css" />
     <Content Include="theme\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="theme\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="theme\images\ui-bg_glass_55_fbf9ee_1x400.png" />

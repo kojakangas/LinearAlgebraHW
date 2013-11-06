@@ -95,7 +95,7 @@
 				<input id="maxI" type="text" class="span1" maxlength="3"  onkeypress="return validateNumericInputAllowMinus(event)" placeholder="max"/>
 			</div>
 			<br />
-			<a id="addQuestion" class="btn btn-primary" href="#" style="margin-top: -50px"; type="submit">Add Question</a>
+			<a id="addQuestion" class="btn btn-primary" href="#" type="submit">Add Question</a>
 		</form>
 		</div>
 		

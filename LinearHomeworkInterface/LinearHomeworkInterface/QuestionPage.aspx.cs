@@ -96,7 +96,7 @@ namespace LinearHomeworkInterface
             MatrixBuilder.MatrixOperations mb = new MatrixBuilder.MatrixOperations();
 
             if (type.Equals("SoE")) {
-                if (n <= m && !inconsistent && numOfFreeVars <= 0) {//has unique solution if n = m + 1; will have free var if n < m + 1
+                if ((n == m || (n + 1) == m) && !inconsistent && numOfFreeVars <= 0){//has unique solution if n = m + 1; will have free var if n < m + 1
                     matrix = mb.generateUniqueSolutionMatrix(n, m, min, max, answer);
                 } else if (n <= m && inconsistent && numOfFreeVars <= 0) {//inconsistent matrix
                     matrix = mb.generateInconsistentMatrix(n, m, min, max);
