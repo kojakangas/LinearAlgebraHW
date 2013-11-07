@@ -92,24 +92,47 @@ namespace LinearHomeworkInterface
             MySqlConnection msqcon = new MySqlConnection(connStr);
             try
             {
+                String username = Context.User.Identity.Name;
+
                 msqcon.Open();
-                //fetch data for assignments table
-                String query = "SELECT ha.currentQuestion, ha.homeworkId FROM hmwkassignment AS ha WHERE ha.assignmentId=@assignment";
+                //grab assignments status
+                String query = "SELECT ha.status From user JOIN hmwkassignment AS ha WHERE user.username=@username AND user.userId=ha.userId AND ha.assignmentId=@assignment";
                 MySqlCommand msqcmd = new MySqlCommand(query, msqcon);
+                msqcmd.Parameters.Add(new MySqlParameter("@username", username));
+                msqcmd.Parameters.Add(new MySqlParameter("@assignment", Request.QueryString["assign"]));
+                MySqlDataReader validateAssignment = msqcmd.ExecuteReader();
+                String assignmentStatus = "";
+                while (validateAssignment.Read())
+                {
+                    assignmentStatus = validateAssignment.GetString(0);
+                }
+                validateAssignment.Close();
+                //check that the url parameter points to an assignment id associated with their user and is currently available to work
+                if (assignmentStatus != "Assigned" && assignmentStatus != "In Progress")
+                {
+                    //redirect to home page if got a tampered parameter
+                    Response.Redirect("StudentHome.aspx");
+                }
+
+                //current question parameter may be uneeded, in which case this query will get the current question
+                //fetch actual current question based on assignmentId as passed in url
+                query = "SELECT ha.currentQuestion, ha.homeworkId FROM hmwkassignment AS ha WHERE ha.assignmentId=@assignment";
+                msqcmd = new MySqlCommand(query, msqcon);
                 msqcmd.Parameters.Add(new MySqlParameter("@assignment", Request.QueryString["assign"]));
                 MySqlDataReader currentQuestion = null;
                 currentQuestion = msqcmd.ExecuteReader();
                 int curQuestion = 0;
                 String homeworkID = "";
-                while (currentQuestion.Read())
-                {
-                    curQuestion = currentQuestion.GetInt32(0);
-                    homeworkID = currentQuestion.GetString(1);
-                }
+                currentQuestion.Read();
+                curQuestion = currentQuestion.GetInt32(0);
+                homeworkID = currentQuestion.GetString(1);
                 currentQuestion.Close();
-                if (Convert.ToInt32(Request.QueryString["assign"]) != curQuestion)
+                //this if would be uneccessary if parameter gets dropped
+                //check url parameter against database result
+                if (Convert.ToInt32(Request.QueryString["question"]) != curQuestion)
                 {
-                    //redirect them to the question they are actually on
+                    //redirect them to the question they are actually on if didn't match
+                    Response.Redirect("QuestionPage.aspx?assign=" + Request.QueryString["assign"] + "&question=" + curQuestion);
                 }
                 query = "SELECT * FROM question AS q WHERE @homework=q.homeworkId";
                 msqcmd = new MySqlCommand(query, msqcon);
