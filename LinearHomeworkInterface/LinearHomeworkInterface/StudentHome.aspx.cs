@@ -61,7 +61,7 @@ namespace LinearHomeworkInterface
                 idfetch.Close();
 
                 //fetch current homework assignments
-                String query = "SELECT  h.title, h.dueDate, ha.grade, ha.status, ha.assignmentId, h.points FROM hmwkassignment AS ha JOIN homework AS h WHERE ha.homeworkId=h.homeworkid AND ha.userID = @userid ORDER BY ha.assignmentID";
+                String query = "SELECT  h.title, h.dueDate, ha.grade, ha.status, ha.assignmentId, h.points, ha.currentQuestion FROM hmwkassignment AS ha JOIN homework AS h WHERE ha.homeworkId=h.homeworkid AND ha.userID = @userid ORDER BY ha.assignmentID";
                 msqcmd = new MySqlCommand(query, msqcon);
                 msqcmd.Parameters.Add(new MySqlParameter("@userid", userid));
                 MySqlDataReader assignments = null;
@@ -83,7 +83,7 @@ namespace LinearHomeworkInterface
                     sb.Append("<td style=\"text-align: left;\">");
                     if (available)
                     {
-                        sb.Append("<a href = \"QuestionPage.aspx?assign=" + assignments.GetString(4) + "\">");
+                        sb.Append("<a href = \"QuestionPage.aspx?assign=" + assignments.GetString(4) + "&question=" + assignments.GetString(6) +"\">");
                         sb.Append(assignments.GetString(0));
                         sb.Append("</a>");
                     }
