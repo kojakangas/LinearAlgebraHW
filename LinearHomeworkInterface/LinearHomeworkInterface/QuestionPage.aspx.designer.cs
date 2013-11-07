@@ -13,6 +13,15 @@ namespace LinearHomeworkInterface {
     public partial class QuestionPage {
         
         /// <summary>
+        /// paginationLiteral control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal paginationLiteral;
+        
+        /// <summary>
         /// question control.
         /// </summary>
         /// <remarks>
