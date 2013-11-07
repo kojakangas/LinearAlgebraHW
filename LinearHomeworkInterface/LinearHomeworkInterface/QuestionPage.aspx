@@ -121,7 +121,7 @@ MathJax.Hub.Config({
                             <div id="info" style="color: #888;">Use the Tools to answer the question...</div>
                         </div>
                         <hr style="margin-bottom: 0px; margin-top: 0px;" />
-                        <a id="submitAnswer" class="btn btn-primary" href="#" onclick="submitAnswer()" style="margin-top: 5px; float: right; margin-bottom: 50px;" type="submit">Submit Answer</a>
+                        <a id="submitAnswer" class="btn btn-primary" style="cursor: pointer; margin-top: 5px; float: right; margin-bottom: 50px;">Submit Answer</a>
                     </form>
                 </div>
             </div>
@@ -148,7 +148,7 @@ MathJax.Hub.Config({
     <script type="text/javascript">
         function validateNumericInput(evt) {
             var charCode = (evt.which) ? evt.which : evt.keyCode
-            if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 45)
+            if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 45 && charCode != 47)
                 return false;
             return true;
         }
@@ -166,11 +166,33 @@ MathJax.Hub.Config({
         }
 
         function addFreeVariable(index) {
-            $('#var' + index).val("f");
+            $('#var' + index).val("F");
             $('#var' + index).attr("disabled", "true");
-            $('#freeLink' + index).text("Remove");
-            $('#freeLink' + index).attr("onclick", "removeFreeVariable(" + index + ")");
-            //$('#leadLink' + index).toggle();
+            $('#freeLink' + index).remove();
+            var variables = $("div[id^='variable']");
+            var c = variables.length;
+            variables.each(function (i, el) {
+                if (i != index) {
+                    if ($("#var" + i).val() != "F") {
+                        el.innerHTML += "+ ";
+                        var input = document.createElement("input");
+                        input.id = "free" + index;
+                        input.name = index;
+                        input.style.width = "27px";
+                        input.className = "gradingInputs";
+                        el.appendChild(input);
+                        el.innerHTML += "x<sub>" + (index + 1) + "</sub>";
+                    } else {
+                        var input = document.getElementById("var" + i);
+                        el.innerHTML = "";
+                        el.appendChild(input);
+                    }
+                } else {
+                    var input = document.getElementById("var" + i);
+                    el.innerHTML = "";
+                    el.appendChild(input);
+                }
+            });
         }
 
         function removeFreeVariable(index) {
@@ -181,21 +203,21 @@ MathJax.Hub.Config({
             // $('#leadLink' + index).toggle();
         }
 
-        function addLeadingVariable(index) {
-            $('#var' + index).val("l");
-            $('#var' + index).attr("disabled", "true");
-            $('#leadLink' + index).text("Remove");
-            $('#leadLink' + index).attr("onclick", "removeLeadingVariable(" + index + ")");
-            $('#freeLink' + index).toggle();
-        }
+        //function addLeadingVariable(index) {
+        //    $('#var' + index).val("l");
+        //    $('#var' + index).attr("disabled", "true");
+        //    $('#leadLink' + index).text("Remove");
+        //    $('#leadLink' + index).attr("onclick", "removeLeadingVariable(" + index + ")");
+        //    $('#freeLink' + index).toggle();
+        //}
 
-        function removeLeadingVariable(index) {
-            $('#var' + index).val("");
-            $('#var' + index).removeAttr("disabled");
-            $('#leadLink' + index).text(" Set Leading Variable");
-            $('#leadLink' + index).attr("onclick", "addLeadingVariable(" + index + ")");
-            $('#freeLink' + index).toggle();
-        }
+        //function removeLeadingVariable(index) {
+        //    $('#var' + index).val("");
+        //    $('#var' + index).removeAttr("disabled");
+        //    $('#leadLink' + index).text(" Set Leading Variable");
+        //    $('#leadLink' + index).attr("onclick", "addLeadingVariable(" + index + ")");
+        //    $('#freeLink' + index).toggle();
+        //}
 
         function removeLastMatrix(index) {
             if (confirm("Remove Last Matrix?")) {
@@ -229,75 +251,142 @@ MathJax.Hub.Config({
                     for (var i = 0; i < rows; i++) {
                         $('#table' + matrixNumber).append("<tr id=\"matrix" + matrixNumber + "row" + i + "\"></tr>");
                         for (var j = 0; j < cols; j++) {
-                            $('#matrix' + matrixNumber + 'row' + i).append("<td><input onkeypress=\"return validateNumericInput(event)\" style=\"width: 27px;\"></input></td>");
+                            $('#matrix' + matrixNumber + 'row' + i).append("<td><input class=\"gradingInputs\" onkeypress=\"return validateNumericInput(event)\" style=\"width: 27px;\"></input></td>");
                         }
                     }
                     //$('#row' + matrixNumber).append("<div class=\"alert alert-success\" style=\"display:flex;\">Correct!</div>");
                     $("#removeRow").remove();
-                    $('#row' + matrixNumber).append("<a id=\"removeRow\" class=\"removeRow\" onClick=\"removeLastMatrix(" + matrixNumber + ")\" style=\"cursor: pointer; display:flex; float: right;\">Remove Matrix</a>");
+                    $('#row' + matrixNumber).append("<a id=\"removeRow\" href=\"#\" onClick=\"removeLastMatrix(" + matrixNumber + ")\" style=\"display:flex; float: right;\">Remove Matrix</a>");
                     matrixNumber = matrixNumber + 1;
                 }
             });
 
-            //JQuery function activated when "Submit Answer" is clicked
-            $('#submitAnswer').click(function () {
-                    //if the user has generated one or more answers
-                if (generatedAnswer === true) {
-                    if (confirm("Submit Answer?")) {
-                        //create a variable to pass as the parameter for our grading controller
-                        //in the code behind
-                        var params = "";
-                        //create counter for number of answers that are filled in
-                        var anscount = 0;
-                        //for each answer text the user has created
-                        for (var i = 0; i < numAnswers; i++) {
-                            if ($('#var' + i).val()) {
-                                //add it to the params variable to pass into the grading controller
-                                //the space in the end is supposed to be there to allow the grading
-                                //controller to separate every answer we are passing to the controller
-                                var params = params + ($('#var' + i).val()) + " ";
-                                anscount++;
-                            }
-                        }
-                        //take off the extra space at the end of our params variable
-                        params = params.substring(0, params.length - 1);
-                        //if we have no blank answer boxes
-                        if (anscount == numAnswers) {
-                            //begin our AJAX call to our WebMethod in the controller
-                            $.ajax({
-                                //must be a POST type of call
-                                type: "POST",
-                                //pass this to the GradeAnswer controller in our code behind
-                                url: "QuestionPage.aspx/GradeAnswer",
-                                //input the params variable as the parameter for our WebMethod
-                                data: "{'ListPassingSolutions': '" + params + "'}",
-                                //must have the following contentType details
-                                contentType: "application/json; charset=utf-8",
-                                //must have the JSON dataType
-                                dataType: "json",
-                                //the next two functions have debug purposes
-                                //if the function executed successfully
-                                success: function (msg) {
-                                    //give the result of this call as an alert for the user
-                                    alert(msg.d);
-                                },
-                                //if the function encountered an error
-                                error: function (response) {
-                                    //replace the page with the stacktrace of the error
-                                    //(obviously this shouldn't happen)
-                                    $('body', document).html(response.responseText);
-                                    //also give an alert with accompanying error message
-                                    alert(response.d);
-                                }
-                            });
-                        }
-                            //otherwise we notify the student of their blank answer
-                        else {
-                            alert("One of your answer boxes is blank... fix it!");
-                        }
+            $("#submitAnswer").click(function () {
+                var hasEmptyInput = false;
+
+                $(".gradingInputs").each(function (i, input) {
+                    if (input.value === "") {
+                        hasEmptyInput = true;
                     }
+                });
+
+                if (hasEmptyInput) {
+                    alert("Cannot leave inputs blank.");
+                } else {
+
+                    //Puts all matrices in a javascript object
+                    var matrixMap = new Object();
+
+                    $("tbody[id^='matrix']").each(function (index, matrixHTML) {
+                        var matrix = [];
+                        $("#" + matrixHTML.id).find("tr").each(function (rowIndex, rowHTML) {
+                            var row = [];
+                            $(this).find("td").each(function (cellIndex, cell) {
+                                row[cellIndex] = $(this).find("input").val();
+                            });
+                            matrix[rowIndex] = row;
+                        });
+                        matrixMap[index] = matrix;
+                    });
+
+                    //Gets the answer
+                    var answer = new Object();
+
+                    var inconsistentAnswer = $("#answerDiv:has(input#inconsistentAnswer)");
+                    if (inconsistentAnswer.length == 0) {
+                        $("#answerDiv > div[id^='variable']").each(function (index, div) {
+                            var answerString = "";
+                            var firstInput = $(this).find("#var" + index).val();
+                            answerString = firstInput;//if F it is a free var
+                            if (firstInput != "F") {
+                                $(this).find("input[id^='free']").each(function (inputIndex, input) {
+                                    var value = eval($(this).val());
+                                    answerString += "," + value + "[" + $(this).attr("name");//Parsing can be done differently
+                                });
+                            }
+                            answer[index] = answerString;
+                        });
+                    } else {
+                        answer = "I";//I is for inconsistent. possible to use boolean or 0 and 1
+                    }
+
+                    //Then there will be an ajax call to grade this
+                    //It will need both the matrixMap and answer variables
+                    $.ajax({
+                        type: "POST",
+                        url: "QuestionPage.aspx/Grade",
+                        data: "{'MatrixMap': '" + matrixMap + "','Answer': '" + answer + "'}",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (url) {
+                            //This will basically just show the message that is returned from code behind
+                        },
+                        error: function (msg) {
+                            alert("Grading Failed, don't panic");
+                        }
+                    });
                 }
             });
+
+            ////JQuery function activated when "Submit Answer" is clicked
+            //$('#submitAnswer').click(function () {
+            //        //if the user has generated one or more answers
+            //    if (generatedAnswer === true) {
+            //        if (confirm("Submit Answer?")) {
+            //            //create a variable to pass as the parameter for our grading controller
+            //            //in the code behind
+            //            var params = "";
+            //            //create counter for number of answers that are filled in
+            //            var anscount = 0;
+            //            //for each answer text the user has created
+            //            for (var i = 0; i < numAnswers; i++) {
+            //                if ($('#var' + i).val()) {
+            //                    //add it to the params variable to pass into the grading controller
+            //                    //the space in the end is supposed to be there to allow the grading
+            //                    //controller to separate every answer we are passing to the controller
+            //                    var params = params + ($('#var' + i).val()) + " ";
+            //                    anscount++;
+            //                }
+            //            }
+            //            //take off the extra space at the end of our params variable
+            //            params = params.substring(0, params.length - 1);
+            //            //if we have no blank answer boxes
+            //            if (anscount == numAnswers) {
+            //                //begin our AJAX call to our WebMethod in the controller
+            //                $.ajax({
+            //                    //must be a POST type of call
+            //                    type: "POST",
+            //                    //pass this to the GradeAnswer controller in our code behind
+            //                    url: "QuestionPage.aspx/GradeAnswer",
+            //                    //input the params variable as the parameter for our WebMethod
+            //                    data: "{'ListPassingSolutions': '" + params + "'}",
+            //                    //must have the following contentType details
+            //                    contentType: "application/json; charset=utf-8",
+            //                    //must have the JSON dataType
+            //                    dataType: "json",
+            //                    //the next two functions have debug purposes
+            //                    //if the function executed successfully
+            //                    success: function (msg) {
+            //                        //give the result of this call as an alert for the user
+            //                        alert(msg.d);
+            //                    },
+            //                    //if the function encountered an error
+            //                    error: function (response) {
+            //                        //replace the page with the stacktrace of the error
+            //                        //(obviously this shouldn't happen)
+            //                        $('body', document).html(response.responseText);
+            //                        //also give an alert with accompanying error message
+            //                        alert(response.d);
+            //                    }
+            //                });
+            //            }
+            //                //otherwise we notify the student of their blank answer
+            //            else {
+            //                alert("One of your answer boxes is blank... fix it!");
+            //            }
+            //        }
+            //    }
+            //});
 
             $("#signOut").click(function (e) {
                 e.preventDefault();
@@ -332,14 +421,16 @@ MathJax.Hub.Config({
                 if (!(variables === "") && generatedAnswer === false) {
                     generatedAnswer = true;
                     $('#answerDiv').append("<h4>Answer: </h4>");
-                    $('#answerDiv').append("<a id=\"removeAnswer\" onClick=\"removeAnswer()\" style=\"cursor: pointer; display:flex; float: right;\">Remove Answer</a>");
+                    $('#answerDiv').append("<a id=\"removeAnswer\" href=\"#\" onClick=\"removeAnswer()\" style=\"display:flex; float: right;\">Remove Answer</a>");
                     for (var i = 0; i < variables; i++) {
-                        $('#answerDiv').append("<strong>x<sub>" + (i + 1) + "</sub> = </strong><input id=\"var" + i + "\" onkeypress=\"return validateNumericInput(event)\" style=\"width: 27px; margin-right: 3px;\"></input><a id=\"freeLink" + i + "\" onclick=\"addFreeVariable(" + i + ")\" style=\"cursor:pointer;\">Set Free Variable</a></br>");
+                        $('#answerDiv').append("<strong>x<sub>" + (i + 1) + "</sub> = </strong>" +
+                            "<div style=\"display: inline;\" id=\"variable" + i + "\"><input id=\"var" + i + "\" class=\"gradingInputs\" onkeypress=\"return validateNumericInput(event)\" style=\"width: 27px; margin-right: 3px;\" /></div>" +
+                            "<a id=\"freeLink" + i + "\" onclick=\"addFreeVariable(" + i + ")\" style=\"cursor: pointer;\">Set Free Variable</a></br>");
                     }
                 } else if ($("#inconsistent").is(":checked")) {
                     generatedAnswer = true;
                     $('#answerDiv').append("<h4>Answer: </h4>");
-                    $('#answerDiv').append("<a id=\"removeAnswer\" onClick=\"removeAnswer()\" style=\"cursor: pointer; display:flex; float: right;\">Remove Answer</a>");
+                    $('#answerDiv').append("<a id=\"removeAnswer\" style=\"cursor: pointer;\" onClick=\"removeAnswer()\" style=\"display:flex; float: right;\">Remove Answer</a>");
                     $("#answerDiv").append("<div style=\"margin-bottom: 10px;\"><span>The matrix is inconsistent.</span><input id=\"inconsistentAnswer\" type=\"checkbox\" checked=\"true\" style=\"display:none;\" /></div>");
 
                 }
