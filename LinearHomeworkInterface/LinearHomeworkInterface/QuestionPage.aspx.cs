@@ -114,7 +114,8 @@ namespace LinearHomeworkInterface
                     Response.Redirect("StudentHome.aspx");
                 }
 
-                //current question parameter may be uneeded, in which case this query will get the current question
+                /* current question parameter may be uneeded, in which case this query will get the current question
+                 * advantage of keeping parameter is if it needs to be referenced outside of page load */
                 //fetch actual current question based on assignmentId as passed in url
                 query = "SELECT ha.currentQuestion, ha.homeworkId FROM hmwkassignment AS ha WHERE ha.assignmentId=@assignment";
                 msqcmd = new MySqlCommand(query, msqcon);
@@ -127,11 +128,12 @@ namespace LinearHomeworkInterface
                 curQuestion = currentQuestion.GetInt32(0);
                 homeworkID = currentQuestion.GetString(1);
                 currentQuestion.Close();
-                //this if would be uneccessary if parameter gets dropped
+                /*this if would be uneccessary if parameter gets dropped*/
                 //check url parameter against database result
                 if (Convert.ToInt32(Request.QueryString["question"]) != curQuestion)
                 {
                     //redirect them to the question they are actually on if didn't match
+                    //however this solution will allow the user to get a new question at will by changing the url parameter
                     Response.Redirect("QuestionPage.aspx?assign=" + Request.QueryString["assign"] + "&question=" + curQuestion);
                 }
                 query = "SELECT * FROM question AS q WHERE @homework=q.homeworkId";
