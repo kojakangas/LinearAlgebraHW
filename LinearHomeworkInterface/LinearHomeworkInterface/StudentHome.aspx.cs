@@ -61,7 +61,7 @@ namespace LinearHomeworkInterface
                 idfetch.Close();
 
                 //fetch current homework assignments
-                String query = "SELECT  h.title, h.dueDate, ha.grade, ha.status, h.homeworkid, h.points FROM hmwkassignment AS ha JOIN homework AS h WHERE ha.homeworkId=h.homeworkid AND ha.userID = @userid ORDER BY ha.assignmentID";
+                String query = "SELECT  h.title, h.dueDate, ha.grade, ha.status, ha.assignmentId, h.points FROM hmwkassignment AS ha JOIN homework AS h WHERE ha.homeworkId=h.homeworkid AND ha.userID = @userid ORDER BY ha.assignmentID";
                 msqcmd = new MySqlCommand(query, msqcon);
                 msqcmd.Parameters.Add(new MySqlParameter("@userid", userid));
                 MySqlDataReader assignments = null;
