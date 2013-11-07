@@ -638,6 +638,46 @@ namespace MatrixBuilder
             return newArray;
         }
 
+        public String checkSingleRowOperation(Dictionary<int, float[,]> matrixMap)
+        {
+            String feedback = "";
+            for (int i = 1; i < matrixMap.Count(); i++)
+            {
+                float[,] matrix1 = null; 
+                matrixMap.TryGetValue(i, out matrix1);
+                float[,] matrix2 = null;
+                matrixMap.TryGetValue(i + 1, out matrix2);
+                if (!checkAddMultipleOfRow(matrix1, matrix2) && !checkTimesScalar(matrix1, matrix2)
+                        && !checkRowSwap(matrix1, matrix2))
+                {
+                    feedback += "Error between matrix " + i + " and matrix " + (i + 1) + ".\n";
+                }
+            }
+            return feedback.Equals("") ? null : feedback;
+        }
+
+        public static String checkAnswers(float[] correctAnswers, float[] studentAnswers)
+        {
+            String feedback = "";
+            if (correctAnswers.Length == studentAnswers.Length)
+            {
+                for (int i = 0; i < correctAnswers.Length; i++)
+                {
+                    float correctNumber = correctAnswers[i];
+                    float studentNumber = studentAnswers[i];
+                    if (Math.Abs(correctNumber - studentNumber) > offset)
+                    {
+                        feedback += "Answer for x<sub>" + (i + 1) + "</sub> is incorrect.\n";
+                    }
+                }
+            }
+            else
+            {
+                feedback = "Your answer has an incorrect number of variables.";
+            }
+            return feedback.Equals("") ? null : feedback;
+        }
+
         public int countOperationsNeeded(float[,] matrix) {
         int numOfRows = matrix.GetLength(0);
         int numOfCols = matrix.GetLength(1);
