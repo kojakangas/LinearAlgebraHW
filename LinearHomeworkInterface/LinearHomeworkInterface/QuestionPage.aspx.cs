@@ -26,13 +26,40 @@ namespace LinearHomeworkInterface
         {
             this.Check_User();
 
-            int n = 3;
-            int m = 4;
-            int min = -2;
-            int max = 2;
-            int numOfFreeVars = 0;
-            bool inconsistent = false;
-            string type = "SoE";
+            String assId = Request.QueryString["assign"];
+            String queId = Request.QueryString["question"];
+            int n;
+            int m;
+            int max;
+            int min;
+            int numOfFreeVars;
+            Boolean inconsistent;
+            String type;
+
+            //set up connection, do stuff
+            string connStr = ConfigurationManager.ConnectionStrings["linearhmwkdb"].ConnectionString;
+            MySqlConnection msqcon = new MySqlConnection(connStr);
+            try
+            {
+                msqcon.Open();
+                String query = "SELECT ha.assignmentId, que.* FROM hmwkassignment AS ha JOIN question AS que WHERE que.homeworkId=ha.homeworkid AND ha.assignmentId = " + assId + " AND que.number = " + queId;
+                MySqlCommand msqcom = new MySqlCommand(query, msqcon);
+                MySqlDataReader book = msqcom.ExecuteReader();
+                book.Read();
+                n = System.Convert.ToInt32(book["rows"]);
+                m = System.Convert.ToInt32(book["columns"]);
+                min = System.Convert.ToInt32(book["min"]);
+                max = System.Convert.ToInt32(book["max"]);
+                numOfFreeVars = System.Convert.ToInt32(book["freeVars"]);
+                inconsistent = false;
+                type = "SoE";
+                msqcon.Close();
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
             //Boolean inconsistent = false;
             
             solution = new List<float>();
