@@ -52,8 +52,17 @@ namespace LinearHomeworkInterface
                 min = System.Convert.ToInt32(book["min"]);
                 max = System.Convert.ToInt32(book["max"]);
                 numOfFreeVars = System.Convert.ToInt32(book["freeVars"]);
-                inconsistent = false;
-                type = "SoE";
+                inconsistent = System.Convert.ToBoolean(book["inconsistent"]);
+                type = System.Convert.ToString(book["type"]);
+                //if (book["inconsistent"] == "0")
+                //{
+                //    inconsistent = false;
+                //}
+                //else
+                //{
+                //    inconsistent = true;
+                //}
+                //type = "SoE";
                 msqcon.Close();
             }
             catch (Exception)
@@ -115,8 +124,6 @@ namespace LinearHomeworkInterface
                 question.Text = question.Text + expression;
             }
 
-            string connStr = ConfigurationManager.ConnectionStrings["linearhmwkdb"].ConnectionString;
-            MySqlConnection msqcon = new MySqlConnection(connStr);
             try
             {
                 String username = Context.User.Identity.Name;
