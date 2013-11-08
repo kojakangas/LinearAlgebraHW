@@ -87,24 +87,7 @@ MathJax.Hub.Config({
                 <div class="span9">
                     <div class="pagination pagination-centered" style="margin-top: 3px; margin-bottom: 3px;">
                         <ul>
-                            <li class="disabled"><a href="#"><<</a></li>
-                            <li class="active"><a href="#">1</a></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#">4</a></li>
-                            <li><a href="#">5</a></li>
-                            <li><a href="#">6</a></li>
-                            <li><a href="#">7</a></li>
-                            <li><a href="#">8</a></li>
-                            <li><a href="#">9</a></li>
-                            <li><a href="#">10</a></li>
-                            <li><a href="#">11</a></li>
-                            <li><a href="#">12</a></li>
-                            <li><a href="#">13</a></li>
-                            <li><a href="#">14</a></li>
-                            <li><a href="#">15</a></li>
-                            <li><a href="#">16</a></li>
-                            <li><a href="#">>></a></li>
+                            <asp:Literal runat="server" ID="paginationLiteral"></asp:Literal>
                         </ul>
                     </div>
                     <div class="hero-unit" style="padding: 10px; margin-bottom: 0px;">

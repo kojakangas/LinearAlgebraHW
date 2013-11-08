@@ -13,6 +13,7 @@ using System.Data.Linq;
 using MySql.Data.MySqlClient;
 using System.Web.Security;
 using System.Configuration;
+using System.Text;
 
 namespace LinearHomeworkInterface
 {
@@ -112,6 +113,90 @@ namespace LinearHomeworkInterface
                     }
                 }
                 question.Text = question.Text + expression;
+            }
+
+            string connStr = ConfigurationManager.ConnectionStrings["linearhmwkdb"].ConnectionString;
+            MySqlConnection msqcon = new MySqlConnection(connStr);
+            try
+            {
+                String username = Context.User.Identity.Name;
+
+                msqcon.Open();
+                //grab assignments status
+                String query = "SELECT ha.status From user JOIN hmwkassignment AS ha WHERE user.username=@username AND user.userId=ha.userId AND ha.assignmentId=@assignment";
+                MySqlCommand msqcmd = new MySqlCommand(query, msqcon);
+                msqcmd.Parameters.Add(new MySqlParameter("@username", username));
+                msqcmd.Parameters.Add(new MySqlParameter("@assignment", Request.QueryString["assign"]));
+                MySqlDataReader validateAssignment = msqcmd.ExecuteReader();
+                String assignmentStatus = "";
+                while (validateAssignment.Read())
+                {
+                    assignmentStatus = validateAssignment.GetString(0);
+                }
+                validateAssignment.Close();
+                //check that the url parameter points to an assignment id associated with their user and is currently available to work
+                if (assignmentStatus != "Assigned" && assignmentStatus != "In Progress")
+                {
+                    //redirect to home page if got a tampered parameter
+                    Response.Redirect("StudentHome.aspx");
+                }
+
+                /* current question parameter may be uneeded, in which case this query will get the current question
+                 * advantage of keeping parameter is if it needs to be referenced outside of page load */
+                //fetch actual current question based on assignmentId as passed in url
+                query = "SELECT ha.currentQuestion, ha.homeworkId FROM hmwkassignment AS ha WHERE ha.assignmentId=@assignment";
+                msqcmd = new MySqlCommand(query, msqcon);
+                msqcmd.Parameters.Add(new MySqlParameter("@assignment", Request.QueryString["assign"]));
+                MySqlDataReader currentQuestion = null;
+                currentQuestion = msqcmd.ExecuteReader();
+                int curQuestion = 0;
+                String homeworkID = "";
+                currentQuestion.Read();
+                curQuestion = currentQuestion.GetInt32(0);
+                homeworkID = currentQuestion.GetString(1);
+                currentQuestion.Close();
+                /*this if would be uneccessary if parameter gets dropped*/
+                //check url parameter against database result
+                if (Convert.ToInt32(Request.QueryString["question"]) != curQuestion)
+                {
+                    //redirect them to the question they are actually on if didn't match
+                    //however this solution will allow the user to get a new question at will by changing the url parameter
+                    Response.Redirect("QuestionPage.aspx?assign=" + Request.QueryString["assign"] + "&question=" + curQuestion);
+                }
+                query = "SELECT * FROM question AS q WHERE @homework=q.homeworkId";
+                msqcmd = new MySqlCommand(query, msqcon);
+                msqcmd.Parameters.Add(new MySqlParameter("@homework", homeworkID));
+                MySqlDataReader questions = null;
+                questions = msqcmd.ExecuteReader();
+
+                //build table
+                StringBuilder sb = new StringBuilder();
+                int count = 1;
+                while (questions.Read())
+                {
+                    if (count < curQuestion)
+                    {
+                        sb.Append("<li class=\"disabled\">");
+                    }
+                    else if (count == curQuestion)
+                    {
+                        sb.Append("<li class=\"active\">");
+                    }
+                    else sb.Append("<li>");
+                    sb.Append("<a href=\"#\">");
+                    sb.Append(count.ToString());
+                    sb.Append("</a>");
+                    sb.Append("</li>");
+                    count++;
+                }
+                paginationLiteral.Text = sb.ToString();
+                questions.Close();
+
+                msqcon.Close();
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
 
