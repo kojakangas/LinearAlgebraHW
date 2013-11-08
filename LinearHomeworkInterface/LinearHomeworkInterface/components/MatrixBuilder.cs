@@ -364,7 +364,7 @@ namespace MatrixBuilder
             ArrayList changedRows = findChangedRows(oldMatrix, newMatrix);
             if (changedRows.Count == 1)
             {
-                int row = changedRows.IndexOf(0);
+                int row = changedRows.IndexOf(0); 
                 while (index < oldMatrix.GetLength(1))
                 {
                     if (oldMatrix[row,index] != 0)
@@ -644,9 +644,9 @@ namespace MatrixBuilder
             for (int i = 1; i < matrixMap.Count(); i++)
             {
                 float[,] matrix1 = null; 
-                matrixMap.TryGetValue(i, out matrix1);
+                matrixMap.TryGetValue(i - 1, out matrix1);
                 float[,] matrix2 = null;
-                matrixMap.TryGetValue(i + 1, out matrix2);
+                matrixMap.TryGetValue(i, out matrix2);
                 if (!checkAddMultipleOfRow(matrix1, matrix2) && !checkTimesScalar(matrix1, matrix2)
                         && !checkRowSwap(matrix1, matrix2))
                 {
@@ -656,7 +656,7 @@ namespace MatrixBuilder
             return feedback.Equals("") ? null : feedback;
         }
 
-        public static String checkAnswers(float[] correctAnswers, float[] studentAnswers)
+        public String checkAnswers(float[] correctAnswers, float[] studentAnswers)
         {
             String feedback = "";
             if (correctAnswers.Length == studentAnswers.Length)

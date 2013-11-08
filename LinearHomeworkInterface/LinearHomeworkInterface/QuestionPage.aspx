@@ -103,7 +103,7 @@ MathJax.Hub.Config({
                             <div id="info" style="color: #888;">Use the Tools to answer the question...</div>
                         </div>
                         <hr style="margin-bottom: 0px; margin-top: 0px;" />
-                        <button id="submitAnswer" disabled="disabled" class="btn btn-primary" title="Note: Must create an answer to submit." style="margin-top: 5px; float: right; margin-bottom: 50px;">Submit Answer</button>
+                        <button id="submitAnswer" disabled="disabled" class="btn btn-primary" title="Note: Must create an answer to submit." type="button" style="margin-top: 5px; float: right; margin-bottom: 50px;">Submit Answer</button>
                     </form>
                 </div>
             </div>
@@ -239,7 +239,7 @@ MathJax.Hub.Config({
                     }
                     //$('#row' + matrixNumber).append("<div class=\"alert alert-success\" style=\"display:flex;\">Correct!</div>");
                     $("#removeRow").remove();
-                    $('#row' + matrixNumber).append("<a id=\"removeRow\" href=\"#\" onClick=\"removeLastMatrix(" + matrixNumber + ")\" style=\"display:flex; float: right;\">Remove Matrix</a>");
+                    $('#row' + matrixNumber).append("<a id=\"removeRow\" tabindex=\"-1\" onClick=\"removeLastMatrix(" + matrixNumber + ")\" style=\"cursor: pointer; display:flex; float: right;\">Remove Matrix</a>");
                     matrixNumber = matrixNumber + 1;
                 }
             });
@@ -298,10 +298,11 @@ MathJax.Hub.Config({
                     $.ajax({
                         type: "POST",
                         url: "QuestionPage.aspx/Grade",
-                        data: "{'MatrixMap': '" + matrixMap + "','Answer': '" + answer + "'}",
+                        data: "{'MatrixMapJSON': '" + JSON.stringify(matrixMap) + "','AnswerJSON': '" + JSON.stringify(answer) + "'}",
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (url) {
+                            $("#answerDiv").append(url.d);
                             //This will basically just show the message that is returned from code behind
                         },
                         error: function (msg) {
@@ -404,7 +405,7 @@ MathJax.Hub.Config({
                 if (!(variables === "") && generatedAnswer === false) {
                     generatedAnswer = true;
                     $('#answerDiv').append("<h4>Answer: </h4>");
-                    $('#answerDiv').append("<a id=\"removeAnswer\" href=\"#\" onClick=\"removeAnswer()\" style=\"display:flex; float: right;\">Remove Answer</a>");
+                    $('#answerDiv').append("<a id=\"removeAnswer\" tabindex=\"-1\" onClick=\"removeAnswer()\" style=\"cursor: pointer; display:flex; float: right;\">Remove Answer</a>");
                     for (var i = 0; i < variables; i++) {
                         $('#answerDiv').append("<strong>x<sub>" + (i + 1) + "</sub> = </strong>" +
                             "<div style=\"display: inline;\" id=\"variable" + i + "\"><input id=\"var" + i + "\" class=\"gradingInputs\" onkeypress=\"return validateNumericInput(event)\" style=\"width: 27px; margin-right: 3px;\" /></div>" +
@@ -413,7 +414,7 @@ MathJax.Hub.Config({
                 } else if ($("#inconsistent").is(":checked")) {
                     generatedAnswer = true;
                     $('#answerDiv').append("<h4>Answer: </h4>");
-                    $('#answerDiv').append("<a id=\"removeAnswer\" style=\"cursor: pointer;\" onClick=\"removeAnswer()\" style=\"display:flex; float: right;\">Remove Answer</a>");
+                    $('#answerDiv').append("<a id=\"removeAnswer\" tabindex=\"-1\" onClick=\"removeAnswer()\" style=\"cursor: pointer; display:flex; float: right;\">Remove Answer</a>");
                     $("#answerDiv").append("<div style=\"margin-bottom: 10px;\"><span>The matrix is inconsistent.</span><input id=\"inconsistentAnswer\" type=\"checkbox\" checked=\"true\" style=\"display:none;\" /></div>");
 
                 }

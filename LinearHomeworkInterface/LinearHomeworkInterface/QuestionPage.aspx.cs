@@ -14,6 +14,7 @@ using MySql.Data.MySqlClient;
 using System.Web.Security;
 using System.Configuration;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace LinearHomeworkInterface
 {
@@ -190,7 +191,7 @@ namespace LinearHomeworkInterface
                         sb.Append("<li class=\"active\">");
                     }
                     else sb.Append("<li>");
-                    sb.Append("<a href=\"#\">");
+                    sb.Append("<a>");
                     sb.Append(count.ToString());
                     sb.Append("</a>");
                     sb.Append("</li>");
@@ -252,56 +253,69 @@ namespace LinearHomeworkInterface
             return matrix;
         }
 
-
-        //our WebMethod for checking the user's solution(s)
         [WebMethod]
-        public static string GradeAnswer(String ListPassingSolutions)
+        public static string Grade(String MatrixMapJSON, String AnswerJSON)
         {
-            //create a String array of the answers submitted from the user page
-            //splits by space
-            string[] lines = ListPassingSolutions.Split(' ');
+            string feedback = "";
+            Dictionary<int, float[,]> MatrixMap = JsonConvert.DeserializeObject<Dictionary<int, float[,]>>(MatrixMapJSON);
+            Dictionary<int, float> Answers = JsonConvert.DeserializeObject<Dictionary<int, float>>(AnswerJSON);
+            MatrixBuilder.MatrixOperations mb = new MatrixBuilder.MatrixOperations();
 
-            //create a float array to represent our solutions being passed into
-            //this method
-            float[] UserSolutions = new float[lines.Length];
+            feedback = mb.checkSingleRowOperation(MatrixMap);
+            //Will need to also check answers here
 
-            //create a counter
-            int x = 0;
-
-            //create a string array which will pass our free variables to the grader
-            string[] freeVar = new string[lines.Length];
-
-            //for all the elements being passed in our array of user strings
-            for (int i = 0; i < lines.Length; i++)
-            {
-                //if our current element is a free variable or blank
-                if(lines[i].Equals("f") || lines[i].Equals(null)) {
-                    //add it to the free variables string array
-                    freeVar[x] = lines[i];
-
-                    //increment our counter
-                    x++;
-                }
-
-                else {
-                    //convert each string into an integer and add it to our integer
-                    //array for the grading component
-                    UserSolutions[x] = System.Convert.ToInt32(lines[i]);
-
-                    //add an empty string to the free variables string array
-                    freeVar[x] = " ";
-
-                    //increment our counter
-                    x++;
-                }
-            }
-            //create our grading object to grade the user's answers
-            GradeComponent.Grader grader = new GradeComponent.Grader();
-
-            //have this created object grade the user's solutions against
-            //the answers of our generated matrix
-            return grader.Grade(solution, UserSolutions, textSolution, freeVar);
+            return feedback.Equals("") ? null : feedback;
         }
+
+        ////our WebMethod for checking the user's solution(s)
+        //[WebMethod]
+        //public static string GradeAnswer(String ListPassingSolutions)
+        //{
+        //    //create a String array of the answers submitted from the user page
+        //    //splits by space
+        //    string[] lines = ListPassingSolutions.Split(' ');
+
+        //    //create a float array to represent our solutions being passed into
+        //    //this method
+        //    float[] UserSolutions = new float[lines.Length];
+
+        //    //create a counter
+        //    int x = 0;
+
+        //    //create a string array which will pass our free variables to the grader
+        //    string[] freeVar = new string[lines.Length];
+
+        //    //for all the elements being passed in our array of user strings
+        //    for (int i = 0; i < lines.Length; i++)
+        //    {
+        //        //if our current element is a free variable or blank
+        //        if(lines[i].Equals("f") || lines[i].Equals(null)) {
+        //            //add it to the free variables string array
+        //            freeVar[x] = lines[i];
+
+        //            //increment our counter
+        //            x++;
+        //        }
+
+        //        else {
+        //            //convert each string into an integer and add it to our integer
+        //            //array for the grading component
+        //            UserSolutions[x] = System.Convert.ToInt32(lines[i]);
+
+        //            //add an empty string to the free variables string array
+        //            freeVar[x] = " ";
+
+        //            //increment our counter
+        //            x++;
+        //        }
+        //    }
+        //    //create our grading object to grade the user's answers
+        //    GradeComponent.Grader grader = new GradeComponent.Grader();
+
+        //    //have this created object grade the user's solutions against
+        //    //the answers of our generated matrix
+        //    return grader.Grade(solution, UserSolutions, textSolution, freeVar);
+        //}
 
         protected void Check_User()
         {
