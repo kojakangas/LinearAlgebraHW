@@ -90,13 +90,12 @@ MathJax.Hub.Config({
                             <asp:Literal runat="server" ID="paginationLiteral"></asp:Literal>
                         </ul>
                     </div>
-                    <div class="hero-unit" style="padding: 10px; margin-bottom: 0px;">
-                        <h3 style="margin: 0px;">Question 1</h3>
-                        <p style="margin: 0px;">Solve the system of linear equations by using elementary row operations.</p>
+                    <div class="hero-unit" style="padding: 10px; margin-bottom: 0px; font-size: 14px;">
+                        <h4 style="margin: 0px;">Question 1</h4>
+                        <p style="margin: 0px; line-height: 25px; font-size: 14px;">Solve the system of linear equations by using elementary row operations.</p>
                         <div id="questiondisplay">
                             <asp:Label ID="question" runat="server" />
                         </div>
-                        <asp:DataGrid ID="DataGrid" ShowHeader="False" GridLines="None" runat="server" AutoGenerateColumns="true"></asp:DataGrid>
                     </div>
                     <form id="form1" runat="server">
                         <div id="matrixHolder" style="display: inline-block; width: 100%;">
@@ -104,7 +103,7 @@ MathJax.Hub.Config({
                             <div id="info" style="color: #888;">Use the Tools to answer the question...</div>
                         </div>
                         <hr style="margin-bottom: 0px; margin-top: 0px;" />
-                        <a id="submitAnswer" class="btn btn-primary" style="cursor: pointer; margin-top: 5px; float: right; margin-bottom: 50px;">Submit Answer</a>
+                        <button id="submitAnswer" disabled="disabled" class="btn btn-primary" title="Note: Must create an answer to submit." style="margin-top: 5px; float: right; margin-bottom: 50px;">Submit Answer</button>
                     </form>
                 </div>
             </div>
@@ -215,6 +214,7 @@ MathJax.Hub.Config({
             if (confirm("Remove Answer?")) {
                 $("#answerDiv").remove();
                 generatedAnswer = false;
+                $("#submitAnswer").attr("disabled", true);
             }
             return false;
         }
@@ -417,8 +417,18 @@ MathJax.Hub.Config({
                     $("#answerDiv").append("<div style=\"margin-bottom: 10px;\"><span>The matrix is inconsistent.</span><input id=\"inconsistentAnswer\" type=\"checkbox\" checked=\"true\" style=\"display:none;\" /></div>");
 
                 }
+                $("#submitAnswer").removeAttr('disabled');
             });
         });
     </script>
+    <style type="text/css">
+        .MathJax_Display {
+            display: block;
+            margin: 0;
+            position: relative;
+            text-align: center;
+            width: 100%;
+        }
+        </style>
 </body>
 </html>

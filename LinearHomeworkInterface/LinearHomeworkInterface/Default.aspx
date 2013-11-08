@@ -43,13 +43,12 @@
             </div>
             <div id="content" style="background: white; margin-top: 50px; height: 550px; border: 1px solid #e5e5e5;">
                 <!-- This div background style will be set to a picture that represents the application -->
-                <div id="createAcctAlert" class="alert alert-success fade in" style="display: none; width: 400px; margin-top: 5px; margin-left: auto; margin-right: auto;">
+                    <div id="createAcctAlert" class="alert alert-success fade in"style="display:none; float: left; width: 400px; margin-top: 5px; margin-left: 250px;" />
                     <a class="close" data-dismiss="alert" href="#">&times;</a>
 				    Account Created! It is time to enter the matrix...		
                 </div>
                 <div id="background" style="display: none; background-image: url('theme/images/axiomz.bmp'); height: 115px; width: 380px; margin: auto; margin-top: 200px;" />                                              
             </div>
-        </div>
         <script src="javascript/tooltip.js"></script>
         <script type="text/javascript">
             //If you try to paste bad characters into the input fields then you will be 
