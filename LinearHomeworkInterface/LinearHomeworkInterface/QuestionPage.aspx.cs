@@ -23,20 +23,25 @@ namespace LinearHomeworkInterface
         public static List<float> solution = null;
         public static List<string> textSolution = null;
         Random rand = new Random();
-        
+        String assId;
+        String queId;
+        int n;
+        int m;
+        int max;
+        int min;
+        int numOfFreeVars;
+        Boolean inconsistent;
+        String type;
+        float[,] matrix = null;
+        float[] vector1 = null;
+        float[] vector2 = null;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             this.Check_User();
 
-            String assId = Request.QueryString["assign"];
-            String queId = Request.QueryString["question"];
-            int n;
-            int m;
-            int max;
-            int min;
-            int numOfFreeVars;
-            Boolean inconsistent;
-            String type;
+            assId = Request.QueryString["assign"];
+            queId = Request.QueryString["question"];
 
             //set up connection, do stuff
             string connStr = ConfigurationManager.ConnectionStrings["linearhmwkdb"].ConnectionString;
@@ -82,47 +87,14 @@ namespace LinearHomeworkInterface
                 solution.Add(answer[i]);
             }
             float[,] matrix = this.Create_Problem(n, m, min, max, numOfFreeVars, inconsistent, type, answer);
-
-            //Displays the equations using MATHJAX by building a parsable string
-            for (int i = 0; i < n; i++)
-            {
-                char[] a = new char[1];
-                String expression = new String(a);
-                for (int j = 0; j < m; j++)
-                {
-                    if (j == 0)
-                    {
-                        expression = "$${";
-                        expression += matrix[i, j];
-                        expression += "x_";
-                        expression += j + 1;
-                        expression += " ";
-                    }
-                    else if (j < (m - 2))
-                    {
-                        if (matrix[i, j] >= 0) expression += "+ ";
-                        else expression += " ";
-                        expression += matrix[i, j];
-                        expression += "x_";
-                        expression += j + 1;
-                        expression += " ";
-                    }
-                    else if (j == (m - 2))
-                    {
-                        if (matrix[i, j] >= 0) expression += "+ ";
-                        else expression += " ";
-                        expression += matrix[i, j];
-                        expression += "x_";
-                        expression += j + 1;
-                        expression += "} = ";
-                    }
-                    else if (j == (m - 1))
-                    {
-                        expression += matrix[i, j];
-                        expression += "$$";
-                    }
-                }
-                question.Text = question.Text + expression;
+            
+            if(type.Equals("DP")){
+                //Displays the two vectors for the Dot Product problem using MATHJAX
+                buildQuestionDisplay(vector1, vector2);
+            }
+            else{
+                //Displays the equations or matrices using MATHJAX by building a parsable string
+                buildQuestionDisplay(matrix);
             }
 
             try
@@ -208,10 +180,110 @@ namespace LinearHomeworkInterface
             }
         }
 
+        //method to dynamically load the question using MATHJAX
+        public void buildQuestionDisplay(float[,] matrix)
+        {
+            //if we wish to generate a System of Equations question
+            if(type == "SoE")
+            {
+                for (int i = 0; i < n; i++)
+                {
+                    char[] a = new char[1];
+                    String expression = new String(a);
+                    for (int j = 0; j < m; j++)
+                    {
+                        if (j == 0)
+                        {
+                            expression = "$${";
+                            expression += matrix[i, j];
+                            expression += "x_";
+                            expression += j + 1;
+                            expression += " ";
+                        }
+                        else if (j < (m - 2))
+                        {
+                            if (matrix[i, j] >= 0) expression += "+ ";
+                            else expression += " ";
+                            expression += matrix[i, j];
+                            expression += "x_";
+                            expression += j + 1;
+                            expression += " ";
+                        }
+                        else if (j == (m - 2))
+                        {
+                            if (matrix[i, j] >= 0) expression += "+ ";
+                            else expression += " ";
+                            expression += matrix[i, j];
+                            expression += "x_";
+                            expression += j + 1;
+                            expression += "} = ";
+                        }
+                        else if (j == (m - 1))
+                        {
+                            expression += matrix[i, j];
+                            expression += "$$";
+                        }
+                    }
+                    question.Text = question.Text + expression;
+                }
+            }
+            //if this is a Reduce to Identity, Determinant, or Inverse problem
+            else if (type == "RtI" || type == "D" || type == "I")
+            {
+                String expression;
+                expression = "$$\\begin{bmatrix}";
+                for (int i = 0; i < n; i++)
+                {
+                    for (int j = 0; j < m; j++)
+                    {
+                        if (j == (m - 1))
+                        {
+                            expression += matrix[i, j];
+                            expression += " \\\\";
+                        }
+                        else
+                        {
+                            expression += matrix[i, j];
+                            expression += " & ";
+                        }
+                    }
+                }
+                expression += "\\end{bmatrix}$$";
+                question.Text = question.Text + expression;
+            }
+            //fallback for if we are trying to display a question we haven't implemented
+            else
+            {
+                question.Text = question.Text + "Question currently unsupported...";
+            }
+        }
+
+        //additional overload method for generating dot product problem
+        public void buildQuestionDisplay(float[] vector1, float[] vector2)
+        {
+            //form our vectors with dot in between
+            String expression;
+            expression = "$$\\begin{pmatrix}";
+            for (int i = 0; i < n; i++)
+            {
+                expression += vector1[i];
+                expression += " \\\\";   
+            }
+            expression += "\\end{pmatrix}";
+            expression += "\\cdot";
+            expression += "\\begin{pmatrix}";
+            for (int i = 0; i < n; i++)
+            {
+                expression += vector2[i];
+                expression += " \\\\";
+            }
+            expression += "\\end{pmatrix}$$";
+            question.Text = question.Text + expression;
+        }
+
         public float[,] Create_Problem(int n, int m, int min, int max, int numOfFreeVars, bool inconsistent, string type, float[] answer)
         {
             //These should be moved out of method to be global
-            float[,] matrix = null;
 
             MatrixBuilder.MatrixOperations mb = new MatrixBuilder.MatrixOperations();
 
@@ -230,24 +302,33 @@ namespace LinearHomeworkInterface
                 }
 
                 //Do the parsing and text adding for question
+                instruction.Text = instruction.Text + "<h4 style=\"margin: 0px;\">Question " + queId + "</h4>\n"
+                    + "<p style=\"margin: 0px; line-height: 25px; font-size: 14px;\">Solve the system of linear equations by using elementary row operations.</p>";
             } else if (type.Equals("RtI")) {
                 matrix = mb.generateRandomIdentityMatrix(n, min, max);
 
                 //Do the parsing and text adding for question
+                instruction.Text = instruction.Text + "<h4 style=\"margin: 0px;\">Question " + queId + "</h4>\n"
+                    + "<p style=\"margin: 0px; line-height: 25px; font-size: 14px;\">Reduce this matrix to an identity matrix.</p>";
             } else if (type.Equals("DP")) {
-                float[] vector1 = mb.generateRandomVector(n, min, max);
-                float[] vector2 = mb.generateRandomVector(n, min, max);
+                vector1 = mb.generateRandomVector(n, min, max);
+                vector2 = mb.generateRandomVector(n, min, max);
 
                 //Do the parsing and text adding for question
+                instruction.Text = instruction.Text + "<h4 style=\"margin: 0px;\">Question " + queId + "</h4>\n"
+                    + "<p style=\"margin: 0px; line-height: 25px; font-size: 14px;\">Find the dot product between the following two vectors.</p>";
             } else if (type.Equals("D")) {
                 matrix = mb.generateRandomIdentityMatrix(n, min, max);
 
                 //Do the parsing and text adding for question
-
+                instruction.Text = instruction.Text + "<h4 style=\"margin: 0px;\">Question " + queId + "</h4>\n"
+                    + "<p style=\"margin: 0px; line-height: 25px; font-size: 14px;\">Find the determinant.</p>";
             } else if (type.Equals("I")) {
                 matrix = mb.generateRandomIdentityMatrix(n, min, max);
 
                 //Do the parsing and text adding for question
+                instruction.Text = instruction.Text + "<h4 style=\"margin: 0px;\">Question " + queId + "</h4>\n"
+                    + "<p style=\"margin: 0px; line-height: 25px; font-size: 14px;\">Find the inverse of the following matrix.</p>";
             }
 
             return matrix;

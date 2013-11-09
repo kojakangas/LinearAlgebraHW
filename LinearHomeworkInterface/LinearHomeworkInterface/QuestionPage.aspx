@@ -91,8 +91,7 @@ MathJax.Hub.Config({
                         </ul>
                     </div>
                     <div class="hero-unit" style="padding: 10px; margin-bottom: 0px; font-size: 14px;">
-                        <h4 style="margin: 0px;">Question 1</h4>
-                        <p style="margin: 0px; line-height: 25px; font-size: 14px;">Solve the system of linear equations by using elementary row operations.</p>
+                        <asp:Label ID="instruction" runat="server" />
                         <div id="questiondisplay">
                             <asp:Label ID="question" runat="server" />
                         </div>

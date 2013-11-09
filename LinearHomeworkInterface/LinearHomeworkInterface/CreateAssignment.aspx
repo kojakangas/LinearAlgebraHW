@@ -244,8 +244,8 @@
 	                    $("#addedQuestionTable").dataTable().fnAddData([
 							questionNumber,
 							"DP",
-							"1",
 							$("#sizeDP").val(),
+							"1",
 							$("#minDP").val(),
 							$("#maxDP").val(),
 							"0",
