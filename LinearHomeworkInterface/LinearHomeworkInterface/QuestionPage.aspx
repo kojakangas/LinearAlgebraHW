@@ -236,7 +236,7 @@ MathJax.Hub.Config({
                             $('#matrix' + matrixNumber + 'row' + i).append("<td><input class=\"gradingInputs\" onkeypress=\"return validateNumericInput(event)\" style=\"width: 27px;\"></input></td>");
                         }
                     }
-                    //$('#row' + matrixNumber).append("<div class=\"alert alert-success\" style=\"display:flex;\">Correct!</div>");
+                    $('#row' + matrixNumber).append("<div id = \"feedback" + matrixNumber + "\" class=\"row-fluid\"></div>");
                     $("#removeRow").remove();
                     $('#row' + matrixNumber).append("<a id=\"removeRow\" tabindex=\"-1\" onClick=\"removeLastMatrix(" + matrixNumber + ")\" style=\"cursor: pointer; display:flex; float: right;\">Remove Matrix</a>");
                     matrixNumber = matrixNumber + 1;
@@ -292,6 +292,17 @@ MathJax.Hub.Config({
                         answer = "I";//I is for inconsistent. possible to use boolean or 0 and 1
                     }
 
+                    //stub for appending feedback, will be moved to success of this function when grading part complete
+                    for (var count = 0; count < matrixNumber; count++) {
+                        if ($('#feedback' + count).is(':empty')) {
+                            $('#feedback' + count).append("<div class=\"alert alert-success\" style=\"display:flex;\">+ Feedback successful</div>");
+                        }
+                        else {
+                            $('#feedback' + count).empty();
+                            $('#feedback' + count).append("<div class=\"alert alert-failure\" style=\"display:flex;\">- Feedback successful</div>");
+                        }
+                    }
+
                     //Then there will be an ajax call to grade this
                     //It will need both the matrixMap and answer variables
                     $.ajax({
@@ -301,7 +312,13 @@ MathJax.Hub.Config({
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (url) {
-                            $("#answerDiv").append(url.d);
+                            if ($('#result').length == 0) {
+                                $("#answerDiv").append(url.d);
+                            }
+                            else {
+                                $("#result").remove();
+                                $("#answerDiv").append(url.d);
+                            }
                             //This will basically just show the message that is returned from code behind
                         },
                         error: function (msg) {

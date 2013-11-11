@@ -345,7 +345,10 @@ namespace LinearHomeworkInterface
             feedback = mb.checkSingleRowOperation(MatrixMap);
             //Will need to also check answers here
 
-            return feedback.Equals("") ? null : feedback;
+            //return feedback.Equals("") ? null : feedback;
+
+            //had to change return statement for feedback message purposes, can change later
+            return "<h4 style=\"color:blue\" id = \"result\">Grade display successful</h4>";
         }
 
         ////our WebMethod for checking the user's solution(s)
