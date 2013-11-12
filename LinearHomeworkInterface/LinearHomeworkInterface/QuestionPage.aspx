@@ -103,6 +103,7 @@ MathJax.Hub.Config({
                         </div>
                         <hr style="margin-bottom: 0px; margin-top: 0px;" />
                         <button id="submitAnswer" disabled="disabled" class="btn btn-primary" title="Note: Must create an answer to submit." type="button" style="margin-top: 5px; float: right; margin-bottom: 50px;">Submit Answer</button>
+                        <button id="nextQuestion" class="btn btn-primary" type="button" style="display: none; margin-top: 5px; float: right; margin-bottom: 50px;">Next Question</button>
                     </form>
                 </div>
             </div>
@@ -264,7 +265,7 @@ MathJax.Hub.Config({
                         $("#" + matrixHTML.id).find("tr").each(function (rowIndex, rowHTML) {
                             var row = [];
                             $(this).find("td").each(function (cellIndex, cell) {
-                                row[cellIndex] = $(this).find("input").val();
+                                row[cellIndex] = eval($(this).find("input").val());
                             });
                             matrix[rowIndex] = row;
                         });
@@ -292,17 +293,6 @@ MathJax.Hub.Config({
                         answer = "I";//I is for inconsistent. possible to use boolean or 0 and 1
                     }
 
-                    //stub for appending feedback, will be moved to success of this function when grading part complete
-                    for (var count = 0; count < matrixNumber; count++) {
-                        if ($('#feedback' + count).is(':empty')) {
-                            $('#feedback' + count).append("<div class=\"alert alert-success\" style=\"display:flex;\">+ Feedback successful</div>");
-                        }
-                        else {
-                            $('#feedback' + count).empty();
-                            $('#feedback' + count).append("<div class=\"alert alert-failure\" style=\"display:flex;\">- Feedback successful</div>");
-                        }
-                    }
-
                     //Then there will be an ajax call to grade this
                     //It will need both the matrixMap and answer variables
                     $.ajax({
@@ -311,15 +301,20 @@ MathJax.Hub.Config({
                         data: "{'MatrixMapJSON': '" + JSON.stringify(matrixMap) + "','AnswerJSON': '" + JSON.stringify(answer) + "'}",
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
-                        success: function (url) {
-                            if ($('#result').length == 0) {
-                                $("#answerDiv").append(url.d);
+                        success: function (gradingMsg) {
+                            $("#answerDiv").append("<h4>Results:<h4>");
+                            $("#resultsDiv").remove();
+                            $("#removeRow").remove();
+                            $("#removeAnswer").remove();
+                            $(".freeLinks").remove();
+                            $(".gradingInputs").attr("disabled", "true");
+                            $("#submitAnswer").remove();
+                            $("#nextQuestion").show();
+                            if (gradingMsg.d != null) {
+                                $("#answerDiv").append("<div id=\"resultsDiv\" class=\"alert alert-danger\" style=\"display:flex;\">" + gradingMsg.d + "</div>");
+                            } else {
+                                $("#answerDiv").append("<div id=\"resultsDiv\" class=\"alert alert-success\" style=\"display:flex;\">Correct!</div>");
                             }
-                            else {
-                                $("#result").remove();
-                                $("#answerDiv").append(url.d);
-                            }
-                            //This will basically just show the message that is returned from code behind
                         },
                         error: function (msg) {
                             alert("Grading Failed, don't panic");
@@ -425,7 +420,7 @@ MathJax.Hub.Config({
                     for (var i = 0; i < variables; i++) {
                         $('#answerDiv').append("<strong>x<sub>" + (i + 1) + "</sub> = </strong>" +
                             "<div style=\"display: inline;\" id=\"variable" + i + "\"><input id=\"var" + i + "\" class=\"gradingInputs\" onkeypress=\"return validateNumericInput(event)\" style=\"width: 27px; margin-right: 3px;\" /></div>" +
-                            "<a id=\"freeLink" + i + "\" onclick=\"addFreeVariable(" + i + ")\" style=\"cursor: pointer;\">Set Free Variable</a></br>");
+                            "<a id=\"freeLink" + i + "\" class=\"freeLinks\" onclick=\"addFreeVariable(" + i + ")\" style=\"cursor: pointer;\">Set Free Variable</a></br>");
                     }
                 } else if ($("#inconsistent").is(":checked")) {
                     generatedAnswer = true;

@@ -20,8 +20,6 @@ namespace LinearHomeworkInterface
 {
     public partial class QuestionPage : System.Web.UI.Page
     {
-        public static List<float> solution = null;
-        public static List<string> textSolution = null;
         Random rand = new Random();
         String assId;
         String queId;
@@ -29,12 +27,13 @@ namespace LinearHomeworkInterface
         int m;
         int max;
         int min;
-        int numOfFreeVars;
-        Boolean inconsistent;
+        public static int numOfFreeVars;
+        public static Boolean inconsistent;
         String type;
-        float[,] matrix = null;
         float[] vector1 = null;
         float[] vector2 = null;
+        public static float[] actualAnswer = null;
+        public static float[,] matrix = null;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -76,17 +75,13 @@ namespace LinearHomeworkInterface
                 
                 throw;
             }
-            //Boolean inconsistent = false;
-            
-            solution = new List<float>();
 
-            float[] answer = new float[n];
+            actualAnswer = new float[n];
             for (int i = 0; i < n; i++)
             {
-                answer[i] = rand.Next(min, max);
-                solution.Add(answer[i]);
+                actualAnswer[i] = rand.Next(min, max);
             }
-            float[,] matrix = this.Create_Problem(n, m, min, max, numOfFreeVars, inconsistent, type, answer);
+            matrix = this.Create_Problem(n, m, min, max, numOfFreeVars, inconsistent, type, actualAnswer);
             
             if(type.Equals("DP")){
                 //Displays the two vectors for the Dot Product problem using MATHJAX
@@ -283,8 +278,6 @@ namespace LinearHomeworkInterface
 
         public float[,] Create_Problem(int n, int m, int min, int max, int numOfFreeVars, bool inconsistent, string type, float[] answer)
         {
-            //These should be moved out of method to be global
-
             MatrixBuilder.MatrixOperations mb = new MatrixBuilder.MatrixOperations();
 
             if (type.Equals("SoE")) {
@@ -339,16 +332,48 @@ namespace LinearHomeworkInterface
         {
             string feedback = "";
             Dictionary<int, float[,]> MatrixMap = JsonConvert.DeserializeObject<Dictionary<int, float[,]>>(MatrixMapJSON);
-            Dictionary<int, float> Answers = JsonConvert.DeserializeObject<Dictionary<int, float>>(AnswerJSON);
             MatrixBuilder.MatrixOperations mb = new MatrixBuilder.MatrixOperations();
 
-            feedback = mb.checkSingleRowOperation(MatrixMap);
-            //Will need to also check answers here
+            //should probably check if the first matrix is the actual first matrix
+            //float[,] augMatrix = null; 
+            //MatrixMap.TryGetValue(0, out augMatrix);
+            //if (!matrix.Equals(augMatrix))
+            //{
+            //   feedback += "The first matrix does not match the augmented matrix.";
+            //}
 
-            //return feedback.Equals("") ? null : feedback;
+            if (AnswerJSON.Contains("I"))
+            {
+                feedback = mb.checkSingleRowOperation(MatrixMap);
+                if (!inconsistent)
+                {
+                    feedback += "The matrix is actually consistent.";
+                }
+            }
+            else if (AnswerJSON.Contains("F"))
+            {
+                feedback = mb.checkSingleRowOperation(MatrixMap);
+                if (numOfFreeVars > 0)
+                {
+                    //need a method to solve for free vars
+                }
+                else
+                {
+                    feedback += "The solution actually contains no free variables.";
+                }
+            }
+            else
+            {
+                Dictionary<int, float> AnswersConverted = JsonConvert.DeserializeObject<Dictionary<int, float>>(AnswerJSON);
+                float[] Answers = new float[AnswersConverted.Count()];
+                AnswersConverted.Values.CopyTo(Answers, 0);
 
-            //had to change return statement for feedback message purposes, can change later
-            return "<h4 style=\"color:blue\" id = \"result\">Grade display successful</h4>";
+                feedback = mb.checkSingleRowOperation(MatrixMap);
+                //Will need to also check answers here
+                feedback += mb.checkAnswers(actualAnswer, Answers);
+            }
+
+            return (feedback == null || feedback.Equals("")) ? null : feedback;
         }
 
         ////our WebMethod for checking the user's solution(s)

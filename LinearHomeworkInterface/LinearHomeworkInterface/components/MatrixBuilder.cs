@@ -364,7 +364,8 @@ namespace MatrixBuilder
             ArrayList changedRows = findChangedRows(oldMatrix, newMatrix);
             if (changedRows.Count == 1)
             {
-                int row = changedRows.IndexOf(0); 
+                int[] rows = (int[]) changedRows.ToArray(typeof(int));
+                int row = rows[0];
                 while (index < oldMatrix.GetLength(1))
                 {
                     if (oldMatrix[row,index] != 0)
@@ -408,8 +409,9 @@ namespace MatrixBuilder
             ArrayList changedRows = findChangedRows(oldMatrix, newMatrix);
             if (changedRows.Count == 2)
             {
-                int row1 = changedRows.IndexOf(0);
-                int row2 = changedRows.IndexOf(1);
+                int[] rows = (int[])changedRows.ToArray(typeof(int));
+                int row1 = rows[0];
+                int row2 = rows[1];
                 for (int i = 0; i < oldMatrix.GetLength(0); i++)
                 {
                     if (oldMatrix[row1,i] != newMatrix[row2,i] || oldMatrix[row2,i] != newMatrix[row1,i])
@@ -449,7 +451,8 @@ namespace MatrixBuilder
         bool isAddMultipleOfRow = false;
         ArrayList changedRows = findChangedRows(oldMatrix, newMatrix);
         if (changedRows.Count == 1) {
-            int changedRow = changedRows.IndexOf(0);
+            int[] rows = (int[])changedRows.ToArray(typeof(int));
+            int changedRow = rows[0];
             float[,] rowDifference = this.copyMatrix(oldMatrix);
             for (int i = 0; i < oldMatrix.GetLength(1); i++) {
                 rowDifference[0,i] = oldMatrix[changedRow,i] - newMatrix[changedRow,i];
@@ -650,7 +653,7 @@ namespace MatrixBuilder
                 if (!checkAddMultipleOfRow(matrix1, matrix2) && !checkTimesScalar(matrix1, matrix2)
                         && !checkRowSwap(matrix1, matrix2))
                 {
-                    feedback += "Error between matrix " + i + " and matrix " + (i + 1) + ".\n";
+                    feedback += "<div>Error between matrix " + i + " and matrix " + (i + 1) + ".<div>";
                 }
             }
             return feedback.Equals("") ? null : feedback;
@@ -667,7 +670,7 @@ namespace MatrixBuilder
                     float studentNumber = studentAnswers[i];
                     if (Math.Abs(correctNumber - studentNumber) > offset)
                     {
-                        feedback += "Answer for x<sub>" + (i + 1) + "</sub> is incorrect.\n";
+                        feedback += "<div>Answer for x<sub>" + (i + 1) + " </sub>  is incorrect.<div>\n";
                     }
                 }
             }
