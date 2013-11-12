@@ -29,9 +29,20 @@
     </div>
     </form>
 
+    <div id="helpmenu" class="navbar-inner" style="display: none; position: absolute; width: 900px; z-index: 1000; bottom:20px; left:200px">
+            <div class="nav-collapse collapse">
+                <ul class="nav" style="float: left; margin: 10px 0 0px 0;">
+                    <li style="float: left; padding: 0 20px 0 0;"><a href="StudentHome.aspx">Home</a></li>
+                </ul>
+                <form class="navbar-form pull-right" style="">
+                    <button id="signOut" class="btn" style="margin-top: 5px;" type="submit">Sign Out</button>
+                </form>
+            </div>
+        </div>
     <script type ="text/javascript">
         $(document).ready(function () {
-            $('#instructions').centerhorizontal().show("clip", "swing", 1000);
+            $('#instructions').delay("500").centerhorizontal().show("clip", "swing", 1000);
+            $('#helpmenu').centerhorizontal().show("clip", "swing", 1000);
         });
 
         jQuery.fn.centerhorizontal = function () {
