@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 namespace LinearHomeworkInterface
 {
-    public partial class Helpaspx : System.Web.UI.Page
+    public partial class Help : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
