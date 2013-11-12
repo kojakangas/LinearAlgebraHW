@@ -38,6 +38,8 @@ namespace LinearHomeworkInterface
         protected void Page_Load(object sender, EventArgs e)
         {
             this.Check_User();
+            instruction.Text = "";
+            question.Text = "";
 
             assId = Request.QueryString["assign"];
             queId = Request.QueryString["question"];
@@ -173,6 +175,7 @@ namespace LinearHomeworkInterface
             {
                 throw;
             }
+            nextQuestion.Attributes.Add("href", "/QuestionPage?assign=" + assId + "&question=" + (System.Convert.ToInt32(queId) + 1));
         }
 
         //method to dynamically load the question using MATHJAX

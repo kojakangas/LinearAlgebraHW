@@ -14,293 +14,377 @@
     <script src="javascript/jquery.dataTables.min.js"></script>
 </head>
 <body style="background-color: #F5F5F5;">
-        <div class="container">
-            <div class="navbar-inner" style="position: fixed; width: 900px; z-index: 1000;">
-                <div class="nav-collapse collapse">
-                    <ul class="nav" style="float: left; margin: 10px 0 0px 0;">
-                        <li class="dropdown" style="float: left; padding: 0 20px 0 0;"><a id="createAcctLink" data-toggle="dropdown" class="dropdown-toggle" href="#">Create Account <b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <form id="createAccount" class="signin" runat="server" autocomplete="off">
-                                    <h4>New Account</h4>                                    
-                                    <input id="username" data-placement="right" data-toggle="tooltip" type="text" maxlength="20" placeholder="Username" />
-                                    <input id="first" data-placement="right" data-toggle="tooltip" type="text" maxlength="20" placeholder="First Name" />
-                                    <input id="last" data-placement="right" data-toggle="tooltip" type="text" maxlength="20" placeholder="Last Name" />
-                                    <input id="password" data-placement="right" data-toggle="tooltip" type="password" maxlength="20" placeholder="Password" />
-                                    <input id="retypedpass" data-placement="right" data-toggle="tooltip" type="password" maxlength="20" placeholder="Re-enter Password" />
-                                    <input id="accessCode" data-placement="right" data-toggle="tooltip" type="text" maxlength="20" placeholder="Student Access Code" />
-                                    <button id="create" class="btn btn-primary">Create</button>
-                                    <button id="clearForm" style="float: right;" class="btn">Clear</button>
-                                </form>
-                            </ul>
-                        </li>
-                    </ul>
-                    <form id="signInForm" class="navbar-form pull-right">
-                        <input id="usernameSignIn" data-placement="bottom" data-toggle="tooltip" maxlength="20" type="text" placeholder="Username" class="span2" />
-                        <input id="passwordSignIn" maxlength="20" type="password" placeholder="Password" class="span2" />
-                        <button id="signIn" class="btn btn-success" type="submit">Sign in</button>
-                    </form>
-                </div>
+    <div class="container">
+        <div class="navbar-inner" style="position: fixed; width: 900px; z-index: 1000;">
+            <div class="nav-collapse collapse">
+                <ul class="nav" style="float: left; margin: 10px 0 0px 0;">
+                    <li class="dropdown" style="float: left; padding: 0 20px 0 0;"><a id="createAcctLink" data-toggle="dropdown" class="dropdown-toggle" href="#">Create Account <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <form id="createAccount" class="signin" runat="server" autocomplete="off">
+                                <h4>New Account</h4>
+                                <input id="username" data-placement="right" data-toggle="tooltip" type="text" maxlength="20" placeholder="Username" />
+                                <input id="first" data-placement="right" data-toggle="tooltip" type="text" maxlength="20" placeholder="First Name" />
+                                <input id="last" data-placement="right" data-toggle="tooltip" type="text" maxlength="20" placeholder="Last Name" />
+                                <input id="password" data-placement="right" data-toggle="tooltip" type="password" maxlength="20" placeholder="Password" />
+                                <input id="retypedpass" data-placement="right" data-toggle="tooltip" type="password" maxlength="20" placeholder="Re-enter Password" />
+                                <input id="accessCode" data-placement="right" data-toggle="tooltip" type="text" maxlength="20" placeholder="Student Access Code" />
+                                <button id="create" class="btn btn-primary">Create</button>
+                                <button id="clearForm" style="float: right;" class="btn">Clear</button>
+                            </form>
+                        </ul>
+                    </li>
+                </ul>
+                <form id="signInForm" class="navbar-form pull-right">
+                    <input id="usernameSignIn" data-placement="bottom" data-toggle="tooltip" maxlength="20" type="text" placeholder="Username" class="span2" />
+                    <input id="passwordSignIn" maxlength="20" type="password" placeholder="Password" class="span2" />
+                    <button id="signIn" class="btn btn-success" type="submit">Sign in</button>
+                </form>
             </div>
-            <div id="content" style="background: white; margin-top: 50px; height: 550px; border: 1px solid #e5e5e5;">
-                <!-- This div background style will be set to a picture that represents the application -->
-                    <div id="createAcctAlert" class="alert alert-success fade in"style="display:none; float: left; width: 400px; margin-top: 5px; margin-left: 250px;" />
-                    <a class="close" data-dismiss="alert" href="#">&times;</a>
-				    Account Created! It is time to enter the matrix...		
-                </div>
-                <div id="background" style="display: none; background-image: url('theme/images/axiomz.bmp'); height: 115px; width: 380px; margin: auto; margin-top: 200px;" />                                              
+        </div>
+        <div id="content" style="background: white; margin-top: 50px; height: 550px; border: 1px solid #e5e5e5;">
+            <div id="createAcctAlert" class="alert alert-success fade in"
+                style="display: none; position: absolute; z-index: 1001; float: left; width: 400px; margin-top: 5px; margin-bottom: 5px; margin-left: 250px;">
+                <a class="close" data-dismiss="alert"
+                    href="#">&times;</a>
+                Account Created! It is time to enter the matrix...
             </div>
-        <script src="javascript/tooltip.js"></script>
-        <script type="text/javascript">
-            //If you try to paste bad characters into the input fields then you will be 
-            //disabled from pasting into input fields. This will prevent sql injection attacks
-            var badInputPaste = false;
+            <div id="carousel" class="carousel slide"
+                data-ride="carousel" style="height: 600px;">
+                <!-- Indicators -->
+                <ol class="carousel-indicators">
+                    <li data-target="#carousel" data-slide-to="0"
+                        class="active"></li>
+                    <li data-target="#carousel"
+                        data-slide-to="1"></li>
+                    <li data-target="#carousel"
+                        data-slide-to="2"></li>
+                </ol>
 
-            //Do Stuffs
-            $(document).ready(function () {
-                $("#background").delay("500").fadeIn(5000);
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner">
+                    <div class="item active">
+                        <img src="theme/images/black.jpg" style="margin-left: auto; margin-right: auto;" />
+                        <div class="carousel-caption">
+                            <h4>Welcome! </h4>
+                            <p id="reminder" style="float: right;">Reminder: Only <label id="daysLeft" style="display: inline;"></label> days left this semester!</p>
+                            <p>If you are new to the site, <a href="#carousel" data-slide="next">click here</a></p>
+                            <p>If you are not new to the site, then stop procrastinating and sign in! </p>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <img src="theme/images/black.jpg" style="margin-left: auto; margin-right: auto;" />
+                        <div class="carousel-caption">
+                            <h4>Account Set Up </h4>
+                            <p>This is the basic information you will need</p>
+                            <p>to create an account and get started.</p>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <img src="theme/images/black.jpg" style="margin-left: auto; margin-right: auto;" />
+                        <div class="carousel-caption">
+                            <h4>Linear Algebra Homework </h4>
+                            <p>
+                                Powered By:
+                                <img
+                                    src="theme/images/axiomzMini.jpg" />
+                            </p>
+                        </div>
+                    </div>
+                </div>
 
-                $("#signIn").click(function (e) {
-                    e.preventDefault();
-                    var RegEx = /^[a-zA-Z0-9\s]*$/;
-                    if (RegEx.test($("#usernameSignIn").val()) && $("#passwordSignIn").val().indexOf(";") && $("#passwordSignIn").val().indexOf("'") && $("#passwordSignIn").val().indexOf("/")) {
-                        if (!$("#usernameSignIn").val()) {
-                            $("#usernameSignIn").trigger("focus");
-                            $("#usernameSignIn").addClass("error");
-                        } else if (!$("#passwordSignIn").val()) {
-                            $("#passwordSignIn").trigger("focus");
-                            $("#passwordSignIn").addClass("error");
-                        } else {
-                            //This is the call to the controller that handles logging in
-                            $.ajax({
-                                type: "POST",
-                                url: "Default.aspx/SignIn",
-                                data: "{'Username': '" + $("#usernameSignIn").val() + "','Password': '" + $("#passwordSignIn").val() + "'}",
-                                contentType: "application/json; charset=utf-8",
-                                dataType: "json",
-                                success: function (url) {
-                                    if (url.d === "") {
-                                        $("#usernameSignIn").trigger("focus");
-                                        $("#usernameSignIn").addClass("error");
-                                        $("#passwordSignIn").addClass("error");
-                                        $("#usernameSignIn").tooltip({ trigger: "manual", title: "Incorrect Username or Password!" });
-                                        $("#usernameSignIn").tooltip("show");
-                                    } else {
-                                        window.location = url.d;
-                                    }
-                                },
-                                error: function (msg) {
-                                    alert("Authentication Failed!");
-                                }
-                            });
-                        }
+                <!-- Controls -->
+                <a class="carousel-control left" href="#carousel"
+                    data-slide="prev">&lsaquo;</a>
+                <a class="carousel-control right" href="#carousel"
+                    data-slide="next">&rsaquo;</a>
+            </div>
+        </div>
+        <div class="overlay" style="display: none;">
+           <img src="theme/images/loading.gif" style="margin-top: 150px;" />
+        </div>
+    </div>
+    <footer style="margin-top: 50px; text-align: center;">Powered By: <img src="theme/images/axiomzMini.jpg" /></footer>
+    <script src="javascript/tooltip.js"></script>
+    <script type="text/javascript">
+        //If you try to paste bad characters into the input fields then you will be 
+        //disabled from pasting into input fields. This will prevent sql injection attacks
+        var badInputPaste = false;
+
+        var lastDay = new Date("05/09/2014");
+        var today = new Date();
+        var timediff = Math.abs(lastDay.getTime() - today.getTime());
+        var diffDays = Math.ceil(timediff / (1000 * 3600 * 24));
+
+        //Do Stuffs
+        $(document).ready(function () {
+            $('.carousel').carousel({
+                interval: false,
+            });
+
+            if (diffDays > 0) {
+                $("#daysLeft").text(diffDays);
+                $("#daysLeft").text(diffDays);
+                $("#daysLeft").css("font-weight", "bold");
+            } else {
+                $("#reminder").remove();
+            }
+
+            $("#signIn").click(function (e) {
+                e.preventDefault();
+                var RegEx = /^[a-zA-Z0-9\s]*$/;
+                if (RegEx.test($("#usernameSignIn").val()) && $("#passwordSignIn").val().indexOf(";") && $("#passwordSignIn").val().indexOf("'") && $("#passwordSignIn").val().indexOf("/")) {
+                    if (!$("#usernameSignIn").val()) {
+                        $("#usernameSignIn").trigger("focus");
+                        $("#usernameSignIn").addClass("error");
+                    } else if (!$("#passwordSignIn").val()) {
+                        $("#passwordSignIn").trigger("focus");
+                        $("#passwordSignIn").addClass("error");
                     } else {
-                        alert("Invalid Characters were entered \nin username and password fields!");
-                    }
-                });
-
-                $("#create").click(function (e) {
-                    e.preventDefault();
-                    if (!$("#username").val()) {
-                        $("#username").trigger("focus");
-                        $("#username").addClass("error");
-                        $("#username").tooltip({ trigger: "manual", title: "Don't forget a username" });
-                        $("#username").tooltip("show");
-                    } else if (!$("#first").val().trim()) {
-                        $("#first").trigger("focus");
-                        $("#first").addClass("error");
-                        $("#first").tooltip({ trigger: "manual", title: "First name is required" });
-                        $("#first").tooltip("show");
-                    } else if (!$("#last").val().trim()) {
-                        $("#last").trigger("focus");
-                        $("#last").addClass("error");
-                        $("#last").tooltip({ trigger: "manual", title: "" + $("#first").val().trim() + " who?" });
-                        $("#last").tooltip("show");
-                    } else if (!$("#password").val() || $("#password").val() != $("#retypedpass").val()) {
-                        $("#password").trigger("select");
-                        $("#password").addClass("error");
-                        $("#retypedpass").addClass("error");
-                        $("#password").tooltip({ trigger: "manual", title: "Passwords do not match!" });
-                        $("#password").tooltip("show");
-                    } else if (!$("#accessCode").val() || $("#accessCode").val() != "DU2014") {
-                        $("#accessCode").trigger("select");
-                        $("#accessCode").addClass("error");
-                        $("#accessCode").tooltip({ trigger: "manual", title: "Incorrect Access Code!" });
-                        $("#accessCode").tooltip("show");
-                    } else {
-                        //This call will create the account
+                        //This is the call to the controller that handles logging in
+                        $(".overlay").show();
                         $.ajax({
                             type: "POST",
-                            url: "Default.aspx/CheckUsername",
-                            data: "{'username': '" + $("#username").val() + "'}",
+                            url: "Default.aspx/SignIn",
+                            data: "{'Username': '" + $("#usernameSignIn").val() + "','Password': '" + $("#passwordSignIn").val() + "'}",
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",
-                            success: function (available) {
-                                if (!available.d) {
-                                    $("#username").trigger("select");
-                                    $("#username").addClass("error");
-                                    $("#username").tooltip({ trigger: "manual", title: "Username is already taken!" });
-                                    $("#username").tooltip("show");
+                            success: function (url) {
+                                if (url.d === "") {
+                                    $("#usernameSignIn").trigger("focus");
+                                    $("#usernameSignIn").addClass("error");
+                                    $("#passwordSignIn").addClass("error");
+                                    $("#usernameSignIn").tooltip({ trigger: "manual", title: "Incorrect Username or Password!" });
+                                    $("#usernameSignIn").tooltip("show");
                                 } else {
-                                    var details = $("#username").val() + " " + $("#first").val() + " " + $("#last").val() + " "
-                                        + $("#password").val();
-                                    $.ajax({
-                                        type: "POST",
-                                        url: "Default.aspx/CreateAccount",
-                                        data: "{'UserDetails': '" + details + "'}",
-                                        contentType: "application/json; charset=utf-8",
-                                        dataType: "json",
-                                        success: function (available) {
-                                            $("#createAcctAlert").show();
-                                            $(".dropdown").removeClass("open");
-                                            $("#clearForm").trigger("click");
-                                        },
-                                        error: function (response) {
-                                            alert("Account Creation Failed");
-                                        }
-                                    });
+                                    window.location = url.d;
                                 }
                             },
-                            error: function (response) {
-                                alert("Account Creation Failed");
+                            error: function (msg) {
+                                alert("Authentication Failed!");
                             }
                         });
                     }
-                });
+                } else {
+                    alert("Invalid Characters were entered \nin username and password fields!");
+                }
+            });
 
-                $("#username,#accessCode,#usernameSignIn").keypress(function (e) {
-                    var charCode = (e.which) ? e.which : e.keyCode
-                    var RegEx = /^[a-zA-Z0-9\s]*$/;
-                    var newVal = $(this).val() + String.fromCharCode(charCode);
-                    var test = !RegEx.test(newVal);
-                    var ctrlKey = e.ctrlKey;
-                    if (ctrlKey && charCode == 118 && badInputPaste) {
-                        return false;
-                    } else {
-                        if ((charCode != 32 && RegEx.test(newVal)) || charCode == 8 || (charCode == 46 && e.which == 0) || (!e.shiftKey && (charCode == 37 || (charCode == 39 && e.which == 0)))) {
-                            $(this).tooltip("destroy");
-                            $(this).removeClass("error");
-                        } else {
-                            return false;
+            $("#create").click(function (e) {
+                e.preventDefault();
+                if (!$("#username").val()) {
+                    $("#username").trigger("focus");
+                    $("#username").addClass("error");
+                    $("#username").tooltip({ trigger: "manual", title: "Don't forget a username" });
+                    $("#username").tooltip("show");
+                } else if (!$("#first").val().trim()) {
+                    $("#first").trigger("focus");
+                    $("#first").addClass("error");
+                    $("#first").tooltip({ trigger: "manual", title: "First name is required" });
+                    $("#first").tooltip("show");
+                } else if (!$("#last").val().trim()) {
+                    $("#last").trigger("focus");
+                    $("#last").addClass("error");
+                    $("#last").tooltip({ trigger: "manual", title: "" + $("#first").val().trim() + " who?" });
+                    $("#last").tooltip("show");
+                } else if (!$("#password").val() || $("#password").val() != $("#retypedpass").val()) {
+                    $("#password").trigger("select");
+                    $("#password").addClass("error");
+                    $("#retypedpass").addClass("error");
+                    $("#password").tooltip({ trigger: "manual", title: "Passwords do not match!" });
+                    $("#password").tooltip("show");
+                } else if (!$("#accessCode").val() || $("#accessCode").val() != "DU2014") {
+                    $("#accessCode").trigger("select");
+                    $("#accessCode").addClass("error");
+                    $("#accessCode").tooltip({ trigger: "manual", title: "Incorrect Access Code!" });
+                    $("#accessCode").tooltip("show");
+                } else {
+                    //This call will create the account
+                    $.ajax({
+                        type: "POST",
+                        url: "Default.aspx/CheckUsername",
+                        data: "{'username': '" + $("#username").val() + "'}",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (available) {
+                            if (!available.d) {
+                                $("#username").trigger("select");
+                                $("#username").addClass("error");
+                                $("#username").tooltip({ trigger: "manual", title: "Username is already taken!" });
+                                $("#username").tooltip("show");
+                            } else {
+                                var details = $("#username").val() + " " + $("#first").val() + " " + $("#last").val() + " "
+                                    + $("#password").val();
+                                $.ajax({
+                                    type: "POST",
+                                    url: "Default.aspx/CreateAccount",
+                                    data: "{'UserDetails': '" + details + "'}",
+                                    contentType: "application/json; charset=utf-8",
+                                    dataType: "json",
+                                    success: function (available) {
+                                        $("#createAcctAlert").show();
+                                        $(".dropdown").removeClass("open");
+                                        $("#clearForm").trigger("click");
+                                    },
+                                    error: function (response) {
+                                        alert("Account Creation Failed");
+                                    }
+                                });
+                            }
+                        },
+                        error: function (response) {
+                            alert("Account Creation Failed");
                         }
-                    }
-                });
+                    });
+                }
+            });
 
-                $("#username,#accessCode,#usernameSignIn").keyup(function (e) {
-                    var RegEx = /^[a-zA-Z0-9\s]*$/;
-                    if (!RegEx.test($(this).val())) {
-                        alert("Pasting has been disabled due to pasting potentially harmful characters...");
-                        badInputPaste = true;
-                        $(this).val("");
-                    }
-                });
-
-                $("#usernameSignIn,#username,#accessCode").change(function (e) {
-                    var RegEx = /^[a-zA-Z0-9\s]*$/;
-                    if (!RegEx.test($(this).val())) {
-                        alert("Pasting has been disabled due to pasting potentially harmful characters...");
-                        badInputPaste = true;
-                        $(this).val("");
-                    }
-                });
-
-                $("#first,#last").keypress(function (e) {
-                    var charCode = (e.which) ? e.which : e.keyCode
-                    var curTar = e.currentTarget.id
-                    var RegEx = /^[a-zA-Z\s]*$/;
-                    var newVal = $(this).val() + String.fromCharCode(charCode);
-                    if (((((charCode != 32 || ($(this).val().trim() && $(this).val() == $(this).val().replace(" ", ""))) && RegEx.test(newVal)) || charCode == 8 || (charCode == 46 && e.which == 0)) && !badInputPaste) || (!e.shiftKey && (charCode == 37 || (charCode == 39 && e.which == 0)))) {
+            $("#username,#accessCode,#usernameSignIn").keypress(function (e) {
+                var charCode = (e.which) ? e.which : e.keyCode
+                var RegEx = /^[a-zA-Z0-9\s]*$/;
+                var newVal = $(this).val() + String.fromCharCode(charCode);
+                var test = !RegEx.test(newVal);
+                var ctrlKey = e.ctrlKey;
+                if (ctrlKey && charCode == 118 && badInputPaste) {
+                    return false;
+                } else {
+                    if ((charCode != 32 && RegEx.test(newVal)) || charCode == 8 || (charCode == 46 && e.which == 0) || (!e.shiftKey && (charCode == 37 || (charCode == 39 && e.which == 0)))) {
                         $(this).tooltip("destroy");
                         $(this).removeClass("error");
                     } else {
                         return false;
                     }
-                });
-
-                $("#first,#last").keyup(function (e) {
-                    var RegEx = /^[a-zA-Z\s]*$/;
-                    if (!RegEx.test($(this).val())) {
-                        alert("Pasting has been disabled due to pasting potentially harmful characters...");
-                        badInputPaste = true;
-                        $(this).val("");
-                    }
-                });
-
-                $("#first,#last").change(function (e) {
-                    var RegEx = /^[a-zA-Z\s]*$/;
-                    if (!RegEx.test($(this).val())) {
-                        alert("Pasting has been disabled due to pasting potentially harmful characters...");
-                        badInputPaste = true;
-                        $(this).val("");
-                    }
-                });
-
-                $("#password,#retypedpass,#passwordSignIn").keypress(function (e) {
-                    var charCode = (e.which) ? e.which : e.keyCode
-                    var ctrlKey = e.ctrlKey;
-                    if (charCode == 118 && ctrlKey == true) {
-                        //Do nothing because they are trying to paste the password and they shouldn't be able to
-                        return false;
-                    } else {
-                        if (charCode != 32 && charCode != 39 && charCode != 59 && charCode != 47) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-                });
-
-                $("#password,#retypedpass,#passwordSignIn").keyup(function (e) {
-                    var charCode = (e.which) ? e.which : e.keyCode
-                    if (charCode != 13) {
-                        if ($("#password").val() == $("#retypedpass").val() || $(this).attr("id") === $("#passwordSignIn").attr("id")) {
-                            $("#password,#retypedpass,#passwordSignIn").tooltip("destroy");
-                            $("#password,#retypedpass,#passwordSignIn").removeClass("error");
-                        }
-                    }
-                });
-
-                $("#usernameSignIn").trigger("focus");
-
-                $("#clearForm").click(function (e) {
-                    e.preventDefault();
-                    $("#username,#first,#last,#password,#retypedpass,#accessCode").tooltip("destroy");
-                    $("#username,#first,#last,#password,#retypedpass,#accessCode").removeClass("error");
-                    $("#username,#first,#last,#password,#retypedpass,#accessCode").val("");
-                    $("#username").focus();
-                });
-
-            });
-</script>
-        <style type="text/css">
-            body {
-                background-color: #f5f5f5;
-            }
-
-            .signin {
-                max-width: 200px;
-                padding: 5px 35px 10px 15px;
-                margin: 0 auto 0px;
-                background-color: #fff;
-            }
-
-            .error {
-                border-color: rgba(255, 0, 0, 1) !important;
-            }
-
-            .tooltip.right {
-                width: 150px;
-                opacity: 1;
-            }
-
-                .tooltip.right .tooltip-arrow {
-                    border-right-color: #FF0000;
-                    opacity: 1;
                 }
+            });
 
-            .tooltip-inner {
-                background-color: #FF0000;
+            $("#username,#accessCode,#usernameSignIn").keyup(function (e) {
+                var RegEx = /^[a-zA-Z0-9\s]*$/;
+                if (!RegEx.test($(this).val())) {
+                    alert("Pasting has been disabled due to pasting potentially harmful characters...");
+                    badInputPaste = true;
+                    $(this).val("");
+                }
+            });
+
+            $("#usernameSignIn,#username,#accessCode").change(function (e) {
+                var RegEx = /^[a-zA-Z0-9\s]*$/;
+                if (!RegEx.test($(this).val())) {
+                    alert("Pasting has been disabled due to pasting potentially harmful characters...");
+                    badInputPaste = true;
+                    $(this).val("");
+                }
+            });
+
+            $("#first,#last").keypress(function (e) {
+                var charCode = (e.which) ? e.which : e.keyCode
+                var curTar = e.currentTarget.id
+                var RegEx = /^[a-zA-Z\s]*$/;
+                var newVal = $(this).val() + String.fromCharCode(charCode);
+                if (((((charCode != 32 || ($(this).val().trim() && $(this).val() == $(this).val().replace(" ", ""))) && RegEx.test(newVal)) || charCode == 8 || (charCode == 46 && e.which == 0)) && !badInputPaste) || (!e.shiftKey && (charCode == 37 || (charCode == 39 && e.which == 0)))) {
+                    $(this).tooltip("destroy");
+                    $(this).removeClass("error");
+                } else {
+                    return false;
+                }
+            });
+
+            $("#first,#last").keyup(function (e) {
+                var RegEx = /^[a-zA-Z\s]*$/;
+                if (!RegEx.test($(this).val())) {
+                    alert("Pasting has been disabled due to pasting potentially harmful characters...");
+                    badInputPaste = true;
+                    $(this).val("");
+                }
+            });
+
+            $("#first,#last").change(function (e) {
+                var RegEx = /^[a-zA-Z\s]*$/;
+                if (!RegEx.test($(this).val())) {
+                    alert("Pasting has been disabled due to pasting potentially harmful characters...");
+                    badInputPaste = true;
+                    $(this).val("");
+                }
+            });
+
+            $("#password,#retypedpass,#passwordSignIn").keypress(function (e) {
+                var charCode = (e.which) ? e.which : e.keyCode
+                var ctrlKey = e.ctrlKey;
+                if (charCode == 118 && ctrlKey == true) {
+                    //Do nothing because they are trying to paste the password and they shouldn't be able to
+                    return false;
+                } else {
+                    if (charCode != 32 && charCode != 39 && charCode != 59 && charCode != 47) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            });
+
+            $("#password,#retypedpass,#passwordSignIn").keyup(function (e) {
+                var charCode = (e.which) ? e.which : e.keyCode
+                if (charCode != 13) {
+                    if ($("#password").val() == $("#retypedpass").val() || $(this).attr("id") === $("#passwordSignIn").attr("id")) {
+                        $("#password,#retypedpass,#passwordSignIn").tooltip("destroy");
+                        $("#password,#retypedpass,#passwordSignIn").removeClass("error");
+                    }
+                }
+            });
+
+            $("#usernameSignIn").trigger("focus");
+
+            $("#clearForm").click(function (e) {
+                e.preventDefault();
+                $("#username,#first,#last,#password,#retypedpass,#accessCode").tooltip("destroy");
+                $("#username,#first,#last,#password,#retypedpass,#accessCode").removeClass("error");
+                $("#username,#first,#last,#password,#retypedpass,#accessCode").val("");
+                $("#username").focus();
+            });
+
+        });
+    </script>
+    <style type="text/css">
+        body {
+            background-color: #f5f5f5;
+        }
+
+        .signin {
+            max-width: 200px;
+            padding: 5px 35px 10px 15px;
+            margin: 0 auto 0px;
+            background-color: #fff;
+        }
+
+        .error {
+            border-color: rgba(255, 0, 0, 1) !important;
+        }
+
+        .tooltip.right {
+            width: 150px;
+            opacity: 1;
+        }
+
+            .tooltip.right .tooltip-arrow {
+                border-right-color: #FF0000;
                 opacity: 1;
             }
-        </style>
+
+        .tooltip-inner {
+            background-color: #FF0000;
+            opacity: 1;
+        }
+
+        .overlay {
+                background-color: #FFFFFF;
+                height: 100%;
+                left: 0;
+                opacity: 0.5;
+                position: fixed;
+                text-align: center;
+                top: 0;
+                vertical-align: middle;
+                width: 100%;
+                z-index: 2000;
+          }
+    </style>
 </body>
 </html>
