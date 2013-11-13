@@ -12,151 +12,190 @@ namespace MatrixBuilder
         private static Random rand = new Random();
         public static float offset = .001f; //used for float comparisons
 
-        public MatrixOperations() {
+        public MatrixOperations()
+        {
 
         }
 
         //Can be considered augmented or not
-        public float[,] generateRandomMatrix(int rows, int cols, int min, int max) {
-        float[,] matrix = new float[rows,cols];
+        public float[,] generateRandomMatrix(int rows, int cols, int min, int max)
+        {
+            float[,] matrix = new float[rows, cols];
 
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                matrix[i,j] = rand.Next(min,max);
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    matrix[i, j] = rand.Next(min, max);
+                }
             }
-        }
 
-        return matrix;
-    }
+            return matrix;
+        }
 
         //Is augmented
         //This method has specific answers
-        public float[,] generateUniqueSolutionMatrix(int rows, int cols, int min, int max, float[] answer) {
-        float[,] matrix = new float[rows,cols];
-        bool hasUniqueSolution = false;
-        while (!hasUniqueSolution) {
-            for (int i = 0; i < rows; i++) {
-                for (int j = 0; j < cols - 1; j++) {
-                    matrix[i,j] = rand.Next(min,max);
-                    matrix[i,cols - 1] = matrix[i,cols - 1] + matrix[i,j] * answer[j];
+        public float[,] generateUniqueSolutionMatrix(int rows, int cols, int min, int max, float[] answer)
+        {
+            float[,] matrix = new float[rows, cols];
+            bool hasUniqueSolution = false;
+            while (!hasUniqueSolution)
+            {
+                for (int i = 0; i < rows; i++)
+                {
+                    for (int j = 0; j < cols - 1; j++)
+                    {
+                        matrix[i, j] = rand.Next(min, max);
+                        matrix[i, cols - 1] = matrix[i, cols - 1] + matrix[i, j] * answer[j];
+                    }
+                }
+                float[,] tempMatrix = this.copyMatrix(matrix);
+                tempMatrix = reduceMatrix(tempMatrix);
+                if (checkForRowOfZeros(tempMatrix) == -1 && !checkForInconsistentMatrix(tempMatrix))
+                {
+                    hasUniqueSolution = true;
+                }
+                else
+                {
+                    matrix = new float[rows, cols];
                 }
             }
-            float[,] tempMatrix = this.copyMatrix(matrix);
-            tempMatrix = reduceMatrix(tempMatrix);
-            if (checkForRowOfZeros(tempMatrix) == -1 && !checkForInconsistentMatrix(tempMatrix)) {
-                hasUniqueSolution = true;
-            } else {
-                matrix = new float[rows,cols];
-            }
-        }
 
-        return matrix;
-    }
+            return matrix;
+        }
 
         //Is augmented
         //Will have non integer answers
-        public float[,] generateUniqueSolutionMatrix(int rows, int cols,int min, int max) {
-        float[,] matrix = new float[rows,cols];
-        bool hasUniqueSolution = false;
-        while (!hasUniqueSolution) {
-            for (int i = 0; i < rows; i++) {
-                for (int j = 0; j < cols; j++) {
-                    matrix[i,j] = rand.Next(min,max);
+        public float[,] generateUniqueSolutionMatrix(int rows, int cols, int min, int max)
+        {
+            float[,] matrix = new float[rows, cols];
+            bool hasUniqueSolution = false;
+            while (!hasUniqueSolution)
+            {
+                for (int i = 0; i < rows; i++)
+                {
+                    for (int j = 0; j < cols; j++)
+                    {
+                        matrix[i, j] = rand.Next(min, max);
+                    }
+                }
+                float[,] tempMatrix = this.copyMatrix(matrix);
+                tempMatrix = reduceMatrix(tempMatrix);
+                this.copyMatrix(matrix);
+                if (checkForRowOfZeros(tempMatrix) == -1 && !checkForInconsistentMatrix(tempMatrix))
+                {
+                    hasUniqueSolution = true;
+                }
+                else
+                {
+                    matrix = new float[rows, cols];
                 }
             }
-            float[,] tempMatrix = this.copyMatrix(matrix);
-            tempMatrix = reduceMatrix(tempMatrix);
-            this.copyMatrix(matrix);
-            if (checkForRowOfZeros(tempMatrix) == -1 && !checkForInconsistentMatrix(tempMatrix)) {
-                hasUniqueSolution = true;
-            } else {
-                matrix = new float[rows,cols];
-            }
-        }
 
-        return matrix;
-    }
+            return matrix;
+        }
 
         //Is augmented
-        public float[,] generateInconsistentMatrix(int rows, int cols, int min, int max) {
-        float[,] matrix = new float[rows,cols];
-        bool isInconsistent = false;
-        while (!isInconsistent) {
-            for (int i = 0; i < rows; i++) {
-                for (int j = 0; j < cols; j++) {
-                    matrix[i,j] = rand.Next(min,max);
+        public float[,] generateInconsistentMatrix(int rows, int cols, int min, int max)
+        {
+            float[,] matrix = new float[rows, cols];
+            bool isInconsistent = false;
+            while (!isInconsistent)
+            {
+                for (int i = 0; i < rows; i++)
+                {
+                    for (int j = 0; j < cols; j++)
+                    {
+                        matrix[i, j] = rand.Next(min, max);
+                    }
+                }
+                float[,] tempMatrix = this.copyMatrix(matrix);
+                tempMatrix = reduceMatrix(tempMatrix);
+                if (checkForRowOfZeros(tempMatrix) == -1 && checkForInconsistentMatrix(tempMatrix))
+                {
+                    isInconsistent = true;
+                }
+                else
+                {
+                    matrix = new float[rows, cols];
                 }
             }
-            float[,] tempMatrix = this.copyMatrix(matrix);
-            tempMatrix = reduceMatrix(tempMatrix);
-            if (checkForRowOfZeros(tempMatrix) == -1 && checkForInconsistentMatrix(tempMatrix)) {
-                isInconsistent = true;
-            } else {
-                matrix = new float[rows,cols];
-            }
-        }
 
-        return matrix;
-    }
+            return matrix;
+        }
 
         //Considered Augmented
-        public float[,] generateMatrixWithFreeVariables(int rows, int cols, int min, int max, float[] answer, int numOfFreeVars) {
-        float[,] matrix = new float[rows,cols];
-        bool hasFreeVariables = false;
-        while (!hasFreeVariables) {
-            for (int i = 0; i < matrix.GetLength(0); i++) {
-                for (int j = 0; j < matrix.GetLength(1) - 1; j++) {
-                    matrix[i,j] = rand.Next(min,max);
-                    matrix[i,matrix.GetLength(1) - 1] = matrix[i,matrix.GetLength(1) - 1] + matrix[i,j] * answer[j];
+        public float[,] generateMatrixWithFreeVariables(int rows, int cols, int min, int max, float[] answer, int numOfFreeVars)
+        {
+            float[,] matrix = new float[rows, cols];
+            bool hasFreeVariables = false;
+            while (!hasFreeVariables)
+            {
+                for (int i = 0; i < matrix.GetLength(0); i++)
+                {
+                    for (int j = 0; j < matrix.GetLength(1) - 1; j++)
+                    {
+                        matrix[i, j] = rand.Next(min, max);
+                        matrix[i, matrix.GetLength(1) - 1] = matrix[i, matrix.GetLength(1) - 1] + matrix[i, j] * answer[j];
+                    }
+                }
+                float[,] tempMatrix = this.copyMatrix(matrix);
+                tempMatrix = reduceMatrix(tempMatrix);
+                if (checkForRowOfZeros(tempMatrix) != -1 && checkForRowOfZeros(matrix) == -1
+                        && !checkForInconsistentMatrix(tempMatrix))
+                {
+                    int counter = 0;
+                    int row = checkForRowOfZeros(tempMatrix);
+                    while (row != -1)
+                    {
+                        tempMatrix[row, 0] = 1;
+                        row = checkForRowOfZeros(tempMatrix);
+                        counter++;
+                    }
+                    if (counter == numOfFreeVars)
+                    {
+                        hasFreeVariables = true;
+                    }
+                }
+                else
+                {
+                    matrix = new float[matrix.GetLength(0), matrix.GetLength(1)];
                 }
             }
-            float[,] tempMatrix = this.copyMatrix(matrix);
-            tempMatrix = reduceMatrix(tempMatrix);
-            if (checkForRowOfZeros(tempMatrix) != -1 && checkForRowOfZeros(matrix) == -1
-                    && !checkForInconsistentMatrix(tempMatrix)) {
-                int counter = 0;
-                int row = checkForRowOfZeros(tempMatrix);
-                while (row != -1) {
-                    tempMatrix[row,0] = 1;
-                    row = checkForRowOfZeros(tempMatrix);
-                    counter++;
-                }
-                if (counter == numOfFreeVars) {
-                    hasFreeVariables = true;
-                }
-            } else {
-                matrix = new float[matrix.GetLength(0),matrix.GetLength(1)];
-            }
+
+            return matrix;
         }
 
-        return matrix;
-    }
-
-        public float[,] generateRandomIdentityMatrix(int size, int min, int max) {
-        float[,] matrix = null;
-        bool isIdentity = false;
-        while (!isIdentity) {
-            matrix = new float[size,size];
-            for (int i = 0; i < size; i++) {
-                for (int j = 0; j < size; j++) {
-                    matrix[i,j] = rand.Next(min,max);
+        public float[,] generateRandomIdentityMatrix(int size, int min, int max)
+        {
+            float[,] matrix = null;
+            bool isIdentity = false;
+            while (!isIdentity)
+            {
+                matrix = new float[size, size];
+                for (int i = 0; i < size; i++)
+                {
+                    for (int j = 0; j < size; j++)
+                    {
+                        matrix[i, j] = rand.Next(min, max);
+                    }
+                }
+                float[,] tempMatrix = this.copyMatrix(matrix);
+                tempMatrix = reduceMatrix(tempMatrix);
+                if (checkForRowOfZeros(tempMatrix) == -1)
+                {
+                    isIdentity = true;
                 }
             }
-            float[,] tempMatrix = this.copyMatrix(matrix);
-            tempMatrix = reduceMatrix(tempMatrix);
-            if (checkForRowOfZeros(tempMatrix) == -1) {
-                isIdentity = true;
-            }
-        }
 
-        return matrix;
+            return matrix;
         }
 
         public float[] generateRandomVector(int size, int min, int max)
         {
             float[] vector = new float[size];
             for (int i = 0; i < size; i++)
-                vector[i] = rand.Next(min,max);
+                vector[i] = rand.Next(min, max);
             return vector;
         }
 
@@ -226,15 +265,15 @@ namespace MatrixBuilder
                     //row and changing the sign.
                     for (int row = 0; row < numOfRows; row++)
                     {
-                        if (!(Math.Abs(matrix[row,col]) < offset) && row != col)
+                        if (!(Math.Abs(matrix[row, col]) < offset) && row != col)
                         {
-                            float scalar = matrix[row,col] * (-1);
+                            float scalar = matrix[row, col] * (-1);
                             matrix = addMultipleOfRow(scalar, tRow, row, matrix);
                             for (int i = 0; i < numOfCols; i++)
                             {
-                                if (Math.Abs(matrix[row,i]) < offset)
+                                if (Math.Abs(matrix[row, i]) < offset)
                                 {
-                                    matrix[row,i] = 0;
+                                    matrix[row, i] = 0;
                                 }
                             }
                         }
@@ -253,11 +292,11 @@ namespace MatrixBuilder
 
             for (int i = 0; i < matrix.GetLength(0); i++)
             {
-                if (matrix[i,currentCol] != 0)
+                if (matrix[i, currentCol] != 0)
                 {
                     for (int j = 0; j < currentCol; j++)
                     {
-                        if (Math.Abs(matrix[i,j]) < offset)
+                        if (Math.Abs(matrix[i, j]) < offset)
                         {
                             counter++;
                         }
@@ -284,13 +323,13 @@ namespace MatrixBuilder
             {
                 for (int j = 0; j < matrix.GetLength(1) - 1; j++)
                 {
-                    if (!(Math.Abs(matrix[i,j]) < offset))
+                    if (!(Math.Abs(matrix[i, j]) < offset))
                     {
                         break;
                     }
                     counter++;
                 }
-                if (counter == matrix.GetLength(1) - 1 && !(Math.Abs(matrix[i,matrix.GetLength(1) - 1]) < offset))
+                if (counter == matrix.GetLength(1) - 1 && !(Math.Abs(matrix[i, matrix.GetLength(1) - 1]) < offset))
                 {
                     inconsistent = true;
                     break;
@@ -311,7 +350,7 @@ namespace MatrixBuilder
             {
                 for (int j = 0; j < matrix.GetLength(1); j++)
                 {
-                    if (!(Math.Abs(matrix[i,j]) < offset))
+                    if (!(Math.Abs(matrix[i, j]) < offset))
                     {
                         break;
                     }
@@ -337,7 +376,7 @@ namespace MatrixBuilder
             {
                 for (int j = 0; j < matrix.GetLength(1); j++)
                 {
-                    if (matrix[i,j] != matrix2[i,j])
+                    if (matrix[i, j] != matrix2[i, j])
                     {
                         changedRowsIndex.Add(i);
                         break;
@@ -351,7 +390,7 @@ namespace MatrixBuilder
         public float[,] timesScalar(float scalar, int row, float[,] matrix)
         {
             for (int i = 0; i < matrix.GetLength(1); i++)
-                matrix[row,i] = matrix[row,i] * scalar;
+                matrix[row, i] = matrix[row, i] * scalar;
             return matrix;
         }
 
@@ -364,20 +403,20 @@ namespace MatrixBuilder
             ArrayList changedRows = findChangedRows(oldMatrix, newMatrix);
             if (changedRows.Count == 1)
             {
-                int[] rows = (int[]) changedRows.ToArray(typeof(int));
+                int[] rows = (int[])changedRows.ToArray(typeof(int));
                 int row = rows[0];
                 while (index < oldMatrix.GetLength(1))
                 {
-                    if (oldMatrix[row,index] != 0)
+                    if (oldMatrix[row, index] != 0)
                     {
-                        constant = newMatrix[row,index] / oldMatrix[row,index];
+                        constant = newMatrix[row, index] / oldMatrix[row, index];
                         break;
                     }
                     index++;
                 }
                 for (int i = 0; i < oldMatrix.GetLength(1); i++)
                 {
-                    if (Math.Abs(constant * oldMatrix[row,i] - newMatrix[row,i]) > floatOffset)
+                    if (Math.Abs(constant * oldMatrix[row, i] - newMatrix[row, i]) > floatOffset)
                     {
                         isTimesScalar = false;
                         break;
@@ -414,7 +453,7 @@ namespace MatrixBuilder
                 int row2 = rows[1];
                 for (int i = 0; i < oldMatrix.GetLength(0); i++)
                 {
-                    if (oldMatrix[row1,i] != newMatrix[row2,i] || oldMatrix[row2,i] != newMatrix[row1,i])
+                    if (oldMatrix[row1, i] != newMatrix[row2, i] || oldMatrix[row2, i] != newMatrix[row1, i])
                     {
                         isRowSwap = false;
                         break;
@@ -434,87 +473,98 @@ namespace MatrixBuilder
             float[] rowHolder = new float[matrix.GetLength(1)];
             for (int i = 0; i < matrix.GetLength(1); i++)
             {
-                rowHolder[i] = matrix[actionRow,i];
+                rowHolder[i] = matrix[actionRow, i];
             }
             matrix = timesScalar(scalar, actionRow, matrix);
             for (int i = 0; i < matrix.GetLength(1); i++)
-                matrix[targetRow,i] += matrix[actionRow,i];
+                matrix[targetRow, i] += matrix[actionRow, i];
 
             for (int i = 0; i < matrix.GetLength(1); i++)
             {
-                matrix[actionRow,i] = rowHolder[i];
+                matrix[actionRow, i] = rowHolder[i];
             }
             return matrix;
         }
 
-        public bool checkAddMultipleOfRow(float[,] oldMatrix, float[,] newMatrix) {
-        bool isAddMultipleOfRow = false;
-        ArrayList changedRows = findChangedRows(oldMatrix, newMatrix);
-        if (changedRows.Count == 1) {
-            int[] rows = (int[])changedRows.ToArray(typeof(int));
-            int changedRow = rows[0];
-            float[,] rowDifference = this.copyMatrix(oldMatrix);
-            for (int i = 0; i < oldMatrix.GetLength(1); i++) {
-                rowDifference[0,i] = oldMatrix[changedRow,i] - newMatrix[changedRow,i];
-            }
+        public bool checkAddMultipleOfRow(float[,] oldMatrix, float[,] newMatrix)
+        {
+            bool isAddMultipleOfRow = false;
+            ArrayList changedRows = findChangedRows(oldMatrix, newMatrix);
+            if (changedRows.Count == 1)
+            {
+                int[] rows = (int[])changedRows.ToArray(typeof(int));
+                int changedRow = rows[0];
+                float[,] rowDifference = this.copyMatrix(oldMatrix);
+                for (int i = 0; i < oldMatrix.GetLength(1); i++)
+                {
+                    rowDifference[0, i] = oldMatrix[changedRow, i] - newMatrix[changedRow, i];
+                }
 
-            for (int j = 0; j < oldMatrix.GetLength(0); j++) {
-                if (j != changedRow) {
-                    if (checkTimesScalar(oldMatrix, rowDifference)) {
-                        isAddMultipleOfRow = true;
-                        break;
+                for (int j = 0; j < oldMatrix.GetLength(0); j++)
+                {
+                    if (j != changedRow)
+                    {
+                        if (checkTimesScalar(oldMatrix, rowDifference))
+                        {
+                            isAddMultipleOfRow = true;
+                            break;
+                        }
+                    }
+                    if ((j + 1) != oldMatrix.GetLength(0))
+                        rowSwap(j, j + 1, rowDifference);
+                    for (int k = 0; k < oldMatrix.GetLength(1); k++)
+                    {
+                        rowDifference[j, k] = oldMatrix[j, k];
                     }
                 }
-                if ((j + 1) != oldMatrix.GetLength(0))
-                    rowSwap(j, j + 1, rowDifference);
-                for (int k = 0; k < oldMatrix.GetLength(1); k++)
-                {
-                    rowDifference[j, k] = oldMatrix[j, k];
-                }
             }
-        }
 
-        return isAddMultipleOfRow;
-    }
+            return isAddMultipleOfRow;
+        }
 
         //Will error with incorrect size matrices
-        public static float[,] matrixMultiplication(float[,] matrix, float[,] matrix2) {
-        float[,] product = null;
-        if (matrix.GetLength(1) == matrix2.GetLength(0)) {
-            product = new float[matrix.GetLength(0),matrix2.GetLength(1)];
-            for (int i = 0; i < product.GetLength(0); i++) {
-                float[] vector = new float[matrix2.GetLength(0)];
-                for (int k = 0; k < matrix2.GetLength(0); k++) {
-                    vector[k] = matrix2[k,i];
-                }
-                for (int j = 0; j < product.GetLength(1); j++) {
-                    float[] row = new float[matrix.GetLength(1)];
-                    for (int k = 0; k < row.GetLength(1); k++)
+        public float[,] matrixMultiplication(float[,] matrix, float[,] matrix2)
+        {
+            float[,] product = null;
+            if (matrix.GetLength(1) == matrix2.GetLength(0))
+            {
+                product = new float[matrix.GetLength(0), matrix2.GetLength(1)];
+                for (int i = 0; i < product.GetLength(0); i++)
+                {
+                    float[] vector = new float[matrix2.GetLength(0)];
+                    for (int k = 0; k < matrix2.GetLength(0); k++)
                     {
-                        row[k] = matrix[j, k];
+                        vector[k] = matrix2[k, i];
                     }
-                    product[j,i] = dotProduct(row, vector);
+                    for (int j = 0; j < product.GetLength(1); j++)
+                    {
+                        float[] row = new float[matrix.GetLength(1)];
+                        for (int k = 0; k < row.GetLength(1); k++)
+                        {
+                            row[k] = matrix[j, k];
+                        }
+                        product[j, i] = dotProduct(row, vector);
+                    }
                 }
+
             }
 
+            return product;
         }
 
-        return product;
-    }
-
-        public static float[,] matrixScalarMultiplication(float[,] matrix, float scalar)
+        public float[,] matrixScalarMultiplication(float[,] matrix, float scalar)
         {
             for (int i = 0; i < matrix.GetLength(0); i++)
             {
                 for (int j = 0; j < matrix.GetLength(1); j++)
                 {
-                    matrix[i,j] = scalar * matrix[i,j];
+                    matrix[i, j] = scalar * matrix[i, j];
                 }
             }
             return matrix;
         }
 
-        public static float dotProduct(float[] vector1, float[] vector2)
+        public float dotProduct(float[] vector1, float[] vector2)
         {
             float result = 0;
             for (int i = 0; i < vector1.GetLength(0); i++)
@@ -524,81 +574,91 @@ namespace MatrixBuilder
             return result;
         }
 
-        public float findDeterminant(float[,] matrix) {
-        float determinant = 0;
-        if (matrix.GetLength(0) == 2)
+        public float findDeterminant(float[,] matrix)
         {
-            determinant = (matrix[0,0] * matrix[1,1]) - (matrix[0,1] * matrix[1,0]);
-        } else if (matrix.GetLength(0) > 2) {
-            int curColIndex = 0;
-            while (curColIndex < matrix.GetLength(0))
+            float determinant = 0;
+            if (matrix.GetLength(0) == 2)
             {
-                float[,] detMatrix = new float[matrix.GetLength(0) - 1, matrix.GetLength(1) - 1];
-                int detRow = 0;
-                int detCol = 0;
+                determinant = (matrix[0, 0] * matrix[1, 1]) - (matrix[0, 1] * matrix[1, 0]);
+            }
+            else if (matrix.GetLength(0) > 2)
+            {
+                int curColIndex = 0;
+                while (curColIndex < matrix.GetLength(0))
+                {
+                    float[,] detMatrix = new float[matrix.GetLength(0) - 1, matrix.GetLength(1) - 1];
+                    int detRow = 0;
+                    int detCol = 0;
+                    for (int i = 0; i < matrix.GetLength(0); i++)
+                    {
+                        for (int j = 0; j < matrix.GetLength(1); j++)
+                        {
+                            if (i != 0 && j != curColIndex)
+                            {
+                                detMatrix[detRow, detCol] = matrix[i, j];
+                                detCol++;
+                            }
+                        }
+                        if (i != 0)
+                        {
+                            detRow++;
+                        }
+                        detCol = 0;
+                    }
+                    float scalar = matrix[0, curColIndex];
+                    if (Math.Abs(scalar) != 0)
+                    {
+                        if ((curColIndex % 2) == 0)
+                        {
+                            determinant += scalar * findDeterminant(detMatrix);
+                        }
+                        else if ((curColIndex % 2) == 1)
+                        {
+                            determinant -= scalar * findDeterminant(detMatrix);
+                        }
+                    }
+                    curColIndex++;
+                }
+            }
+            return determinant;
+        }
+
+        public float[,] findInverse(float[,] matrix)
+        {
+            float[,] inverse = null;
+            if (matrix.GetLength(0) == matrix.GetLength(1))
+            {
+                inverse = new float[matrix.GetLength(0), matrix.GetLength(1)];
+                float[,] matrixWithInverse = new float[matrix.GetLength(0), matrix.GetLength(1) * 2];
                 for (int i = 0; i < matrix.GetLength(0); i++)
                 {
                     for (int j = 0; j < matrix.GetLength(1); j++)
                     {
-                        if (i != 0 && j != curColIndex) {
-                            detMatrix[detRow,detCol] = matrix[i,j];
-                            detCol++;
-                        }
-                    }
-                    if (i != 0) {
-                        detRow++;
-                    }
-                    detCol = 0;
-                }
-                float scalar = matrix[0,curColIndex];
-                if (Math.Abs(scalar) != 0) {
-                    if ((curColIndex % 2) == 0) {
-                        determinant += scalar * findDeterminant(detMatrix);
-                    } else if ((curColIndex % 2) == 1) {
-                        determinant -= scalar * findDeterminant(detMatrix);
+                        matrixWithInverse[i, j] = matrix[i, j];
                     }
                 }
-                curColIndex++;
-            }
-        }
-        return determinant;
-    }
-
-        public float[,] findInverse(float[,] matrix) {
-        float[,] inverse = null;
-        if (matrix.GetLength(0) == matrix.GetLength(1))
-        {
-            inverse = new float[matrix.GetLength(0), matrix.GetLength(1)];
-            float[,] matrixWithInverse = new float[matrix.GetLength(0), matrix.GetLength(1) * 2];
-            for (int i = 0; i < matrix.GetLength(0); i++)
-            {
-                for (int j = 0; j < matrix.GetLength(1); j++)
+                int row = 0;
+                for (int j = matrix.GetLength(1); j < matrixWithInverse.GetLength(1); j++)
                 {
-                    matrixWithInverse[i,j] = matrix[i,j];
+                    matrixWithInverse[row, j] = 1;
+                    row++;
                 }
-            }
-            int row = 0;
-            for (int j = matrix.GetLength(1); j < matrixWithInverse.GetLength(1); j++)
-            {
-                matrixWithInverse[row,j] = 1;
-                row++;
-            }
 
-            matrixWithInverse = reduceMatrix(matrixWithInverse);
+                matrixWithInverse = reduceMatrix(matrixWithInverse);
 
-            for (int i = 0; i < inverse.GetLength(0); i++)
-            {
-                for (int j = 0; j < inverse.GetLength(1); j++)
+                for (int i = 0; i < inverse.GetLength(0); i++)
                 {
-                    inverse[i, j] = matrixWithInverse[i, j + matrix.GetLength(1)];
+                    for (int j = 0; j < inverse.GetLength(1); j++)
+                    {
+                        inverse[i, j] = matrixWithInverse[i, j + matrix.GetLength(1)];
+                    }
                 }
             }
+
+            return inverse;
         }
 
-        return inverse;
-    }
-
-        public static bool checkMatrixEquality(float[,] matrix, float[,] matrix2)
+        public bool checkMatrixEquality(float[,] matrix, float[,] matrix2)
         {
             bool isEqual = true;
 
@@ -608,7 +668,7 @@ namespace MatrixBuilder
                 {
                     for (int j = 0; j < matrix.GetLength(1); j++)
                     {
-                        if (Math.Abs(matrix[i,j] - matrix2[i,j]) >= offset)
+                        if (Math.Abs(matrix[i, j] - matrix2[i, j]) >= offset)
                         {
                             isEqual = false;
                             break;
@@ -629,7 +689,7 @@ namespace MatrixBuilder
 
         protected float[,] copyMatrix(float[,] matrix)
         {
-            float[,] newArray = new float[matrix.GetLength(0),matrix.GetLength(1)];
+            float[,] newArray = new float[matrix.GetLength(0), matrix.GetLength(1)];
             for (int i = 0; i < matrix.GetLength(0); i++)
             {
                 for (int j = 0; j < matrix.GetLength(1); j++)
@@ -646,7 +706,7 @@ namespace MatrixBuilder
             String feedback = "";
             for (int i = 1; i < matrixMap.Count(); i++)
             {
-                float[,] matrix1 = null; 
+                float[,] matrix1 = null;
                 matrixMap.TryGetValue(i - 1, out matrix1);
                 float[,] matrix2 = null;
                 matrixMap.TryGetValue(i, out matrix2);
@@ -681,73 +741,172 @@ namespace MatrixBuilder
             return feedback.Equals("") ? null : feedback;
         }
 
-        public int countOperationsNeeded(float[,] matrix) {
-        int numOfRows = matrix.GetLength(0);
-        int numOfCols = matrix.GetLength(1);
-        int numOfRowOps = 0;
-        bool zeroColumn = false;
-
-        //For each column reduce the coefficients under it to 0
-        for (int col = 0; col < numOfCols - 1; col++) {
-            //Handles when n >= m
-            int tRow = col;
-            if (numOfCols <= col) {
-                break;
+        public String checkFreeVariableAnswers(float[,] startingMatrix, String[] studentAnswers)
+        {
+            String feedback = "";
+            if (startingMatrix.GetLength(0) == studentAnswers.Length)
+            {
+                startingMatrix = reduceMatrix(startingMatrix);
+                List<int> rowsToSolve = findRowsToSolve(startingMatrix);
+                float[,] solvedMatrix = solveForFreeVariables(startingMatrix, rowsToSolve);
+                float[,] studentMatrix = parseStudentAnswer(studentAnswers);
+                bool t = checkMatrixEquality(solvedMatrix, studentMatrix);
+                bool c = !checkMatrixEquality(solvedMatrix, studentMatrix);
+                if (!checkMatrixEquality(solvedMatrix, studentMatrix))
+                {
+                    feedback += "<div>Incorrect Solution Provided. Check your answers.</div>";
+                }
             }
-            if (zeroColumn == true && numOfRows + 1 < numOfCols) {
-                tRow -= 1;
-            } else if (tRow == numOfRows && numOfRows + 1 < numOfCols) {
-                break;
+            else
+            {
+                feedback = "Your answer has an incorrect number of variables.";
             }
+            return feedback.Equals("") ? null : feedback;
+        }
 
-            zeroColumn = false;
-            //if the current diagonal = 0 then swap rows until it doesn't
-            if (matrix[tRow,col] == 0) {
-                int index = col;
-                while (matrix[tRow,col] == 0) {
-                    if (index < numOfRows - 1) {
-                        matrix = rowSwap(tRow, index + 1, matrix);
-                        numOfRowOps++;
-                        index++;
+        private float[,] parseStudentAnswer(String[] studentAnswers) {
+        float[,] studentMatrix = new float[studentAnswers.Length,studentAnswers.Length + 1];
+        for (int row = 0; row < studentAnswers.Length; row++) {
+            if (!studentAnswers[row].Contains("F")) {
+                String stringRow = studentAnswers[row];
+                String[] variables = stringRow.Split(',');
+                foreach (String variable in variables) {
+                    if (variable.Contains("@")) {
+                        String[] valueAndIndex = variable.Split('@');
+                        float value = float.Parse(valueAndIndex[0]);
+                        int col = int.Parse(valueAndIndex[1]);
+                        studentMatrix[row,col] = value;
                     } else {
-                        int pivotRow = checkForPivotRowAbove(col, matrix);
-                        if (pivotRow != -1) {
-                            matrix = rowSwap(tRow, pivotRow, matrix);
-                            numOfRowOps++;
-                        } else {
-                            zeroColumn = true;
-                        }
-                        break;
+                        studentMatrix[row,studentAnswers.Length] = float.Parse(variable);
                     }
                 }
+                studentMatrix[row,row] = 1f;
             }
+        }
+        return studentMatrix;
+    }
 
-            if (!zeroColumn) {
-                //Makes the current diagonal = 1
-                if (matrix[tRow,col] != 1) {
-                    matrix = timesScalar(1 / matrix[tRow,col], tRow, matrix);
-                    numOfRowOps++;
-                }
-
-                //This is what reduces the coefficients under the current column to 0
-                //by multiplying the current row by the first coefficient of the next
-                //row and changing the sign.
-                for (int row = 0; row < numOfRows; row++) {
-                    if (!(Math.Abs(matrix[row,col]) <= offset) && row != col) {
-                        float scalar = matrix[row,col] * (-1);
-                        matrix = addMultipleOfRow(scalar, tRow, row, matrix);
-                        numOfRowOps++;
-                        for (int i = 0; i < numOfCols; i++) {
-                            if (Math.Abs(matrix[row,i]) < offset) {
-                                matrix[row,i] = 0;
-                            }
+        private float[,] solveForFreeVariables(float[,] matrix, List<int> rowsToSolve) {
+        foreach (int row in rowsToSolve) {
+            
+            for (int i = 0; i < matrix.GetLength(1); i++) {
+                if (i != row) {
+                    if (i == matrix.GetLength(1) - 1)
+                    {
+                        matrix[row, i] = matrix[row, i] / matrix[row, row];
+                    } else {
+                        if (matrix[row, i] != 0)
+                        {
+                            matrix[row, i] = (matrix[row, i] / matrix[row, row]) * (-1);
                         }
                     }
                 }
             }
         }
+        return matrix;
+    }
 
-        return numOfRowOps;
+        private List<int> findRowsToSolve(float[,] matrix)
+        {
+            List<int> freeRows = new List<int>();
+            for (int i = 0; i < matrix.GetLength(0); i++)
+            {
+                if (matrix[i,i] != 0)
+                {
+                    freeRows.Add(i);
+                }
+            }
+
+            return freeRows;
+        }
+
+        public int countOperationsNeeded(float[,] matrix)
+        {
+            int numOfRows = matrix.GetLength(0);
+            int numOfCols = matrix.GetLength(1);
+            int numOfRowOps = 0;
+            bool zeroColumn = false;
+
+            //For each column reduce the coefficients under it to 0
+            for (int col = 0; col < numOfCols - 1; col++)
+            {
+                //Handles when n >= m
+                int tRow = col;
+                if (numOfCols <= col)
+                {
+                    break;
+                }
+                if (zeroColumn == true && numOfRows + 1 < numOfCols)
+                {
+                    tRow -= 1;
+                }
+                else if (tRow == numOfRows && numOfRows + 1 < numOfCols)
+                {
+                    break;
+                }
+
+                zeroColumn = false;
+                //if the current diagonal = 0 then swap rows until it doesn't
+                if (matrix[tRow, col] == 0)
+                {
+                    int index = col;
+                    while (matrix[tRow, col] == 0)
+                    {
+                        if (index < numOfRows - 1)
+                        {
+                            matrix = rowSwap(tRow, index + 1, matrix);
+                            numOfRowOps++;
+                            index++;
+                        }
+                        else
+                        {
+                            int pivotRow = checkForPivotRowAbove(col, matrix);
+                            if (pivotRow != -1)
+                            {
+                                matrix = rowSwap(tRow, pivotRow, matrix);
+                                numOfRowOps++;
+                            }
+                            else
+                            {
+                                zeroColumn = true;
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                if (!zeroColumn)
+                {
+                    //Makes the current diagonal = 1
+                    if (matrix[tRow, col] != 1)
+                    {
+                        matrix = timesScalar(1 / matrix[tRow, col], tRow, matrix);
+                        numOfRowOps++;
+                    }
+
+                    //This is what reduces the coefficients under the current column to 0
+                    //by multiplying the current row by the first coefficient of the next
+                    //row and changing the sign.
+                    for (int row = 0; row < numOfRows; row++)
+                    {
+                        if (!(Math.Abs(matrix[row, col]) <= offset) && row != col)
+                        {
+                            float scalar = matrix[row, col] * (-1);
+                            matrix = addMultipleOfRow(scalar, tRow, row, matrix);
+                            numOfRowOps++;
+                            for (int i = 0; i < numOfCols; i++)
+                            {
+                                if (Math.Abs(matrix[row, i]) < offset)
+                                {
+                                    matrix[row, i] = 0;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return numOfRowOps;
         }
     }
 }

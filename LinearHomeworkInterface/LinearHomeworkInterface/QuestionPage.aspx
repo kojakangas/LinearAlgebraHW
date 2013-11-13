@@ -284,7 +284,7 @@ MathJax.Hub.Config({
                             if (firstInput != "F") {
                                 $(this).find("input[id^='free']").each(function (inputIndex, input) {
                                     var value = eval($(this).val());
-                                    answerString += "," + value + "[" + $(this).attr("name");//Parsing can be done differently
+                                    answerString += "," + value + "@" + $(this).attr("name");//Parsing can be done differently
                                 });
                             }
                             answer[index] = answerString;

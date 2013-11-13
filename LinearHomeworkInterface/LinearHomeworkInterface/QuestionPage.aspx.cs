@@ -338,12 +338,13 @@ namespace LinearHomeworkInterface
             MatrixBuilder.MatrixOperations mb = new MatrixBuilder.MatrixOperations();
 
             //should probably check if the first matrix is the actual first matrix
-            //float[,] augMatrix = null; 
-            //MatrixMap.TryGetValue(0, out augMatrix);
-            //if (!matrix.Equals(augMatrix))
-            //{
-            //   feedback += "The first matrix does not match the augmented matrix.";
-            //}
+            float[,] augMatrix = null; 
+            MatrixMap.TryGetValue(0, out augMatrix);
+            //Not sure if this if works 
+            if (!mb.checkMatrixEquality(matrix,augMatrix))
+            {
+               feedback += "The first matrix does not match the augmented matrix.";
+            }
 
             if (AnswerJSON.Contains("I"))
             {
@@ -358,7 +359,10 @@ namespace LinearHomeworkInterface
                 feedback = mb.checkSingleRowOperation(MatrixMap);
                 if (numOfFreeVars > 0)
                 {
-                    //need a method to solve for free vars
+                    Dictionary<int, String> AnswersConverted = JsonConvert.DeserializeObject<Dictionary<int, String>>(AnswerJSON);
+                    String[] Answers = new String[AnswersConverted.Count()];
+                    AnswersConverted.Values.CopyTo(Answers, 0);
+                    feedback += mb.checkFreeVariableAnswers(matrix, Answers);
                 }
                 else
                 {
@@ -376,7 +380,10 @@ namespace LinearHomeworkInterface
                 feedback += mb.checkAnswers(actualAnswer, Answers);
             }
 
-            return (feedback == null || feedback.Equals("")) ? null : feedback;
+            //Need to display points somehow
+            //feedback += "<div><strong>Points Earned: </strong> 0.7 / 1.0</div>";
+
+            return String.IsNullOrEmpty(feedback) ? null : feedback;
         }
 
         ////our WebMethod for checking the user's solution(s)
