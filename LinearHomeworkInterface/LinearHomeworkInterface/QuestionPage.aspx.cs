@@ -47,57 +47,10 @@ namespace LinearHomeworkInterface
             //set up connection, do stuff
             string connStr = ConfigurationManager.ConnectionStrings["linearhmwkdb"].ConnectionString;
             MySqlConnection msqcon = new MySqlConnection(connStr);
+            //username is needed for assignment check
+            String username = Context.User.Identity.Name;
             try
             {
-                msqcon.Open();
-                String query = "SELECT ha.assignmentId, que.* FROM hmwkassignment AS ha JOIN question AS que WHERE que.homeworkId=ha.homeworkid AND ha.assignmentId = " + assId + " AND que.number = " + queId;
-                MySqlCommand msqcom = new MySqlCommand(query, msqcon);
-                MySqlDataReader book = msqcom.ExecuteReader();
-                book.Read();
-                n = System.Convert.ToInt32(book["rows"]);
-                m = System.Convert.ToInt32(book["columns"]);
-                min = System.Convert.ToInt32(book["min"]);
-                max = System.Convert.ToInt32(book["max"]);
-                numOfFreeVars = System.Convert.ToInt32(book["freeVars"]);
-                inconsistent = System.Convert.ToBoolean(book["inconsistent"]);
-                type = System.Convert.ToString(book["type"]);
-                //if (book["inconsistent"] == "0")
-                //{
-                //    inconsistent = false;
-                //}
-                //else
-                //{
-                //    inconsistent = true;
-                //}
-                //type = "SoE";
-                msqcon.Close();
-            }
-            catch (Exception)
-            {
-                
-                throw;
-            }
-
-            actualAnswer = new float[n];
-            for (int i = 0; i < n; i++)
-            {
-                actualAnswer[i] = rand.Next(min, max);
-            }
-            matrix = this.Create_Problem(n, m, min, max, numOfFreeVars, inconsistent, type, actualAnswer);
-            
-            if(type.Equals("DP")){
-                //Displays the two vectors for the Dot Product problem using MATHJAX
-                buildQuestionDisplay(vector1, vector2);
-            }
-            else{
-                //Displays the equations or matrices using MATHJAX by building a parsable string
-                buildQuestionDisplay(matrix);
-            }
-
-            try
-            {
-                String username = Context.User.Identity.Name;
-
                 msqcon.Open();
                 //grab assignments status
                 String query = "SELECT ha.status From user JOIN hmwkassignment AS ha WHERE user.username=@username AND user.userId=ha.userId AND ha.assignmentId=@assignment";
@@ -168,6 +121,58 @@ namespace LinearHomeworkInterface
                 }
                 paginationLiteral.Text = sb.ToString();
                 questions.Close();
+                //now read the data needed to generate our question
+                query = "SELECT ha.assignmentId, que.* FROM hmwkassignment AS ha JOIN question AS que WHERE que.homeworkId=ha.homeworkid AND ha.assignmentId = " + assId + " AND que.number = " + queId;
+                MySqlCommand msqcom = new MySqlCommand(query, msqcon);
+                MySqlDataReader book = msqcom.ExecuteReader();
+                book.Read();
+                n = System.Convert.ToInt32(book["rows"]);
+                m = System.Convert.ToInt32(book["columns"]);
+                min = System.Convert.ToInt32(book["min"]);
+                max = System.Convert.ToInt32(book["max"]);
+                numOfFreeVars = System.Convert.ToInt32(book["freeVars"]);
+                inconsistent = System.Convert.ToBoolean(book["inconsistent"]);
+                type = System.Convert.ToString(book["type"]);
+                //if (book["inconsistent"] == "0")
+                //{
+                //    inconsistent = false;
+                //}
+                //else
+                //{
+                //    inconsistent = true;
+                //}
+                //type = "SoE";
+                msqcon.Close();
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
+
+            actualAnswer = new float[n];
+            for (int i = 0; i < n; i++)
+            {
+                actualAnswer[i] = rand.Next(min, max);
+            }
+            matrix = this.Create_Problem(n, m, min, max, numOfFreeVars, inconsistent, type, actualAnswer);
+            
+            if(type.Equals("DP")){
+                //Displays the two vectors for the Dot Product problem using MATHJAX
+                buildQuestionDisplay(vector1, vector2);
+            }
+            else{
+                //Displays the equations or matrices using MATHJAX by building a parsable string
+                buildQuestionDisplay(matrix);
+            }
+
+            try
+            {
+                
+
+                msqcon.Open();
+                
+                
 
                 msqcon.Close();
             }
@@ -175,7 +180,7 @@ namespace LinearHomeworkInterface
             {
                 throw;
             }
-            nextQuestion.Attributes.Add("href", "/QuestionPage?assign=" + assId + "&question=" + (System.Convert.ToInt32(queId) + 1));
+            //nextQuestion.Attributes.Add("href", "/QuestionPage?assign=" + assId + "&question=" + (System.Convert.ToInt32(queId) + 1));
         }
 
         //method to dynamically load the question using MATHJAX
@@ -384,6 +389,45 @@ namespace LinearHomeworkInterface
             //feedback += "<div><strong>Points Earned: </strong> 0.7 / 1.0</div>";
 
             return String.IsNullOrEmpty(feedback) ? null : feedback;
+        }
+
+        [WebMethod]
+        public static String updateForNextQuestion(String question, String assignment)
+        {
+            String flag;
+            //set up connection, do stuff
+            string connStr = ConfigurationManager.ConnectionStrings["linearhmwkdb"].ConnectionString;
+            MySqlConnection msqcon = new MySqlConnection(connStr);
+            try
+            {
+                msqcon.Open();
+                String query = "SELECT ha.assignmentId, ha.currentQuestion, h.points FROM hmwkassignment AS ha JOIN homework AS h WHERE h.homeworkId=ha.homeworkid AND ha.assignmentId = " + assignment;
+                MySqlCommand msqcheck = new MySqlCommand(query, msqcon);
+                MySqlDataReader book = msqcheck.ExecuteReader();
+                book.Read();
+                if (System.Convert.ToInt32(book["currentQuestion"]) < System.Convert.ToInt32(book["points"]))
+                {
+                    book.Close();
+                    String command = "UPDATE hmwkassignment SET currentQuestion = " + (System.Convert.ToInt32(question) + 1) + " WHERE assignmentId = " + assignment;
+                    MySqlCommand msqcom = new MySqlCommand(command, msqcon);
+                    msqcom.ExecuteNonQuery();
+                    flag = "incomplete";
+                }
+                else
+                {
+                    book.Close();
+                    String command = "UPDATE hmwkassignment SET status = 'Complete', currentQuestion = 0 WHERE assignmentId = " + assignment;
+                    MySqlCommand msqcom = new MySqlCommand(command, msqcon);
+                    msqcom.ExecuteNonQuery();
+                    flag = "complete";
+                }
+                msqcon.Close();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return flag;
         }
 
         ////our WebMethod for checking the user's solution(s)

@@ -103,7 +103,7 @@ MathJax.Hub.Config({
                         </div>
                         <hr style="margin-bottom: 0px; margin-top: 0px;" />
                         <button id="submitAnswer" disabled="disabled" class="btn btn-primary" title="Note: Must create an answer to submit." type="button" style="margin-top: 5px; float: right; margin-bottom: 50px;">Submit Answer</button>
-                        <asp:button id="nextQuestion" Text="Next Question" runat="server" class="btn btn-primary" type="button" style="display: none; margin-top: 5px; float: right; margin-bottom: 50px;" />
+                        <button id="nextQuestion" class="btn btn-primary" type="button" style="display: none; margin-top: 5px; float: right; margin-bottom: 50px;">Next Question</button>
                     </form>
                 </div>
             </div>
@@ -320,6 +320,49 @@ MathJax.Hub.Config({
                             alert("Grading Failed, don't panic");
                         }
                     });
+                }
+            });
+
+            $('#nextQuestion').click(function (callback) {
+                var complete = "";
+                var vars = [], hash;
+                var q = document.URL.split('?')[1];
+                if (q != undefined) {
+                    q = q.split('&');
+                    for (var i = 0; i < q.length; i++) {
+                        hash = q[i].split('=');
+                        vars.push(hash[1]);
+                        vars[hash[0]] = hash[1];
+                    }
+                }
+                alert(vars['assign']);
+                alert(vars['question']);
+                $.ajax({
+                    type: "POST",
+                    url: "QuestionPage.aspx/updateForNextQuestion",
+                    data: "{'question': '" + vars['question'] + "','assignment': '" + vars['assign'] + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        //the value returned from the POST AJAX is not immediately returned, so we must pass
+                        //it from the AJAX call to another function
+                        complete = data.d;
+                        nextStep(complete);
+                    },
+                    error: function (msg) {
+                        alert("Question Loading Failed, don't panic");
+                    }
+                });
+
+                function nextStep(data) {
+                    if (complete == "incomplete") {
+                        alert("Loading next question...");
+                        window.location.href = "QuestionPage.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                    }
+                    if (complete == "complete") {
+                        alert("Well done! This assignment is now complete.");
+                        window.location.href = "StudentHome.aspx";
+                    }
                 }
             });
 
