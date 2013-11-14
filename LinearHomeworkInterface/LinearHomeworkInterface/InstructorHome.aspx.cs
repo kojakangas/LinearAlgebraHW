@@ -64,31 +64,6 @@ namespace LinearHomeworkInterface
                 }
                 StudentListLiteral.Text = sb.ToString();
                 students.Close();
-                /*
-                //student grade junk
-                msqcon.Open();
-                query = "SELECT h.title, ha.grade FROM hmwkassignment AS ha JOIN homework AS h WHERE ha.homeworkId=h.homeworkid AND ha.userID = @userid ORDER BY h.homeworkid";
-                msqcmd = new MySqlCommand(query, msqcon);
-                msqcmd.Parameters.Add(new MySqlParameter("@userid", studentNameDropdown.Value));
-                MySqlDataReader studentGrades = null;
-                assignments = msqcmd.ExecuteReader();
-                //build table
-                sb = new StringBuilder();
-                while (studentGrades.Read())
-                {
-                    sb.Append("<tr>");
-                    sb.Append("<td>");
-                    sb.Append(assignments.GetString(0));
-                    sb.Append("</td>");
-                    sb.Append("<td>");
-                    sb.Append(assignments.GetString(1));
-                    sb.Append("</td>");
-
-                    sb.Append("</tr>");
-                }
-                //StudentGradeLiteral.Text = sb.ToString();
-                studentGrades.Close();
-                */
 
                 msqcon.Close();
             }
@@ -138,22 +113,12 @@ namespace LinearHomeworkInterface
                 if(studentGrades.HasRows){
                     while (studentGrades.Read())
                     {
-                        /*sb.Append("<tr>");
-                        sb.Append("<td>");
-                        sb.Append(studentGrades.GetString(0));
-                        sb.Append("</td>");
-                        sb.Append("<td>");
-                        sb.Append(studentGrades.GetString(1));
-                        sb.Append("</td>");
-
-                        sb.Append("</tr>");*/
                         sb.Append(studentGrades.GetString(0));
                         sb.Append(',');
                         sb.Append(studentGrades.GetString(1));
                         sb.Append('/'+studentGrades.GetString(2));
                         sb.Append(';');
                     }
-                    //StudentGradeLiteral.Text = sb.ToString();
                     studentGrades.Close();
                     String result = sb.ToString();
                     result = result.Remove(result.Length - 1);
