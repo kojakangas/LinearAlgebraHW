@@ -315,6 +315,7 @@ MathJax.Hub.Config({
                             } else {
                                 $("#answerDiv").append("<div id=\"resultsDiv\" class=\"alert alert-success\" style=\"display:flex;\">Correct!</div>");
                             }
+                            nextQuestionUpdate();
                         },
                         error: function (msg) {
                             alert("Grading Failed, don't panic");
@@ -323,7 +324,7 @@ MathJax.Hub.Config({
                 }
             });
 
-            $('#nextQuestion').click(function (callback) {
+            function nextQuestionUpdate() {
                 var complete = "";
                 var vars = [], hash;
                 var q = document.URL.split('?')[1];
@@ -335,8 +336,6 @@ MathJax.Hub.Config({
                         vars[hash[0]] = hash[1];
                     }
                 }
-                alert(vars['assign']);
-                alert(vars['question']);
                 $.ajax({
                     type: "POST",
                     url: "QuestionPage.aspx/updateForNextQuestion",
@@ -357,14 +356,19 @@ MathJax.Hub.Config({
                 function nextStep(data) {
                     if (complete == "incomplete") {
                         alert("Loading next question...");
-                        window.location.href = "QuestionPage.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                        $('#nextQuestion').click(function () {
+                            window.location.href = "QuestionPage.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                        });
                     }
                     if (complete == "complete") {
+                        $('#nextQuestion').text('Finish');
                         alert("Well done! This assignment is now complete.");
-                        window.location.href = "StudentHome.aspx";
+                        $('#nextQuestion').click(function () {
+                            window.location.href = "StudentHome.aspx";
+                        });
                     }
                 }
-            });
+            };
 
             ////JQuery function activated when "Submit Answer" is clicked
             //$('#submitAnswer').click(function () {
