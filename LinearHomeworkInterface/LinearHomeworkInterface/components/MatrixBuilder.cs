@@ -820,8 +820,9 @@ namespace MatrixBuilder
             return freeRows;
         }
 
-        public int countOperationsNeeded(float[,] matrix)
+        public int countOperationsNeeded(float[,] origMatrix)
         {
+            float[,] matrix = copyMatrix(origMatrix);
             int numOfRows = matrix.GetLength(0);
             int numOfCols = matrix.GetLength(1);
             int numOfRowOps = 0;

@@ -34,6 +34,7 @@ namespace LinearHomeworkInterface
         float[] vector2 = null;
         public static float[] actualAnswer = null;
         public static float[,] matrix = null;
+        public static int minNumOfRowOps = 0;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -301,6 +302,8 @@ namespace LinearHomeworkInterface
                     //Current does infinite loop
                     //matrix = generateInconsistentMatrix(n, m, min, max);
                 }
+                int rowOpsCount = mb.countOperationsNeeded(matrix) - 2;
+                rowOpsNeeded.Text = System.Convert.ToString(rowOpsCount);
 
                 //Do the parsing and text adding for question
                 instruction.Text = instruction.Text + "<h4 style=\"margin: 0px;\">Question " + queId + "</h4>\n"
