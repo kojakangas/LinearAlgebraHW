@@ -44,10 +44,10 @@
 			<span>Question Type:  </span>
 			<select id="questionType" style="margin-bottom: 5px;">
 				<option value="SoE">System of Equations</option>
-				<option value="RtI">Reduce to Identity</option>
+				<%--<option value="RtI">Reduce to Identity</option>
 				<option value="DP">Dot Product</option>
 				<option value="I">Inverse</option>
-				<option value="D">Determinant</option>
+				<option value="D">Determinant</option>--%>
 			</select>
 			<div id="SoE">
 				<span>Rows: </span>
