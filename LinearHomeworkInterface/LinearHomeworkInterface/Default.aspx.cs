@@ -94,6 +94,10 @@ namespace LinearHomeworkInterface
                     {
                         status[j] = System.Convert.ToString(statbook["status"]);
                         statbook.Read();
+                        if (status[j] != "Assigned" && status[j] != "Complete")
+                        {
+                            status[j] = "Complete";
+                        }
                     }
                     statbook.Close();
                     query = "SELECT * FROM user ORDER BY userId DESC LIMIT 1";
