@@ -62,7 +62,7 @@ DROP EVENT IF EXISTS `update_homework`;
 DELIMITER |
 
 CREATE EVENT `update_homework` 
-ON SCHEDULE EVERY 1 DAY STARTS CURDATE() + INTERVAL 10 HOUR
+ON SCHEDULE EVERY 1 DAY STARTS CURDATE() + INTERVAL 24 HOUR
 DO BEGIN
 	UPDATE linearhmwkdb.homework SET status = "Complete" WHERE dueDate <= NOW();
 	UPDATE linearhmwkdb.hmwkassignment hw SET status = "Late" WHERE (SELECT status from linearhmwkdb.homework where homeworkId = hw.homeworkId) = "Complete" && status != "Complete";
