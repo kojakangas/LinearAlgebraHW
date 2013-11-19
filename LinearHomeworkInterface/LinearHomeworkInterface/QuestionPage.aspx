@@ -63,7 +63,7 @@ MathJax.Hub.Config({
                                 </ul>
                             </li>
                             <li class="dropdown">
-                                <a data-toggle="dropdown" class="dropdown-toggle" href="#">Answer <b class="caret"></b></a>
+                                <a id="createAnsLink" data-toggle="dropdown" class="dropdown-toggle" href="#">Answer <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     <li style="margin-left: 5px;">
                                         <h5>Solution: </h5>
@@ -205,22 +205,29 @@ MathJax.Hub.Config({
         function removeLastMatrix(index) {
             if (confirm("Remove Last Matrix?")) {
                 $("#row" + index).remove();
-                $("#row" + (index - 1)).append("<a id=\"removeRow\" onClick=\"removeLastMatrix(" + (index - 1) + ")\" style=\"cursor: pointer; display:flex; float: right;\">Remove Matrix</a>");
+                $("#row" + (index - 1)).append("<a id=\"removeRow\" href=\"#\" onClick=\"removeLastMatrix(" + (index - 1) + ")\" style=\"display:flex; float: right;\">Remove Matrix</a>");
                 matrixNumber = matrixNumber - 1;
+                var numOfRowOpsNeeded = parseInt($("#rowOpsNeeded").text());
+                if (matrixNumber < numOfRowOpsNeeded) {
+                    $("#createAnsLink").click(function () { return false; });
+                }
+                return false;
             }
-            return false;
         }
 
         function removeAnswer() {
             if (confirm("Remove Answer?")) {
                 $("#answerDiv").remove();
+                $("#row" + (matrixNumber - 1)).append("<a id=\"removeRow\" href=\"#\" onClick=\"removeLastMatrix(" + (matrixNumber - 1) + ")\" style=\"display:flex; float: right;\">Remove Matrix</a>");
+                $("#createAnsLink").off("click");
                 generatedAnswer = false;
                 $("#submitAnswer").attr("disabled", true);
             }
-            return false;
         }
 
         $(document).ready(function () {
+            $("#createAnsLink").click(function () { return false; });
+
             $('.dropdown-menu input, #makeMatrix').click(function (e) {
                 e.stopPropagation();
             });
@@ -242,6 +249,10 @@ MathJax.Hub.Config({
                     $("#removeRow").remove();
                     $('#row' + matrixNumber).append("<a id=\"removeRow\" tabindex=\"-1\" onClick=\"removeLastMatrix(" + matrixNumber + ")\" style=\"cursor: pointer; display:flex; float: right;\">Remove Matrix</a>");
                     matrixNumber = matrixNumber + 1;
+                    var numOfRowOpsNeeded = parseInt($("#rowOpsNeeded").text());
+                    if (matrixNumber >= numOfRowOpsNeeded) {
+                        $("#createAnsLink").off("click");
+                    }
                 }
             });
 
@@ -272,61 +283,56 @@ MathJax.Hub.Config({
                         });
                         matrixMap[index] = matrix;
                     });
-                    
-                    if (matrixMap.length > $("rowOPsNeeded").text()) {
+                  
+                    //Gets the answer
+                    var answer = new Object();
 
-                        //Gets the answer
-                        var answer = new Object();
-
-                        var inconsistentAnswer = $("#answerDiv:has(input#inconsistentAnswer)");
-                        if (inconsistentAnswer.length == 0) {
-                            $("#answerDiv > div[id^='variable']").each(function (index, div) {
-                                var answerString = "";
-                                var firstInput = $(this).find("#var" + index).val();
-                                answerString = firstInput;//if F it is a free var
-                                if (firstInput != "F") {
-                                    $(this).find("input[id^='free']").each(function (inputIndex, input) {
-                                        var value = eval($(this).val());
-                                        answerString += "," + value + "@" + $(this).attr("name");//Parsing can be done differently
-                                    });
-                                }
-                                answer[index] = answerString;
-                            });
-                        } else {
-                            answer = "I";//I is for inconsistent. possible to use boolean or 0 and 1
-                        }
-
-                        //Then there will be an ajax call to grade this
-                        //It will need both the matrixMap and answer variables
-                        $.ajax({
-                            type: "POST",
-                            url: "QuestionPage.aspx/Grade",
-                            data: "{'MatrixMapJSON': '" + JSON.stringify(matrixMap) + "','AnswerJSON': '" + JSON.stringify(answer) + "'}",
-                            contentType: "application/json; charset=utf-8",
-                            dataType: "json",
-                            success: function (gradingMsg) {
-                                $("#answerDiv").append("<h4>Results:<h4>");
-                                $("#resultsDiv").remove();
-                                $("#removeRow").remove();
-                                $("#removeAnswer").remove();
-                                $(".freeLinks").remove();
-                                $(".gradingInputs").attr("disabled", "true");
-                                $("#submitAnswer").remove();
-                                $("#nextQuestion").show();
-                                if (gradingMsg.d != null) {
-                                    $("#answerDiv").append("<div id=\"resultsDiv\" class=\"alert alert-danger\" style=\"display:flex;\">" + gradingMsg.d + "</div>");
-                                } else {
-                                    $("#answerDiv").append("<div id=\"resultsDiv\" class=\"alert alert-success\" style=\"display:flex;\">Correct!</div>");
-                                }
-                                nextQuestionUpdate();
-                            },
-                            error: function (msg) {
-                                alert("Grading Failed, don't panic");
+                    var inconsistentAnswer = $("#answerDiv:has(input#inconsistentAnswer)");
+                    if (inconsistentAnswer.length == 0) {
+                        $("#answerDiv > div[id^='variable']").each(function (index, div) {
+                            var answerString = "";
+                            var firstInput = $(this).find("#var" + index).val();
+                            answerString = firstInput;//if F it is a free var
+                            if (firstInput != "F") {
+                                $(this).find("input[id^='free']").each(function (inputIndex, input) {
+                                    var value = eval($(this).val());
+                                    answerString += "," + value + "@" + $(this).attr("name");//Parsing can be done differently
+                                });
                             }
-                        })
+                            answer[index] = answerString;
+                        });
                     } else {
-                        alert("Must have at least " + $("rowOpsNeeded").Text() + " matrices created to submit.");
+                        answer = "I";//I is for inconsistent. possible to use boolean or 0 and 1
                     }
+
+                    //Then there will be an ajax call to grade this
+                    //It will need both the matrixMap and answer variables
+                    $.ajax({
+                        type: "POST",
+                        url: "QuestionPage.aspx/Grade",
+                        data: "{'MatrixMapJSON': '" + JSON.stringify(matrixMap) + "','AnswerJSON': '" + JSON.stringify(answer) + "'}",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (gradingMsg) {
+                            $("#answerDiv").append("<h4>Results:<h4>");
+                            $("#resultsDiv").remove();
+                            $("#removeRow").remove();
+                            $("#removeAnswer").remove();
+                            $(".freeLinks").remove();
+                            $(".gradingInputs").attr("disabled", "true");
+                            $("#submitAnswer").remove();
+                            $("#nextQuestion").show();
+                            if (gradingMsg.d != null) {
+                                $("#answerDiv").append("<div id=\"resultsDiv\" class=\"alert alert-danger\" style=\"display:flex;\">" + gradingMsg.d + "</div>");
+                            } else {
+                                $("#answerDiv").append("<div id=\"resultsDiv\" class=\"alert alert-success\" style=\"display:flex;\">Correct!</div>");
+                            }
+                            nextQuestionUpdate();
+                        },
+                        error: function (msg) {
+                            alert("Grading Failed, don't panic");
+                        }
+                    });
                 }
             });
 
@@ -482,8 +488,13 @@ MathJax.Hub.Config({
                     $("#answerDiv").append("<div style=\"margin-bottom: 10px;\"><span>The matrix is inconsistent.</span><input id=\"inconsistentAnswer\" type=\"checkbox\" checked=\"true\" style=\"display:none;\" /></div>");
 
                 }
+                $("#removeRow").remove();
+                $("#createAnsLink").click(function () { return false; });
                 $("#submitAnswer").removeAttr('disabled');
             });
+
+            $("#createAnsLink").attr("title", "You must complete at least " + $("#rowOpsNeeded").text() + " row operations before creating an answer.");
+
         });
     </script>
     <style type="text/css">
