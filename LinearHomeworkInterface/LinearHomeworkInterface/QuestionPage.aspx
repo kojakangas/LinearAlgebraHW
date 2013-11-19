@@ -367,7 +367,6 @@ MathJax.Hub.Config({
 
                 function nextStep(data) {
                     if (complete == "incomplete") {
-                        alert("Loading next question...");
                         $('#nextQuestion').click(function () {
                             window.location.href = "QuestionPage.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
                         });

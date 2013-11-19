@@ -77,10 +77,14 @@
     <Content Include="javascript\tooltip.js" />
     <Content Include="QuestionPage.aspx" />
     <Content Include="theme\images\animated-overlay.gif" />
+    <Content Include="theme\images\applogo.png" />
     <Content Include="theme\images\axiomz.bmp" />
     <Content Include="theme\bootstrap.css" />
     <Content Include="theme\images\axiomzMini.JPG" />
     <Content Include="theme\images\black.JPG" />
+    <Content Include="theme\images\createaccount.png" />
+    <Content Include="theme\images\drury university.gif" />
+    <Content Include="theme\images\DruryLogo.jpg" />
     <Content Include="theme\images\loading.gif" />
     <Content Include="theme\images\PossibleCustomPage.png" />
     <Content Include="theme\images\ui-bg_flat_0_aaaaaa_40x100.png" />

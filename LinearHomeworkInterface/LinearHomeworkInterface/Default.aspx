@@ -63,7 +63,7 @@
                 <!-- Wrapper for slides -->
                 <div class="carousel-inner">
                     <div class="item active">
-                        <img src="theme/images/black.jpg" style="margin-left: auto; margin-right: auto;" />
+                        <img src="theme/images/DruryLogo.png" style="margin-left: auto; margin-right: auto;" />
                         <div class="carousel-caption">
                             <h4>Welcome! </h4>
                             <p id="reminder" style="float: right;">Reminder: Only <label id="daysLeft" style="display: inline;"></label> days left this semester!</p>
@@ -72,15 +72,15 @@
                         </div>
                     </div>
                     <div class="item">
-                        <img src="theme/images/black.jpg" style="margin-left: auto; margin-right: auto;" />
+                        <img src="theme/images/createaccount.png" style="margin-left: auto; margin-right: auto;" />
                         <div class="carousel-caption">
                             <h4>Account Set Up </h4>
                             <p>This is the basic information you will need</p>
-                            <p>to create an account and get started.</p>
+                            <p>to create an account and get starte87d.</p>
                         </div>
                     </div>
                     <div class="item">
-                        <img src="theme/images/black.jpg" style="margin-left: auto; margin-right: auto;" />
+                        <img src="theme/images/applogo.png" style="margin-left: auto; margin-right: auto;" />
                         <div class="carousel-caption">
                             <h4>Linear Algebra Homework </h4>
                             <p>

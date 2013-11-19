@@ -85,6 +85,17 @@ namespace LinearHomeworkInterface
                     aidbook.Read();
                     int aid = System.Convert.ToInt32(aidbook["assignmentId"]);
                     aidbook.Close();
+                    query = "SELECT status FROM hmwkassignment GROUP BY homeworkid";
+                    msqcmd = new MySqlCommand(query, msqcon);
+                    MySqlDataReader statbook = msqcmd.ExecuteReader();
+                    statbook.Read();
+                    String[] status = new String[aid];
+                    for (int j = 0; j < hwid; j++)
+                    {
+                        status[j] = System.Convert.ToString(statbook["status"]);
+                        statbook.Read();
+                    }
+                    statbook.Close();
                     query = "SELECT * FROM user ORDER BY userId DESC LIMIT 1";
                     msqcmd = new MySqlCommand(query, msqcon);
                     MySqlDataReader uidbook = msqcmd.ExecuteReader();
@@ -99,7 +110,7 @@ namespace LinearHomeworkInterface
                     //assign ALL the assignments to the new student!
                     while (i < count)
                     {
-                        query = "INSERT INTO hmwkassignment (assignmentId, homeworkId, grade, status, currentQuestion, userId) values (" + aid + ", " + hwid + ", 0, 'Assigned', 1, " + userid + ")";
+                        query = "INSERT INTO hmwkassignment (assignmentId, homeworkId, grade, status, currentQuestion, userId) values (" + aid + ", " + hwid + ", 0, '" + status[i] + "', 1, " + userid + ")";
                         msqcmd = new MySqlCommand(query, msqcon);
                         msqcmd.ExecuteNonQuery();
                         i++;

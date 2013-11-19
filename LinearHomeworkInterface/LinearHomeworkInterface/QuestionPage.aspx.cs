@@ -411,7 +411,7 @@ namespace LinearHomeworkInterface
                 if (System.Convert.ToInt32(book["currentQuestion"]) < System.Convert.ToInt32(book["points"]))
                 {
                     book.Close();
-                    String command = "UPDATE hmwkassignment SET currentQuestion = " + (System.Convert.ToInt32(question) + 1) + " WHERE assignmentId = " + assignment;
+                    String command = "UPDATE hmwkassignment SET currentQuestion = " + (System.Convert.ToInt32(question) + 1) + ", status = 'In Progress' WHERE assignmentId = " + assignment;
                     MySqlCommand msqcom = new MySqlCommand(command, msqcon);
                     msqcom.ExecuteNonQuery();
                     flag = "incomplete";
