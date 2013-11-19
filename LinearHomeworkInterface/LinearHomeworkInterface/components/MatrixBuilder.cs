@@ -754,7 +754,7 @@ namespace MatrixBuilder
                 bool c = !checkMatrixEquality(solvedMatrix, studentMatrix);
                 if (!checkMatrixEquality(solvedMatrix, studentMatrix))
                 {
-                    feedback += "<div>Incorrect Solution Provided. Check your answers.</div>";
+                    feedback += "<div>Incorrect solution provided, check your answers.</div>";
                 }
             }
             else

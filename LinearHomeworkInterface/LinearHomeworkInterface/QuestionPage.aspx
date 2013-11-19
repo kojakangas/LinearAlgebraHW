@@ -310,7 +310,7 @@ MathJax.Hub.Config({
                     $.ajax({
                         type: "POST",
                         url: "QuestionPage.aspx/Grade",
-                        data: "{'MatrixMapJSON': '" + JSON.stringify(matrixMap) + "','AnswerJSON': '" + JSON.stringify(answer) + "'}",
+                        data: "{'MatrixMapJSON': '" + JSON.stringify(matrixMap) + "','AnswerJSON': '" + JSON.stringify(answer) + "','question': '" + vars['question'] + "','assignment': '" + vars['assign'] + "'}",
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (gradingMsg) {

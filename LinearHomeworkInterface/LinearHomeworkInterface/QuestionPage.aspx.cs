@@ -339,11 +339,36 @@ namespace LinearHomeworkInterface
         }
 
         [WebMethod]
-        public static string Grade(String MatrixMapJSON, String AnswerJSON)
+        public static string Grade(String MatrixMapJSON, String AnswerJSON, String question, String assignment)
         {
+            float questionValue = 0;
+            float currentGrade = 0;
+
+            string connStr = ConfigurationManager.ConnectionStrings["linearhmwkdb"].ConnectionString;
+            MySqlConnection msqcon = new MySqlConnection(connStr);
+            try
+            {
+                msqcon.Open();
+                String query = "SELECT q.pointValue, ha.grade FROM question AS q JOIN hmwkassignment AS ha WHERE ha.homeworkId=q.homeworkId AND ha.assignmentId = " + assignment + " AND q.number = " + question;
+                MySqlCommand msqcmd = new MySqlCommand(query, msqcon);
+                MySqlDataReader points = msqcmd.ExecuteReader();
+                points.Read();
+                questionValue = points.GetFloat(0);
+                currentGrade = points.GetFloat(1);
+                points.Close();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+
             string feedback = "";
             Dictionary<int, float[,]> MatrixMap = JsonConvert.DeserializeObject<Dictionary<int, float[,]>>(MatrixMapJSON);
             MatrixBuilder.MatrixOperations mb = new MatrixBuilder.MatrixOperations();
+
+            float deductValue = (float)Math.Round((questionValue/(float)mb.countOperationsNeeded(matrix))*10F)/10F;
+            if (deductValue == 0) deductValue = .1F;
 
             //should probably check if the first matrix is the actual first matrix
             float[,] augMatrix = null; 
@@ -388,8 +413,26 @@ namespace LinearHomeworkInterface
                 feedback += mb.checkAnswers(actualAnswer, Answers);
             }
 
+            String[] deductionStrings = feedback.Split('.');
+            float grade = questionValue - deductValue*(deductionStrings.Length);
+            float updatedGrade = grade + currentGrade;
+
             //Need to display points somehow
-            //feedback += "<div><strong>Points Earned: </strong> 0.7 / 1.0</div>";
+            feedback += "<div><strong>Points Earned: </strong>" + grade + " / " + questionValue + "</div>";
+
+            //Update grade in database
+            msqcon = new MySqlConnection(connStr);
+            try
+            {
+                msqcon.Open();
+                String query = "UPDATE hmwkassignment AS ha SET ha.grade = " + updatedGrade + " WHERE assignmentId = " + assignment;
+                MySqlCommand msqcmd = new MySqlCommand(query, msqcon);
+                msqcmd.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
 
             return String.IsNullOrEmpty(feedback) ? null : feedback;
         }
