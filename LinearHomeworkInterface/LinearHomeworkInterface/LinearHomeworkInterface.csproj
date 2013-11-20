@@ -82,8 +82,10 @@
     <Content Include="theme\bootstrap.css" />
     <Content Include="theme\images\axiomzMini.JPG" />
     <Content Include="theme\images\black.JPG" />
+    <Content Include="theme\images\create.png" />
     <Content Include="theme\images\createaccount.png" />
     <Content Include="theme\images\drury university.gif" />
+    <Content Include="theme\images\druryCrest.bmp" />
     <Content Include="theme\images\DruryLogo.jpg" />
     <Content Include="theme\images\loading.gif" />
     <Content Include="theme\images\loginHelp.bmp" />

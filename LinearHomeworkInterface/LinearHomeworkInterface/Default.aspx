@@ -43,30 +43,20 @@
         </div>
         <div id="content" style="background: white; margin-top: 50px; height: 550px; border: 1px solid #e5e5e5;">
             <div id="createAcctAlert" class="alert alert-success fade in"
-                style="display: none; position: absolute; z-index: 1001; float: left; width: 400px; margin-top: 5px; margin-bottom: 5px; margin-left: 250px;">
+                style="display: none; position: absolute; z-index: 1001; float: left; width: 200px; margin-top: 5px; margin-bottom: 5px; margin-left: 350px;">
                 <a class="close" data-dismiss="alert"
                     href="#">&times;</a>
-                Account Created! It is time to enter the matrix...
+                Account Creation Successful!
             </div>
-            <div id="carousel" class="carousel slide"
-                data-ride="carousel" style="height: 600px;">
-                <!-- Indicators -->
-                <ol class="carousel-indicators">
-                    <li data-target="#carousel" data-slide-to="0"
-                        class="active"></li>
-                    <li data-target="#carousel"
-                        data-slide-to="1"></li>
-                    <li data-target="#carousel"
-                        data-slide-to="2"></li>
-                </ol>
+            <div id="carousel" class="carousel slide" data-ride="carousel" style="height: 600px;">
 
                 <!-- Wrapper for slides -->
                 <div class="carousel-inner">
                     <div class="item active">
-                        <img src="theme/images/DruryLogo.png" style="margin-left: auto; margin-right: auto;" />
+                        <img id="druryCrest" src="theme/images/druryCrest.bmp" style="display: none; margin-left: auto; margin-right: auto;" />
                         <div class="carousel-caption">
+                            <p id="reminder" style="float: right;">Reminder: Only <label id="daysLeft" style="display: inline;"></label> days left this semester!<label id="motivation"></label></p>
                             <h4>Welcome! </h4>
-                            <p id="reminder" style="float: right;">Reminder: Only <label id="daysLeft" style="display: inline;"></label> days left this semester!</p>
                             <p>If you are new to the site, <a href="#carousel" data-slide="next">click here</a></p>
                             <p>If you are not new to the site, then stop procrastinating and sign in! </p>
                         </div>
@@ -74,18 +64,13 @@
                     <div class="item">
                         <img src="theme/images/loginHelp.bmp" style="margin-left: auto; margin-right: auto;" />
                         <div class="carousel-caption">
+                            <p style="float: right;"><a href="#carousel" data-slide="prev">Go Back</a></p>
                             <h4>Account Set Up </h4>
                             <p>This is the basic information you will need</p>
                             <p>to create an account and get started.</p>
                         </div>
                     </div>
                 </div>
-
-                <!-- Controls -->
-                <a class="carousel-control left" href="#carousel"
-                    data-slide="prev">&lsaquo;</a>
-                <a class="carousel-control right" href="#carousel"
-                    data-slide="next">&rsaquo;</a>
             </div>
         </div>
         <div class="overlay" style="display: none;">
@@ -104,8 +89,23 @@
         var timediff = Math.abs(lastDay.getTime() - today.getTime());
         var diffDays = Math.ceil(timediff / (1000 * 3600 * 24));
 
+        var motivation = "I know, I know...the semester just started.";
+        if(diffDays < 5){
+            motivation = "Good Luck on your finals!";
+        } else if (diffDays < 25) {
+            motivation = "You must be a linear algebra genius by now...";
+        } else if (diffDays < 50) {
+            motivation = "What do you call friends who like math? Algebros...did you get it?";
+        } else if (diffDays < 70) {
+            motivation = "Isn't this just the best website ever?";
+        } else if (diffDays < 90) {
+            motivation = "Well, at least you got through the first few weeks.";
+        }
+
         //Do Stuffs
         $(document).ready(function () {
+            $("#druryCrest").fadeIn(4000);
+
             $('.carousel').carousel({
                 interval: false,
             });
@@ -114,6 +114,7 @@
                 $("#daysLeft").text(diffDays);
                 $("#daysLeft").text(diffDays);
                 $("#daysLeft").css("font-weight", "bold");
+                $("#motivation").text(motivation);
             } else {
                 $("#reminder").remove();
             }
@@ -188,6 +189,7 @@
                     $("#accessCode").tooltip("show");
                 } else {
                     //This call will create the account
+                    $(".overlay").show();
                     $.ajax({
                         type: "POST",
                         url: "Default.aspx/CheckUsername",
@@ -196,6 +198,7 @@
                         dataType: "json",
                         success: function (available) {
                             if (!available.d) {
+                                $(".overlay").hide();
                                 $("#username").trigger("select");
                                 $("#username").addClass("error");
                                 $("#username").tooltip({ trigger: "manual", title: "Username is already taken!" });
@@ -210,17 +213,20 @@
                                     contentType: "application/json; charset=utf-8",
                                     dataType: "json",
                                     success: function (available) {
+                                        $(".overlay").hide();
                                         $("#createAcctAlert").show();
                                         $(".dropdown").removeClass("open");
                                         $("#clearForm").trigger("click");
                                     },
                                     error: function (response) {
+                                        $(".overlay").hide();
                                         alert("Account Creation Failed");
                                     }
                                 });
                             }
                         },
                         error: function (response) {
+                            $(".overlay").hide();
                             alert("Account Creation Failed");
                         }
                     });
@@ -366,7 +372,7 @@
                 background-color: #FFFFFF;
                 height: 100%;
                 left: 0;
-                opacity: 0.5;
+                opacity: 0.8;
                 position: fixed;
                 text-align: center;
                 top: 0;
