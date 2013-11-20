@@ -290,6 +290,17 @@ MathJax.Hub.Config({
 
                     //Then there will be an ajax call to grade this
                     //It will need both the matrixMap and answer variables
+					var complete = "";
+					var vars = [], hash;
+					var q = document.URL.split('?')[1];
+					if (q != undefined) {
+						q = q.split('&');
+						for (var i = 0; i < q.length; i++) {
+							hash = q[i].split('=');
+							vars.push(hash[1]);
+							vars[hash[0]] = hash[1];
+						}
+					}
                     $.ajax({
                         type: "POST",
                         url: "QuestionPage.aspx/Grade",
