@@ -47,6 +47,9 @@
                 </table>
             </div>
         </div>
+        <div class="overlay" style="display: none;">
+           <img src="theme/images/loading.gif" style="margin-top: 150px;" />
+        </div>
     </div>
 <script type="text/javascript">
 
@@ -54,6 +57,7 @@
 
         $("#signOut").click(function (e) {
             e.preventDefault();
+            $(".overlay").show();
             $.ajax({
                 type: "POST",
                 url: "Default.aspx/SignOut",
@@ -61,9 +65,11 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (msg) {
+                    $(".overlay").hide();
                     window.location = "Default.aspx";
                 },
                 error: function (msg) {
+                    $(".overlay").hide();
                     alert("Sign Out Failed!");
                 }
             });
@@ -77,5 +83,19 @@
         });
     });
 </script>
+<style type="text/css">
+    .overlay {
+            background-color: #FFFFFF;
+            height: 100%;
+            left: 0;
+            opacity: 0.8;
+            position: fixed;
+            text-align: center;
+            top: 0;
+            vertical-align: middle;
+            width: 100%;
+            z-index: 2000;
+        }
+</style>
 </body>
 </html>

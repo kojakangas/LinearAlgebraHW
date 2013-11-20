@@ -140,6 +140,7 @@
                             dataType: "json",
                             success: function (url) {
                                 if (url.d === "") {
+                                    $(".overlay").hide();
                                     $("#usernameSignIn").trigger("focus");
                                     $("#usernameSignIn").addClass("error");
                                     $("#passwordSignIn").addClass("error");
@@ -150,6 +151,7 @@
                                 }
                             },
                             error: function (msg) {
+                                $(".overlay").hide();
                                 alert("Authentication Failed!");
                             }
                         });

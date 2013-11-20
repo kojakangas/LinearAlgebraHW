@@ -183,24 +183,7 @@ MathJax.Hub.Config({
             $('#var' + index).removeAttr("disabled");
             $('#freeLink' + index).text("Set Free Variable ");
             $('#freeLink' + index).attr("onclick", "addFreeVariable(" + index + ")");
-            // $('#leadLink' + index).toggle();
         }
-
-        //function addLeadingVariable(index) {
-        //    $('#var' + index).val("l");
-        //    $('#var' + index).attr("disabled", "true");
-        //    $('#leadLink' + index).text("Remove");
-        //    $('#leadLink' + index).attr("onclick", "removeLeadingVariable(" + index + ")");
-        //    $('#freeLink' + index).toggle();
-        //}
-
-        //function removeLeadingVariable(index) {
-        //    $('#var' + index).val("");
-        //    $('#var' + index).removeAttr("disabled");
-        //    $('#leadLink' + index).text(" Set Leading Variable");
-        //    $('#leadLink' + index).attr("onclick", "addLeadingVariable(" + index + ")");
-        //    $('#freeLink' + index).toggle();
-        //}
 
         function removeLastMatrix(index) {
             if (confirm("Remove Last Matrix?")) {
