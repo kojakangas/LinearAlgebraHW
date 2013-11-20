@@ -27,7 +27,7 @@ DROP TABLE IF EXISTS `hmwkassignment`;
 CREATE TABLE `hmwkassignment` (
   `assignmentId` bigint(20) NOT NULL AUTO_INCREMENT,
   `homeworkId` bigint(20) NOT NULL,
-  `grade` decimal(10,0) NOT NULL DEFAULT '0',
+  `grade` decimal(10,2) NOT NULL DEFAULT '0',
   `status` varchar(45) NOT NULL DEFAULT 'Assigned',
   `currentQuestion` bigint(20) NOT NULL DEFAULT '1',
   `userId` bigint(20) NOT NULL,
