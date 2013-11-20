@@ -427,6 +427,8 @@ namespace LinearHomeworkInterface
                 //set grade to the total minus the deduct amount times number of mistakes
                 grade = questionValue - deductValue*(deductionStrings.Length);
             }
+            //make their grade go no lower than 0 (no negative points)
+            if (grade < 0) grade = 0;
             //create grade to write back to database
             float updatedGrade = grade + currentGrade;
 
