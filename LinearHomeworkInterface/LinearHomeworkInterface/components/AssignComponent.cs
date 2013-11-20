@@ -202,7 +202,7 @@ namespace AssignComponent
                 //insert the new assigned homework into the homework table with values passed from the instructor and the
                 //total amount of points from the questions in the assignment
                 msqcom = new MySqlCommand("INSERT INTO homework (homeworkid, title, points, dueDate, status) " +
-                "Values (" + hwid + ", '" + title + "', " + points + ", '" + dueDate + "', 'Assigned')", msqcon);
+                "Values (" + hwid + ", '" + title + "', " + points + ", '" + dueDate + " 23:59:59', 'Assigned')", msqcon);
                 msqcom.ExecuteNonQuery();
                 //close our connection since we're now finished with assignment insertion
                 msqcon.Close();
