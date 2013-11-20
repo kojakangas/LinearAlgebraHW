@@ -713,7 +713,7 @@ namespace MatrixBuilder
                 if (!checkAddMultipleOfRow(matrix1, matrix2) && !checkTimesScalar(matrix1, matrix2)
                         && !checkRowSwap(matrix1, matrix2))
                 {
-                    feedback += "<div>Error between matrix " + i + " and matrix " + (i + 1) + ".<div>";
+                    feedback += "<div>Mistake between matrix " + i + " and matrix " + (i + 1) + ".<div>";
                 }
             }
             return feedback.Equals("") ? null : feedback;
