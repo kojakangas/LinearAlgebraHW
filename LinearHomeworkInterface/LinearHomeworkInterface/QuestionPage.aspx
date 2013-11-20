@@ -299,6 +299,7 @@ MathJax.Hub.Config({
 							hash = q[i].split('=');
 							vars.push(hash[1]);
 							vars[hash[0]] = hash[1];
+							vars[hash[0]] = vars[hash[0]].replace("#", "");
 						}
 					}
                     $.ajax({
@@ -340,6 +341,7 @@ MathJax.Hub.Config({
                         hash = q[i].split('=');
                         vars.push(hash[1]);
                         vars[hash[0]] = hash[1];
+                        vars[hash[0]] = vars[hash[0]].replace("#", "");
                     }
                 }
                 $.ajax({

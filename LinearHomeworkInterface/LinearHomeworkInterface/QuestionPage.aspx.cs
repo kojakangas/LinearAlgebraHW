@@ -341,9 +341,11 @@ namespace LinearHomeworkInterface
         [WebMethod]
         public static string Grade(String MatrixMapJSON, String AnswerJSON, String question, String assignment)
         {
+            //initialize floats for total point value and their grade so far on assignment
             float questionValue = 0;
             float currentGrade = 0;
 
+            //query to fetch question's point value and their current grade on the assignment
             string connStr = ConfigurationManager.ConnectionStrings["linearhmwkdb"].ConnectionString;
             MySqlConnection msqcon = new MySqlConnection(connStr);
             try
@@ -367,8 +369,11 @@ namespace LinearHomeworkInterface
             Dictionary<int, float[,]> MatrixMap = JsonConvert.DeserializeObject<Dictionary<int, float[,]>>(MatrixMapJSON);
             MatrixBuilder.MatrixOperations mb = new MatrixBuilder.MatrixOperations();
 
-            float deductValue = (float)Math.Round((questionValue/(float)mb.countOperationsNeeded(matrix))*10F)/10F;
-            if (deductValue == 0) deductValue = .1F;
+            //get the amount to deduct by dividing the total points by our approximate number of steps to solve (+1 for first matrix)
+            //shifted then rounded to keep it to 2 decimal points, then shifted back
+            float deductValue = (float)Math.Round((questionValue/((float)mb.countOperationsNeeded(matrix)+1F))*100F)/100F;
+            //if above gives a value of 0 (a rediculously large number of steps), correct to .01 so points are actually deducted
+            if (deductValue == 0) deductValue = .01F;
 
             //should probably check if the first matrix is the actual first matrix
             float[,] augMatrix = null; 
@@ -413,8 +418,16 @@ namespace LinearHomeworkInterface
                 feedback += mb.checkAnswers(actualAnswer, Answers);
             }
 
-            String[] deductionStrings = feedback.Split('.');
-            float grade = questionValue - deductValue*(deductionStrings.Length);
+            float grade = questionValue;
+            //ensure there was feedback, if not, will retain value of the question's total points
+            if (!feedback.Equals(""))
+            {
+                //Run through feedback, create array of statements based on . to count number of point deductions
+                String[] deductionStrings = feedback.Split('.');
+                //set grade to the total minus the deduct amount times number of mistakes
+                grade = questionValue - deductValue*(deductionStrings.Length);
+            }
+            //create grade to write back to database
             float updatedGrade = grade + currentGrade;
 
             //Need to display points somehow
