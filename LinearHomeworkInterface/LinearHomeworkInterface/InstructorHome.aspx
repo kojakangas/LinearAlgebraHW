@@ -98,7 +98,7 @@
                             <thead>
                                 <tr>
                                     <th>Assignment</th>
-                                    <th>Deadline</th>
+                                    <th>Due Date</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -131,11 +131,15 @@
                 </div>
               </div>
             </div>
+            <div class="overlay" style="display: none;">
+           <img src="theme/images/loading.gif" style="margin-top: 150px;" />
+        </div>
         </div>
     </form>
     <script type="text/javascript">
         $(document).ready(function () {
             $("#signOut").click(function (e) {
+                $(".overlay").show();
                 e.preventDefault();
                 $.ajax({
                     type: "POST",
@@ -153,5 +157,19 @@
             });
         });
     </script>
+    <style type="text/css">
+    .overlay {
+            background-color: #FFFFFF;
+            height: 100%;
+            left: 0;
+            opacity: 0.8;
+            position: fixed;
+            text-align: center;
+            top: 0;
+            vertical-align: middle;
+            width: 100%;
+            z-index: 2000;
+        }
+</style>
 </body>
 </html>

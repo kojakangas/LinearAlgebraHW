@@ -143,7 +143,7 @@ namespace AssignComponent
                         int max = System.Convert.ToInt32(variables[5]);
                         int freeVar = System.Convert.ToInt32(variables[6]);
                         int inconsistent;
-                        if (variables[7].Equals("yes"))
+                        if (variables[7].Equals("Yes"))
                         {
                             inconsistent = 1;
                         }

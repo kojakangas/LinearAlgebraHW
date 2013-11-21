@@ -119,6 +119,9 @@
 			</table>
 			</div>
 		</div>	
+            <div class="overlay" style="display: none;">
+               <img src="theme/images/loading.gif" style="margin-top: 150px;" />
+            </div>
 	</div>
 <!-- Le javascript
     ================================================== -->
@@ -321,6 +324,7 @@
 	            } else if (oTable.fnGetData().length == 0) {
 	                alert("Homework must contain at least one\nquestion before assigning to students.");
 	            } else if (confirm("Assign Homework to all students?")) {
+                    $(".overlay").show();
 	                //first we format the date given by the datepicker that the user understands
 	                var dueDate = $('#dueDate').datepicker({ dateFormat: 'y-m-d' }).val();
 	                //create a variable to pass as the parameter for our grading controller
@@ -371,6 +375,7 @@
 	                    error: function (response) {
 	                        //replace the page with the stacktrace of the error
 	                        //(obviously this shouldn't happen)
+	                        $(".overlay").hide();
 	                        $('body', document).html(response.responseText);
 	                        //also give an alert with accompanying error message
 	                        alert(response.d);
@@ -380,6 +385,7 @@
 	        });
 
 	        $("#signOut").click(function (e) {
+	            $(".overlay").show();
 	            e.preventDefault();
 	            $.ajax({
 	                type: "POST",
@@ -399,6 +405,19 @@
 	</script>
     <style type="text/css">
 	  
+        .overlay {
+            background-color: #FFFFFF;
+            height: 100%;
+            left: 0;
+            opacity: 0.8;
+            position: fixed;
+            text-align: center;
+            top: 0;
+            vertical-align: middle;
+            width: 100%;
+            z-index: 2000;
+        }
+
 	  .error {
 		border-color: rgba(255, 0, 0, 1) !important;
 	  }

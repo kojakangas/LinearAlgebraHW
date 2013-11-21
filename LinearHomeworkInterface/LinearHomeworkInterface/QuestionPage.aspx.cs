@@ -134,15 +134,7 @@ namespace LinearHomeworkInterface
                 numOfFreeVars = System.Convert.ToInt32(book["freeVars"]);
                 inconsistent = System.Convert.ToBoolean(book["inconsistent"]);
                 type = System.Convert.ToString(book["type"]);
-                //if (book["inconsistent"] == "0")
-                //{
-                //    inconsistent = false;
-                //}
-                //else
-                //{
-                //    inconsistent = true;
-                //}
-                //type = "SoE";
+
                 msqcon.Close();
             }
             catch (Exception)
@@ -181,7 +173,6 @@ namespace LinearHomeworkInterface
             {
                 throw;
             }
-            //nextQuestion.Attributes.Add("href", "/QuestionPage?assign=" + assId + "&question=" + (System.Convert.ToInt32(queId) + 1));
         }
 
         //method to dynamically load the question using MATHJAX
@@ -296,11 +287,9 @@ namespace LinearHomeworkInterface
                     matrix = mb.generateInconsistentMatrix(n, m, min, max);
                 } else if (n <= m && !inconsistent && numOfFreeVars > 0) {//free variable matrix
                     matrix = mb.generateMatrixWithFreeVariables(n, m, min, max, answer, numOfFreeVars);
-                } else if (n > m && !inconsistent) {//will have free variables = to n - m + 1 + # of free variables
-                    matrix = mb.generateMatrixWithFreeVariables(n, m, min, max, answer, n - m + 1 + numOfFreeVars);
-                } else if (n > m && inconsistent) {//not sure 
-                    //Current does infinite loop
-                    //matrix = generateInconsistentMatrix(n, m, min, max);
+                } else {
+                    //This is the catch all. Not sure how accurate it is
+                    matrix = mb.generateRandomMatrix(n, m, min, max);
                 }
                 int rowOpsCount = mb.countOperationsNeeded(matrix) - 2;
                 rowOpsNeeded.Text = System.Convert.ToString(rowOpsCount);
@@ -381,20 +370,20 @@ namespace LinearHomeworkInterface
             //Not sure if this if works 
             if (!mb.checkMatrixEquality(matrix,augMatrix))
             {
-               feedback += "The first matrix does not match the augmented matrix.";
+                feedback += "<div>The first matrix does not match the augmented matrix.<div>";
             }
 
             if (AnswerJSON.Contains("I"))
             {
-                feedback = mb.checkSingleRowOperation(MatrixMap);
+                feedback += mb.checkSingleRowOperation(MatrixMap);
                 if (!inconsistent)
                 {
-                    feedback += "The matrix is actually consistent.";
+                    feedback += "<div>The matrix is actually consistent.<div>";
                 }
             }
             else if (AnswerJSON.Contains("F"))
             {
-                feedback = mb.checkSingleRowOperation(MatrixMap);
+                feedback += mb.checkSingleRowOperation(MatrixMap);
                 if (numOfFreeVars > 0)
                 {
                     Dictionary<int, String> AnswersConverted = JsonConvert.DeserializeObject<Dictionary<int, String>>(AnswerJSON);
@@ -404,7 +393,7 @@ namespace LinearHomeworkInterface
                 }
                 else
                 {
-                    feedback += "The solution actually contains no free variables.";
+                    feedback += "<div>The solution actually contains no free variables.<div>";
                 }
             }
             else
@@ -413,7 +402,7 @@ namespace LinearHomeworkInterface
                 float[] Answers = new float[AnswersConverted.Count()];
                 AnswersConverted.Values.CopyTo(Answers, 0);
 
-                feedback = mb.checkSingleRowOperation(MatrixMap);
+                feedback += mb.checkSingleRowOperation(MatrixMap);
                 //Will need to also check answers here
                 feedback += mb.checkAnswers(actualAnswer, Answers);
             }
@@ -433,7 +422,11 @@ namespace LinearHomeworkInterface
             float updatedGrade = grade + currentGrade;
 
             //Need to display points somehow
-            feedback += "<div><strong>Points Earned: </strong>" + grade + " / " + questionValue + "</div>";
+            if (grade == 1)
+            {
+                feedback += "<!-- -->";
+            }
+            feedback += "<div><strong>Points Earned: </strong>" + grade + " / " + questionValue + "<div>";
 
             //Update grade in database
             msqcon = new MySqlConnection(connStr);

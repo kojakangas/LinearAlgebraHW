@@ -99,7 +99,7 @@ MathJax.Hub.Config({
                     <form id="form1" runat="server">
                         <div id="matrixHolder" style="display: inline-block; width: 100%;">
                             <!-- jQuery appends the matrices here-->
-                            <div id="info" style="color: #888;">Use the Tools to answer the question...</div>
+                            <div id="info" style="color: #888;">Note: You must start by creating the augmented matrix from the equations above.<br /> Only one row operation is allowed between matrices.<br /> Empty entries must contain 0. </div>
                         </div>
                         <hr style="margin-bottom: 0px; margin-top: 0px;" />
                         <button id="submitAnswer" disabled="disabled" class="btn btn-primary" title="Note: Must create an answer to submit." type="button" style="margin-top: 5px; float: right; margin-bottom: 50px;">Submit Answer</button>
@@ -107,6 +107,9 @@ MathJax.Hub.Config({
                         <asp:Label id="rowOpsNeeded" style="display: none;" runat="server"></asp:Label>
                     </form>
                 </div>
+            </div>
+            <div class="overlay" style="display: none;">
+               <img src="theme/images/loading.gif" style="margin-top: 150px;" />
             </div>
             <!--/.fluid-container-->
         </div>
@@ -225,7 +228,7 @@ MathJax.Hub.Config({
                     for (var i = 0; i < rows; i++) {
                         $('#table' + matrixNumber).append("<tr id=\"matrix" + matrixNumber + "row" + i + "\"></tr>");
                         for (var j = 0; j < cols; j++) {
-                            $('#matrix' + matrixNumber + 'row' + i).append("<td><input class=\"gradingInputs\" onkeypress=\"return validateNumericInput(event)\" style=\"width: 27px;\"></input></td>");
+                            $('#matrix' + matrixNumber + 'row' + i).append("<td><input class=\"gradingInputs\" maxlength=\"7\" onkeypress=\"return validateNumericInput(event)\" style=\"width: 35px;\"></input></td>");
                         }
                     }
                     $('#row' + matrixNumber).append("<div id = \"feedback" + matrixNumber + "\" class=\"row-fluid\"></div>");
@@ -251,6 +254,8 @@ MathJax.Hub.Config({
                 if (hasEmptyInput) {
                     alert("Cannot leave inputs blank.");
                 } else {
+
+                    $(".overlay").show();
 
                     //Puts all matrices in a javascript object
                     var matrixMap = new Object();
@@ -299,7 +304,6 @@ MathJax.Hub.Config({
 							hash = q[i].split('=');
 							vars.push(hash[1]);
 							vars[hash[0]] = hash[1];
-							vars[hash[0]] = vars[hash[0]].replace("#", "");
 						}
 					}
                     $.ajax({
@@ -317,14 +321,16 @@ MathJax.Hub.Config({
                             $(".gradingInputs").attr("disabled", "true");
                             $("#submitAnswer").remove();
                             $("#nextQuestion").show();
-                            if (gradingMsg.d != null) {
+                            $(".overlay").hide();
+                            if (gradingMsg.d.indexOf("!") === -1) {
                                 $("#answerDiv").append("<div id=\"resultsDiv\" class=\"alert alert-danger\" style=\"display:flex;\">" + gradingMsg.d + "</div>");
                             } else {
-                                $("#answerDiv").append("<div id=\"resultsDiv\" class=\"alert alert-success\" style=\"display:flex;\">Correct!</div>");
+                                $("#answerDiv").append("<div id=\"resultsDiv\" class=\"alert alert-success\" style=\"display:flex;\"><div>Correct!<div><div>" + gradingMsg.d + "</div></div>");
                             }
                             nextQuestionUpdate();
                         },
                         error: function (msg) {
+                            $(".overlay").hide();
                             alert("Grading Failed, don't panic");
                         }
                     });
@@ -341,7 +347,6 @@ MathJax.Hub.Config({
                         hash = q[i].split('=');
                         vars.push(hash[1]);
                         vars[hash[0]] = hash[1];
-                        vars[hash[0]] = vars[hash[0]].replace("#", "");
                     }
                 }
                 $.ajax({
@@ -364,6 +369,7 @@ MathJax.Hub.Config({
                 function nextStep(data) {
                     if (complete == "incomplete") {
                         $('#nextQuestion').click(function () {
+                            $(".overlay").show();
                             window.location.href = "QuestionPage.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
                         });
                     }
@@ -371,73 +377,15 @@ MathJax.Hub.Config({
                         $('#nextQuestion').text('Finish');
                         alert("Well done! This assignment is now complete.");
                         $('#nextQuestion').click(function () {
+                            $(".overlay").show();
                             window.location.href = "StudentHome.aspx";
                         });
                     }
                 }
             };
 
-            ////JQuery function activated when "Submit Answer" is clicked
-            //$('#submitAnswer').click(function () {
-            //        //if the user has generated one or more answers
-            //    if (generatedAnswer === true) {
-            //        if (confirm("Submit Answer?")) {
-            //            //create a variable to pass as the parameter for our grading controller
-            //            //in the code behind
-            //            var params = "";
-            //            //create counter for number of answers that are filled in
-            //            var anscount = 0;
-            //            //for each answer text the user has created
-            //            for (var i = 0; i < numAnswers; i++) {
-            //                if ($('#var' + i).val()) {
-            //                    //add it to the params variable to pass into the grading controller
-            //                    //the space in the end is supposed to be there to allow the grading
-            //                    //controller to separate every answer we are passing to the controller
-            //                    var params = params + ($('#var' + i).val()) + " ";
-            //                    anscount++;
-            //                }
-            //            }
-            //            //take off the extra space at the end of our params variable
-            //            params = params.substring(0, params.length - 1);
-            //            //if we have no blank answer boxes
-            //            if (anscount == numAnswers) {
-            //                //begin our AJAX call to our WebMethod in the controller
-            //                $.ajax({
-            //                    //must be a POST type of call
-            //                    type: "POST",
-            //                    //pass this to the GradeAnswer controller in our code behind
-            //                    url: "QuestionPage.aspx/GradeAnswer",
-            //                    //input the params variable as the parameter for our WebMethod
-            //                    data: "{'ListPassingSolutions': '" + params + "'}",
-            //                    //must have the following contentType details
-            //                    contentType: "application/json; charset=utf-8",
-            //                    //must have the JSON dataType
-            //                    dataType: "json",
-            //                    //the next two functions have debug purposes
-            //                    //if the function executed successfully
-            //                    success: function (msg) {
-            //                        //give the result of this call as an alert for the user
-            //                        alert(msg.d);
-            //                    },
-            //                    //if the function encountered an error
-            //                    error: function (response) {
-            //                        //replace the page with the stacktrace of the error
-            //                        //(obviously this shouldn't happen)
-            //                        $('body', document).html(response.responseText);
-            //                        //also give an alert with accompanying error message
-            //                        alert(response.d);
-            //                    }
-            //                });
-            //            }
-            //                //otherwise we notify the student of their blank answer
-            //            else {
-            //                alert("One of your answer boxes is blank... fix it!");
-            //            }
-            //        }
-            //    }
-            //});
-
             $("#signOut").click(function (e) {
+                $(".overlay").show();
                 e.preventDefault();
                 $.ajax({
                     type: "POST",
@@ -449,6 +397,7 @@ MathJax.Hub.Config({
                         window.location = "Default.aspx";
                     },
                     error: function (msg) {
+                        $(".overlay").hide();
                         alert("Sign Out Failed!");
                     }
                 });
@@ -473,7 +422,7 @@ MathJax.Hub.Config({
                     $('#answerDiv').append("<a id=\"removeAnswer\" tabindex=\"-1\" onClick=\"removeAnswer()\" style=\"cursor: pointer; display:flex; float: right;\">Remove Answer</a>");
                     for (var i = 0; i < variables; i++) {
                         $('#answerDiv').append("<strong>x<sub>" + (i + 1) + "</sub> = </strong>" +
-                            "<div style=\"display: inline;\" id=\"variable" + i + "\"><input id=\"var" + i + "\" class=\"gradingInputs\" onkeypress=\"return validateNumericInput(event)\" style=\"width: 27px; margin-right: 3px;\" /></div>" +
+                            "<div style=\"display: inline;\" id=\"variable" + i + "\"><input id=\"var" + i + "\" class=\"gradingInputs\" maxlength=\"7\" onkeypress=\"return validateNumericInput(event)\" style=\"width: 35px; margin-right: 3px;\" /></div>" +
                             "<a id=\"freeLink" + i + "\" class=\"freeLinks\" onclick=\"addFreeVariable(" + i + ")\" style=\"cursor: pointer;\">Set Free Variable</a></br>");
                     }
                 } else if ($("#inconsistent").is(":checked")) {
@@ -488,7 +437,7 @@ MathJax.Hub.Config({
                 $("#submitAnswer").removeAttr('disabled');
             });
 
-            $("#createAnsLink").attr("title", "You must complete at least " + $("#rowOpsNeeded").text() + " row operations before creating an answer.");
+            $("#createAnsLink").attr("title", "You must row reduce the matrix to reduced row echelon form before creating an answer.");
 
         });
     </script>
@@ -500,6 +449,18 @@ MathJax.Hub.Config({
             text-align: center;
             width: 100%;
         }
-        </style>
+    .overlay {
+            background-color: #FFFFFF;
+            height: 100%;
+            left: 0;
+            opacity: 0.8;
+            position: fixed;
+            text-align: center;
+            top: 0;
+            vertical-align: middle;
+            width: 100%;
+            z-index: 2000;
+        }
+</style>
 </body>
 </html>

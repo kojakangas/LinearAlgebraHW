@@ -65,7 +65,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (msg) {
-                    $(".overlay").hide();
                     window.location = "Default.aspx";
                 },
                 error: function (msg) {
