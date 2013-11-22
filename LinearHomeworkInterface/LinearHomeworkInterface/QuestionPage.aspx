@@ -105,6 +105,8 @@ MathJax.Hub.Config({
                         <button id="submitAnswer" disabled="disabled" class="btn btn-primary" title="Note: Must create an answer to submit." type="button" style="margin-top: 5px; float: right; margin-bottom: 50px;">Submit Answer</button>
                         <button id="nextQuestion" class="btn btn-primary" type="button" style="display: none; margin-top: 5px; float: right; margin-bottom: 50px;">Next Question</button>
                         <asp:Label id="rowOpsNeeded" style="display: none;" runat="server"></asp:Label>
+                        <!--possibly unessarcary now-->
+                        <asp:CheckBox id="refreshCheck" style="display: none;" runat="server"></asp:CheckBox>
                     </form>
                 </div>
             </div>
@@ -212,6 +214,13 @@ MathJax.Hub.Config({
         }
 
         $(document).ready(function () {
+            $(function () {
+                //potentially unnessarcary now
+                if ($('#refreshCheck')[0].checked)
+                    window.location.reload();
+
+                $('#refreshCheck')[0].checked = true;
+            });
             $("#createAnsLink").click(function () { return false; });
 
             $('.dropdown-menu input, #makeMatrix').click(function (e) {
@@ -372,7 +381,8 @@ MathJax.Hub.Config({
                     if (complete == "incomplete") {
                         $('#nextQuestion').click(function () {
                             $(".overlay").show();
-                            window.location.href = "QuestionPage.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                            window.location.replace = "QuestionPage.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                            window.location.reload();
                         });
                     }
                     if (complete == "complete") {
