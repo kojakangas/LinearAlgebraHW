@@ -94,10 +94,13 @@ namespace LinearHomeworkInterface
                     {
                         status[j] = System.Convert.ToString(statbook["status"]);
                         statbook.Read();
-                        if (status[j] != "Assigned" && status[j] != "Complete")
-                        {
-                            status[j] = "Complete";
-                        }
+                        //this section commented out. It allows a user to not be punished
+                        //for signing up late into the game and not completing an assignment
+                        //already made
+                        //if (status[j] != "Assigned" && status[j] != "Complete")
+                        //{
+                        //    status[j] = "Complete";
+                        //}
                     }
                     statbook.Close();
                     query = "SELECT * FROM user ORDER BY userId DESC LIMIT 1";
