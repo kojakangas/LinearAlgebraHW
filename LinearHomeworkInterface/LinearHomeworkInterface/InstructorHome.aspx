@@ -51,14 +51,15 @@
                     success: function (rows) {
                         $('#studentGradeTable').dataTable().fnClearTable();
                         $.each(rows, function (index, value) {
-                            $.each(value, function (i, j) {
-                                if (j[0] != "" && j[1]!= "") {
+                            if (value != null) {
+                                $.each(value, function (i, j) {
                                     $('#studentGradeTable').dataTable().fnAddData([j[0], j[1]]);
-                                } else {
-                                    $('#studentGradeTable').dataTable().fnClearTable();
-                                    $('#studentGradeTable').dataTable().fnAddData(["No homework assignments found for student",""]);
-                                }
-                            })
+                                })
+                            }
+                            else {
+                                $('#studentGradeTable').dataTable().fnClearTable();
+                                $('#studentGradeTable').dataTable().fnAddData(["No homework assignments found for student",""]);
+                            }
                         })
                     },
                     error: function (msg) {
