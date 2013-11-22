@@ -52,7 +52,7 @@
                         $('#studentGradeTable').dataTable().fnClearTable();
                         $.each(rows, function (index, value) {
                             $.each(value, function (i, j) {
-                                if (j != null) {
+                                if (j[0] != "" && j[1]!= "") {
                                     $('#studentGradeTable').dataTable().fnAddData([j[0], j[1]]);
                                 } else {
                                     $('#studentGradeTable').dataTable().fnClearTable();
