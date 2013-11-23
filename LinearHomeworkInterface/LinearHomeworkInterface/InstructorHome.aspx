@@ -135,10 +135,18 @@
             <div class="overlay" style="display: none;">
            <img src="theme/images/loading.gif" style="margin-top: 150px;" />
         </div>
+            <asp:CheckBox id="refreshCheck" style="display: none;" runat="server"></asp:CheckBox>
         </div>
     </form>
     <script type="text/javascript">
         $(document).ready(function () {
+            $(function () {
+                if ($('#refreshCheck')[0].checked)
+                    window.location.reload();
+
+                $('#refreshCheck')[0].checked = true;
+            });
+
             $("#signOut").click(function (e) {
                 $(".overlay").show();
                 e.preventDefault();

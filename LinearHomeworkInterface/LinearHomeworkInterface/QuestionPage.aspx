@@ -60,7 +60,7 @@ MathJax.Hub.Config({
                                 <ul class="dropdown-menu">
                                     <li style="margin-left: 5px;">Use the / for fractions:</li>
                                     <li style="margin-left: 5px;">Ex. 1/2</li>
-                                    <li style="margin-left: 5px;">If your fraction is larger than an integer you must use improper fractions</li>
+                                    <li style="margin-left: 5px;">You must use improper fractions</li>
                                     <li style="margin-left: 5px;">Ex. 1 2/3 or 1.6666... must be written as 5/3</li>
                                 </ul>
                             </li>
