@@ -88,7 +88,11 @@
             "bSort": false,
             "bFilter": true,
             'sPaginationType': 'full_numbers',
-            "bAutoWidth": false
+            "bAutoWidth": false,
+            "oLanguage": {
+                "sInfoEmpty": "",
+                "sEmptyTable": "You have no current homework assignments"
+            }
         });
     });
 </script>

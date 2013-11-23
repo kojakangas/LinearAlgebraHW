@@ -417,7 +417,8 @@ namespace LinearHomeworkInterface
                 grade = questionValue - deductValue*(deductionStrings.Length);
             }
             //make their grade go no lower than 0 (no negative points)
-            if (grade < 0) grade = 0;
+            //This should also handle long decimals when the answer is practically 0
+            if (grade < .01) grade = 0;
             //create grade to write back to database
             float updatedGrade = grade + currentGrade;
 

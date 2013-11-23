@@ -710,7 +710,10 @@ namespace MatrixBuilder
                 matrixMap.TryGetValue(i - 1, out matrix1);
                 float[,] matrix2 = null;
                 matrixMap.TryGetValue(i, out matrix2);
-                if (!checkAddMultipleOfRow(matrix1, matrix2) && !checkTimesScalar(matrix1, matrix2)
+                if (checkMatrixEquality(matrix1, matrix2))
+                {
+                    feedback += "<div>No row operation between matrix " + i + " and matrix " + (i + 1) + ".<div>";
+                } else if (!checkAddMultipleOfRow(matrix1, matrix2) && !checkTimesScalar(matrix1, matrix2)
                         && !checkRowSwap(matrix1, matrix2))
                 {
                     feedback += "<div>Mistake between matrix " + i + " and matrix " + (i + 1) + ".<div>";

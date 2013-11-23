@@ -53,7 +53,7 @@
                         $.each(rows, function (index, value) {
                             if (value != null) {
                                 $.each(value, function (i, j) {
-                                    $('#studentGradeTable').dataTable().fnAddData([j[0], j[1]]);
+                                    $('#studentGradeTable').dataTable().fnAddData([j[0], j[1], j[2]]);
                                 })
                             }
                             else {
@@ -121,6 +121,7 @@
                             <thead>
                                 <tr>
                                     <th style="text-align: right;">Assignment</th>
+                                    <th style="text-align: right;">Status</th>
                                     <th style="text-align: right;">Grade</th>
                                 </tr>
                             </thead>

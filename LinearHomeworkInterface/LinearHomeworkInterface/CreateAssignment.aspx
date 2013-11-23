@@ -36,7 +36,7 @@
 		<div id="formHolder" class="span4" style="margin-top:10px; margin-left: 0px; padding-bottom: 10px;">
 		<form class="well span4" style="margin-bottom: 10px; padding: 0px 20px 0px 10px; height: 130px;">
 			<h4>Homework Details</h4>
-			<span style="margin-right: 13px;">Title: </span><input id="title" data-placement="right" data-toggle="tooltip" type="text" placeholder="Homework Title" /><br />
+			<span style="margin-right: 13px;">Title: </span><input id="title" maxlength="38" data-placement="right" data-toggle="tooltip" type="text" placeholder="Homework Title" /><br />
 			<%--<span>Points: </span><input id="points" data-placement="right" data-toggle="tooltip" type="text" placeholder="Points Possible" /><br />--%>
 			<span style="margin-right: 13px;">Due: </span><input id="dueDate" data-placement="right" data-toggle="tooltip" type="text" onkeypress="return validateNoInput(event)" placeholder="Due Date"/>
 		</form>

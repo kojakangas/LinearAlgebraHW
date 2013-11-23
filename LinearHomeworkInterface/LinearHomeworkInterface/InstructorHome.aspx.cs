@@ -103,7 +103,7 @@ namespace LinearHomeworkInterface
             try
             {
                 msqcon.Open();
-                String query = "SELECT h.title, ha.grade, h.points FROM hmwkassignment AS ha JOIN homework AS h WHERE ha.homeworkId=h.homeworkid AND ha.userID = @userid ORDER BY h.homeworkid";
+                String query = "SELECT h.title, ha.grade, h.points, ha.status FROM hmwkassignment AS ha JOIN homework AS h WHERE ha.homeworkId=h.homeworkid AND ha.userID = @userid ORDER BY h.homeworkid";
                 MySqlCommand msqcmd = new MySqlCommand(query, msqcon);
                 msqcmd.Parameters.Add(new MySqlParameter("@userid", UserID));
                 MySqlDataReader studentGrades = null;
@@ -114,6 +114,8 @@ namespace LinearHomeworkInterface
                     while (studentGrades.Read())
                     {
                         sb.Append(studentGrades.GetString(0));
+                        sb.Append(',');
+                        sb.Append(studentGrades.GetString(3));
                         sb.Append(',');
                         sb.Append(studentGrades.GetString(1));
                         sb.Append('/'+studentGrades.GetString(2));

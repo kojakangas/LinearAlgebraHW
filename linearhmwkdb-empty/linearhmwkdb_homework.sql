@@ -6,6 +6,8 @@ USE `linearhmwkdb`;
 -- ------------------------------------------------------
 -- Server version	5.6.14
 
+SET GLOBAL event_scheduler = ON;
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -54,14 +56,13 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- UPDATES PAST DUE HOMEWORK AND HMWKASSIGNMENT
-SET GLOBAL event_scheduler = ON;
 
 DROP EVENT IF EXISTS `update_homework`;
 
 DELIMITER |
 
 CREATE EVENT `update_homework` 
-ON SCHEDULE EVERY 1 DAY STARTS CURDATE()
+ON SCHEDULE EVERY 1 DAY STARTS CURDATE() + INTERVAL 24 HOUR
 DO BEGIN
 	UPDATE linearhmwkdb.homework SET status = "Complete" WHERE dueDate <= NOW();
 	UPDATE linearhmwkdb.hmwkassignment hw SET status = "Late" WHERE (SELECT status from linearhmwkdb.homework where homeworkId = hw.homeworkId) = "Complete" && status != "Complete";

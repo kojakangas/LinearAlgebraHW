@@ -77,7 +77,7 @@
            <img src="theme/images/loading.gif" style="margin-top: 150px;" />
         </div>
     </div>
-    <footer style="margin-top: 50px; text-align: center;">Powered By: <img src="theme/images/axiomzMini.jpg" /></footer>
+    <footer style="text-align: center;">Powered By: <img src="theme/images/axiomzMini.jpg" /></footer>
     <script src="javascript/tooltip.js"></script>
     <script type="text/javascript">
         //If you try to paste bad characters into the input fields then you will be 
