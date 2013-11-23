@@ -222,9 +222,9 @@
 	            questionNumber++;
 	            var questionType = $("#questionType option:selected").val();
 	            if (questionType === "SoE") {
-	                if ($("#minSoE").val() <= $("#maxSoE").val() && $("#rowsSoE").val() && $("#colsSoE").val() && $("#minSoE").val() && $("#maxSoE").val()) {
-	                    var freeVars = $("#freeVarsSoE").val();
-	                    if (freeVars === "") { freeVars = "0"; }
+	                var freeVars = $("#freeVarsSoE").val();
+	                if (freeVars === "") { freeVars = "0"; }
+	                if ($("#minSoE").val() <= $("#maxSoE").val() && $("#rowsSoE").val() && $("#colsSoE").val() && $("#minSoE").val() && $("#maxSoE").val() && (parseInt(freeVars) >= 0) && (parseInt(freeVars) < parseInt($("#rowsSoE").val())) && ((parseInt($("#rowsSoE").val()) + 1) == parseInt($("#colsSoE").val()))) {
 	                    var inconsistent;
 	                    if ($("#inconsistentSoE").is(":checked")) { inconsistent = "Yes"; } else { inconsistent = "No"; }
 	                    $("#addedQuestionTable").dataTable().fnAddData([
@@ -237,7 +237,7 @@
 							freeVars,
 							inconsistent]);
 	                } else {
-	                    alert("Bad Question Parameters: \n1. Must specify Rows, Columns, Min and Max Coefficients\n2. Max Coefficient must be greater than Min Coefficient");
+	                    alert("Bad Question Parameters: \n1. Must specify Rows, Columns, Min and Max Coefficients\n2. Max Coefficient must be greater than Min Coefficient\n3. Must have Rows + 1 Columns (for now)\n4. Number of free variables must be from 0 to 1 less than the number of total variables");
 	                }
 	            } else if (questionType === "RtI") {
 	                if ($("#minRtI").val() <= $("#maxRtI").val() && $("#sizeRtI").val() && $("#minRtI").val() && $("#maxRtI").val()) {
