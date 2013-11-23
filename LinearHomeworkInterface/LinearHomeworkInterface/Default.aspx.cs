@@ -85,7 +85,7 @@ namespace LinearHomeworkInterface
                     aidbook.Read();
                     int aid = System.Convert.ToInt32(aidbook["assignmentId"]);
                     aidbook.Close();
-                    query = "SELECT status FROM hmwkassignment GROUP BY homeworkid";
+                    query = "SELECT status FROM homework";
                     msqcmd = new MySqlCommand(query, msqcon);
                     MySqlDataReader statbook = msqcmd.ExecuteReader();
                     statbook.Read();
@@ -94,13 +94,11 @@ namespace LinearHomeworkInterface
                     {
                         status[j] = System.Convert.ToString(statbook["status"]);
                         statbook.Read();
-                        //this section commented out. It allows a user to not be punished
-                        //for signing up late into the game and not completing an assignment
-                        //already made
-                        //if (status[j] != "Assigned" && status[j] != "Complete")
-                        //{
-                        //    status[j] = "Complete";
-                        //}
+
+                        if (status[j] == "Complete")
+                        {
+                            status[j] = "Late";
+                        }
                     }
                     statbook.Close();
                     query = "SELECT * FROM user ORDER BY userId DESC LIMIT 1";
