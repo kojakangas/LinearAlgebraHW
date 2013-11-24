@@ -347,7 +347,7 @@
         .signin {
             max-width: 200px;
             padding: 5px 35px 10px 15px;
-            margin: 0 auto 0px;
+            margin: 0px auto 0px;
             background-color: #fff;
         }
 

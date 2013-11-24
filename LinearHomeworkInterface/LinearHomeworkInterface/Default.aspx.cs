@@ -60,6 +60,12 @@ namespace LinearHomeworkInterface
             {
                 //placeholder for signing up account, may want to change if we decide to allow instructors to sign up
                 String newaccrole = "student";
+                //instance variable needed to check our homework table
+                int hwcheck = 0;
+                //instance variable needed to check our homework assignments table
+                int hwscheck = 0;
+                //assignment id stuff
+                int aid;
                 msqcon.Open();
                 String query = "insert into user (username, first, last, password, role) values (@Username, @First, @Last, SHA(@Password), 'S')";
                 MySqlCommand msqcmd = new MySqlCommand(query, msqcon);
@@ -69,61 +75,85 @@ namespace LinearHomeworkInterface
                 msqcmd.Parameters.Add(new MySqlParameter("@Password", details[3]));
                 msqcmd.ExecuteNonQuery();
                 //if we made a student account
-                if(newaccrole.Equals("student")){
-                    //first we need to fetch the latest homeworkid
-                    query = "SELECT * FROM homework ORDER BY homeworkid DESC LIMIT 1";
-                    msqcmd = new MySqlCommand(query, msqcon);
-                    MySqlDataReader hwidbook = msqcmd.ExecuteReader();
-                    hwidbook.Read();
-                    //set hwid to the latest homeworkid from homework table
-                    int hwid = System.Convert.ToInt32(hwidbook["homeworkid"]);
-                    //close our DataReader for this operation
-                    hwidbook.Close();
-                    query = "SELECT * FROM hmwkassignment ORDER BY assignmentId DESC LIMIT 1";
-                    msqcmd = new MySqlCommand(query, msqcon);
-                    MySqlDataReader aidbook = msqcmd.ExecuteReader();
-                    aidbook.Read();
-                    int aid = System.Convert.ToInt32(aidbook["assignmentId"]);
-                    aidbook.Close();
-                    query = "SELECT status FROM homework";
-                    msqcmd = new MySqlCommand(query, msqcon);
-                    MySqlDataReader statbook = msqcmd.ExecuteReader();
-                    statbook.Read();
-                    String[] status = new String[aid];
-                    for (int j = 0; j < hwid; j++)
+                if (newaccrole.Equals("student"))
+                {
+                    //we now check how many rows we have in our homework table
+                    MySqlCommand msqcheck = new MySqlCommand("SELECT COUNT(*) FROM homework", msqcon);
+                    MySqlDataReader numhwsbook = msqcheck.ExecuteReader();
+                    numhwsbook.Read();
+                    hwcheck = System.Convert.ToInt32(numhwsbook["COUNT(*)"]);
+                    //and check how many rows we have in our hmwkassignments table
+                    msqcheck = new MySqlCommand("SELECT COUNT(*) FROM homework", msqcon);
+                    MySqlDataReader numhwsabook = msqcheck.ExecuteReader();
+                    numhwsabook = msqcheck.ExecuteReader();
+                    numhwsabook.Read();
+                    hwscheck = System.Convert.ToInt32(numhwsabook["COUNT(*)"]);
+                    //if we have homework assignments
+                    if (hwcheck > 0)
                     {
-                        status[j] = System.Convert.ToString(statbook["status"]);
-                        statbook.Read();
-
-                        if (status[j] == "Complete")
+                        //first we need to fetch the latest homeworkid
+                        query = "SELECT * FROM homework ORDER BY homeworkid DESC LIMIT 1";
+                        msqcmd = new MySqlCommand(query, msqcon);
+                        MySqlDataReader hwidbook = msqcmd.ExecuteReader();
+                        hwidbook.Read();
+                        //set hwid to the latest homeworkid from homework table
+                        int hwid = System.Convert.ToInt32(hwidbook["homeworkid"]);
+                        query = "SELECT * FROM hmwkassignment ORDER BY assignmentId DESC LIMIT 1";
+                        //close our DataReader for this operation
+                        hwidbook.Close();
+                        //if there are homework assignments
+                        if (hwscheck > 0)
                         {
-                            status[j] = "Late";
+                            msqcmd = new MySqlCommand(query, msqcon);
+                            MySqlDataReader aidbook = msqcmd.ExecuteReader();
+                            aidbook.Read();
+                            aid = System.Convert.ToInt32(aidbook["assignmentId"]);
+                            aidbook.Close();
+                        }
+                        //else there aren't any homework assignments
+                        else
+                        {
+                            aid = 1;
+                        }
+                        query = "SELECT status FROM homework";
+                        msqcmd = new MySqlCommand(query, msqcon);
+                        MySqlDataReader statbook = msqcmd.ExecuteReader();
+                        statbook.Read();
+                        String[] status = new String[aid];
+                        for (int j = 0; j < hwid; j++)
+                        {
+                            status[j] = System.Convert.ToString(statbook["status"]);
+                            statbook.Read();
+
+                            if (status[j] == "Complete")
+                            {
+                                status[j] = "Late";
+                            }
+                        }
+                        statbook.Close();
+                        query = "SELECT * FROM user ORDER BY userId DESC LIMIT 1";
+                        msqcmd = new MySqlCommand(query, msqcon);
+                        MySqlDataReader uidbook = msqcmd.ExecuteReader();
+                        uidbook.Read();
+                        int userid = System.Convert.ToInt32(uidbook["userId"]);
+                        uidbook.Close();
+
+                        int count = hwid;
+                        hwid = 1;
+                        int i = 0;
+                        aid++;
+                        //assign ALL the assignments to the new student!
+                        while (i < count)
+                        {
+                            query = "INSERT INTO hmwkassignment (assignmentId, homeworkId, grade, status, currentQuestion, userId) values (" + aid + ", " + hwid + ", 0, '" + status[i] + "', 1, " + userid + ")";
+                            msqcmd = new MySqlCommand(query, msqcon);
+                            msqcmd.ExecuteNonQuery();
+                            i++;
+                            aid++;
+                            hwid++;
                         }
                     }
-                    statbook.Close();
-                    query = "SELECT * FROM user ORDER BY userId DESC LIMIT 1";
-                    msqcmd = new MySqlCommand(query, msqcon);
-                    MySqlDataReader uidbook = msqcmd.ExecuteReader();
-                    uidbook.Read();
-                    int userid = System.Convert.ToInt32(uidbook["userId"]);
-                    uidbook.Close();
-
-                    int count = hwid;
-                    hwid = 1;
-                    int i = 0;
-                    aid++;
-                    //assign ALL the assignments to the new student!
-                    while (i < count)
-                    {
-                        query = "INSERT INTO hmwkassignment (assignmentId, homeworkId, grade, status, currentQuestion, userId) values (" + aid + ", " + hwid + ", 0, '" + status[i] + "', 1, " + userid + ")";
-                        msqcmd = new MySqlCommand(query, msqcon);
-                        msqcmd.ExecuteNonQuery();
-                        i++;
-                        aid++;
-                        hwid++;
-                    }
                 }
-
                 msqcon.Close();
             }
             catch (Exception)
