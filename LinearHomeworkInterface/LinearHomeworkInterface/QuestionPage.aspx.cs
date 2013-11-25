@@ -71,7 +71,28 @@ namespace LinearHomeworkInterface
                     //redirect to home page if got a tampered parameter
                     Response.Redirect("StudentHome.aspx");
                 }
-
+                //now we need to check if the assignment is not late
+                query = "SELECT h.status FROM homework AS h JOIN hmwkassignment AS ha WHERE ha.assignmentId=@assignment AND h.homeworkid = ha.homeworkId";
+                msqcmd = new MySqlCommand(query, msqcon);
+                msqcmd.Parameters.Add(new MySqlParameter("@assignment", Request.QueryString["assign"]));
+                MySqlDataReader doubleValidate = msqcmd.ExecuteReader();
+                doubleValidate.Read();
+                assignmentStatus = System.Convert.ToString(doubleValidate["status"]);
+                doubleValidate.Close();
+                //check that the assignment is not late through the homework table
+                if (assignmentStatus != "Assigned")
+                {
+                    //redirect to home page if the assignment is late
+                    Response.Redirect("StudentHome.aspx");
+                }
+                //after this check we can update the status of this assignment
+                else
+                {
+                    String command = "UPDATE hmwkassignment SET status = 'In Progress' WHERE assignmentId = @assignmentId";
+                    msqcmd = new MySqlCommand(command, msqcon);
+                    msqcmd.Parameters.Add(new MySqlParameter("@assignmentId", Request.QueryString["assign"]));
+                    msqcmd.ExecuteNonQuery();
+                }
                 /* current question parameter may be uneeded, in which case this query will get the current question
                  * advantage of keeping parameter is if it needs to be referenced outside of page load */
                 //fetch actual current question based on assignmentId as passed in url
@@ -463,7 +484,7 @@ namespace LinearHomeworkInterface
                 if (System.Convert.ToInt32(book["currentQuestion"]) < System.Convert.ToInt32(book["points"]))
                 {
                     book.Close();
-                    String command = "UPDATE hmwkassignment SET currentQuestion = " + (System.Convert.ToInt32(question) + 1) + ", status = 'In Progress' WHERE assignmentId = " + assignment;
+                    String command = "UPDATE hmwkassignment SET currentQuestion = " + (System.Convert.ToInt32(question) + 1) + ", WHERE assignmentId = " + assignment;
                     MySqlCommand msqcom = new MySqlCommand(command, msqcon);
                     msqcom.ExecuteNonQuery();
                     flag = "incomplete";
