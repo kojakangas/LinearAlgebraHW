@@ -66,9 +66,18 @@ namespace LinearHomeworkInterface
                 int hwscheck = 0;
                 //assignment id stuff
                 int aid;
+                //user id stuff
+                int usid;
                 msqcon.Open();
-                String query = "insert into user (username, first, last, password, role) values (@Username, @First, @Last, SHA(@Password), 'S')";
+                String query = "SELECT userId FROM user ORDER BY userId DESC LIMIT 1";
+                MySqlCommand msqcheck = new MySqlCommand(query, msqcon);
+                MySqlDataReader usbook = msqcheck.ExecuteReader();
+                usbook.Read();
+                usid = System.Convert.ToInt32(usbook["userId"]) + 1;
+                usbook.Close();
+                query = "insert into user (userId, username, first, last, password, role) values (@userId, @Username, @First, @Last, SHA(@Password), 'S')";
                 MySqlCommand msqcmd = new MySqlCommand(query, msqcon);
+                msqcmd.Parameters.Add(new MySqlParameter("@userId", usid));
                 msqcmd.Parameters.Add(new MySqlParameter("@Username", details[0]));
                 msqcmd.Parameters.Add(new MySqlParameter("@First", details[1]));
                 msqcmd.Parameters.Add(new MySqlParameter("@Last", details[2]));
@@ -78,16 +87,17 @@ namespace LinearHomeworkInterface
                 if (newaccrole.Equals("student"))
                 {
                     //we now check how many rows we have in our homework table
-                    MySqlCommand msqcheck = new MySqlCommand("SELECT COUNT(*) FROM homework", msqcon);
+                    msqcheck = new MySqlCommand("SELECT COUNT(*) FROM homework", msqcon);
                     MySqlDataReader numhwsbook = msqcheck.ExecuteReader();
                     numhwsbook.Read();
                     hwcheck = System.Convert.ToInt32(numhwsbook["COUNT(*)"]);
+                    numhwsbook.Close();
                     //and check how many rows we have in our hmwkassignments table
-                    msqcheck = new MySqlCommand("SELECT COUNT(*) FROM homework", msqcon);
+                    msqcheck = new MySqlCommand("SELECT COUNT(*) FROM hmwkassignment", msqcon);
                     MySqlDataReader numhwsabook = msqcheck.ExecuteReader();
-                    numhwsabook = msqcheck.ExecuteReader();
                     numhwsabook.Read();
                     hwscheck = System.Convert.ToInt32(numhwsabook["COUNT(*)"]);
+                    numhwsabook.Close();
                     //if we have homework assignments
                     if (hwcheck > 0)
                     {
@@ -98,12 +108,13 @@ namespace LinearHomeworkInterface
                         hwidbook.Read();
                         //set hwid to the latest homeworkid from homework table
                         int hwid = System.Convert.ToInt32(hwidbook["homeworkid"]);
-                        query = "SELECT * FROM hmwkassignment ORDER BY assignmentId DESC LIMIT 1";
                         //close our DataReader for this operation
                         hwidbook.Close();
                         //if there are homework assignments
                         if (hwscheck > 0)
                         {
+                            query = "SELECT * FROM hmwkassignment ORDER BY assignmentId DESC LIMIT 1";
+                        
                             msqcmd = new MySqlCommand(query, msqcon);
                             MySqlDataReader aidbook = msqcmd.ExecuteReader();
                             aidbook.Read();
@@ -119,7 +130,7 @@ namespace LinearHomeworkInterface
                         msqcmd = new MySqlCommand(query, msqcon);
                         MySqlDataReader statbook = msqcmd.ExecuteReader();
                         statbook.Read();
-                        String[] status = new String[aid];
+                        String[] status = new String[hwid];
                         for (int j = 0; j < hwid; j++)
                         {
                             status[j] = System.Convert.ToString(statbook["status"]);
@@ -141,7 +152,6 @@ namespace LinearHomeworkInterface
                         int count = hwid;
                         hwid = 1;
                         int i = 0;
-                        aid++;
                         //assign ALL the assignments to the new student!
                         while (i < count)
                         {
