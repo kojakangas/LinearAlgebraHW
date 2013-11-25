@@ -379,9 +379,9 @@ namespace LinearHomeworkInterface
             Dictionary<int, float[,]> MatrixMap = JsonConvert.DeserializeObject<Dictionary<int, float[,]>>(MatrixMapJSON);
             MatrixBuilder.MatrixOperations mb = new MatrixBuilder.MatrixOperations();
 
-            //get the amount to deduct by dividing the total points by our approximate number of steps to solve (+1 for first matrix)
+            //get the amount to deduct by dividing the total points by our approximate number of steps to solve (+1 for first matrix) (+1 for copying the answer correctly)
             //shifted then rounded to keep it to 2 decimal points, then shifted back
-            float deductValue = (float)Math.Round((questionValue/((float)mb.countOperationsNeeded(matrix)+1F))*100F)/100F;
+            float deductValue = (float)Math.Round((questionValue/((float)mb.countOperationsNeeded(matrix)+2F))*100F)/100F;
             //if above gives a value of 0 (a rediculously large number of steps), correct to .01 so points are actually deducted
             if (deductValue == 0) deductValue = .01F;
 
@@ -435,11 +435,12 @@ namespace LinearHomeworkInterface
                 //Run through feedback, create array of statements based on . to count number of point deductions
                 String[] deductionStrings = feedback.Split('.');
                 //set grade to the total minus the deduct amount times number of mistakes
-                grade = questionValue - deductValue*(deductionStrings.Length);
+                grade = questionValue - deductValue*(deductionStrings.Length-1);
+                //correct any odd values from results close to 0 by re-rounding to 2 decimal points
+                grade = (float)Math.Round(grade * 100F) / 100F;
             }
             //make their grade go no lower than 0 (no negative points)
-            //This should also handle long decimals when the answer is practically 0
-            if (grade < .01) grade = 0;
+            if (grade < 0) grade = 0;
             //create grade to write back to database
             float updatedGrade = grade + currentGrade;
 
