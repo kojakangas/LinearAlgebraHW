@@ -118,7 +118,7 @@ namespace LinearHomeworkInterface
                             msqcmd = new MySqlCommand(query, msqcon);
                             MySqlDataReader aidbook = msqcmd.ExecuteReader();
                             aidbook.Read();
-                            aid = System.Convert.ToInt32(aidbook["assignmentId"]);
+                            aid = (System.Convert.ToInt32(aidbook["assignmentId"]) + 1);
                             aidbook.Close();
                         }
                         //else there aren't any homework assignments
