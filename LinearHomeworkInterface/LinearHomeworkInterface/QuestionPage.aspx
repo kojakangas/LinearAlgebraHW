@@ -48,9 +48,9 @@ MathJax.Hub.Config({
                                         <h5>Matrix Size: </h5>
                                     </li>
                                         <li style="line-height: 25px;">
-                                            <input id="rows" type="text" onkeypress="return validateNumericInput(event)" class="span4" style="float: left; margin-left: 20px" placeholder="n" />
+                                            <input id="rows" type="text" onkeypress="return validateNumericInputMatrixSize(event)" class="span4" style="float: left; margin-left: 20px" placeholder="n" />
                                             <div style="display: inline; margin-left: 5px;">X</div>
-                                            <input id="columns" type="text" onkeypress="return validateNumericInput(event)" class="span4" style="float: right; margin-right: 20px" placeholder="m" />
+                                            <input id="columns" type="text" onkeypress="return validateNumericInputMatrixSize(event)" class="span4" style="float: right; margin-right: 20px" placeholder="m" />
                                         </li>
                                     <li><a id="makeMatrix" class="btn" style="margin: 0px 5px 5px 5px;">Create</a></li>
                                 </ul>
@@ -136,10 +136,18 @@ MathJax.Hub.Config({
     <script src="../assets/js/bootstrap-carousel.js"></script>
     <script src="../assets/js/bootstrap-typeahead.js"></script>
     <script type="text/javascript">
+        function validateNumericInputMatrixSize(evt) {
+            var charCode = (evt.which) ? evt.which : evt.keyCode
+            if (charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+            return true;
+        }
+
         function validateNumericInput(evt) {
             var charCode = (evt.which) ? evt.which : evt.keyCode
-            if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 45 && charCode != 47)
+            if (charCode > 31 && (charCode < 48 || charCode > 57) && !(charCode == 47 && evt.currentTarget.value != "" && evt.currentTarget.value.indexOf('/') === -1) && !(charCode == 45 && evt.currentTarget.value === "")) {
                 return false;
+            }
             return true;
         }
 

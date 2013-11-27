@@ -55,10 +55,10 @@
                     <div class="item active">
                         <img id="druryCrest" src="theme/images/druryCrest.bmp" style="display: none; margin-left: auto; margin-right: auto;" />
                         <div class="carousel-caption">
-                            <p id="reminder" style="float: right;">Reminder: Only <label id="daysLeft" style="display: inline;"></label> days left this semester!<label id="motivation"></label></p>
+                            <!--<p id="reminder" style="float: right;">Reminder: Only <label id="daysLeft" style="display: inline;"></label> days left this semester!<label id="motivation"></label></p>-->
                             <h4>Welcome! </h4>
                             <p>If you are new to the site, <a href="#carousel" data-slide="next">click here</a></p>
-                            <p>If you are not new to the site, then stop procrastinating and sign in! </p>
+                             <p> &nbsp; </p>
                         </div>
                     </div>
                     <div class="item">
