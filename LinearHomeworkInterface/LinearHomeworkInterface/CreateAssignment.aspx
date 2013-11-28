@@ -219,7 +219,6 @@
 	        var questionNumber = 0;
 
 	        $("#addQuestion").click(function () {
-	            questionNumber++;
 	            var questionType = $("#questionType option:selected").val();
 	            if (questionType === "SoE") {
 	                var freeVars = $("#freeVarsSoE").val();
@@ -227,6 +226,7 @@
 	                if ($("#minSoE").val() <= $("#maxSoE").val() && $("#rowsSoE").val() && $("#colsSoE").val() && $("#minSoE").val() && $("#maxSoE").val() && (parseInt(freeVars) >= 0) && (parseInt(freeVars) < parseInt($("#rowsSoE").val())) && ((parseInt($("#rowsSoE").val()) + 1) == parseInt($("#colsSoE").val()))) {
 	                    var inconsistent;
 	                    if ($("#inconsistentSoE").is(":checked")) { inconsistent = "Yes"; } else { inconsistent = "No"; }
+	                    questionNumber++;
 	                    $("#addedQuestionTable").dataTable().fnAddData([
 							questionNumber,
 							"SoE",
@@ -241,6 +241,7 @@
 	                }
 	            } else if (questionType === "RtI") {
 	                if ($("#minRtI").val() <= $("#maxRtI").val() && $("#sizeRtI").val() && $("#minRtI").val() && $("#maxRtI").val()) {
+	                    questionNumber++;
 	                    $("#addedQuestionTable").dataTable().fnAddData([
 							questionNumber,
 							"RtI",
@@ -255,6 +256,7 @@
 	                }
 	            } else if (questionType === "DP") {
 	                if ($("#minDP").val() <= $("#maxDP").val() && $("#sizeDP").val() && $("#minDP").val() && $("#maxDP").val()) {
+	                    questionNumber++;
 	                    $("#addedQuestionTable").dataTable().fnAddData([
 							questionNumber,
 							"DP",
@@ -269,6 +271,7 @@
 	                }
 	            } else if (questionType === "D") {
 	                if ($("#minD").val() <= $("#maxD").val() && $("#sizeD").val() && $("#minD").val() && $("#maxD").val()) {
+	                    questionNumber++;
 	                    $("#addedQuestionTable").dataTable().fnAddData([
 							questionNumber,
 							"D",
@@ -283,6 +286,7 @@
 	                }
 	            } else if (questionType === "I") {
 	                if ($("#minI").val() <= $("#maxI").val() && $("#sizeI").val() && $("#minI").val() && $("#maxI").val()) {
+	                    questionNumber++;
 	                    $("#addedQuestionTable").dataTable().fnAddData([
 							questionNumber,
 							"I",

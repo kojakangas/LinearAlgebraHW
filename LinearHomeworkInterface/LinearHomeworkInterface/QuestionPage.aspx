@@ -298,7 +298,7 @@ MathJax.Hub.Config({
                     if (inconsistentAnswer.length == 0) {
                         $("#answerDiv > div[id^='variable']").each(function (index, div) {
                             var answerString = "";
-                            var firstInput = $(this).find("#var" + index).val();
+                            var firstInput = eval($(this).find("#var" + index).val());
                             answerString = firstInput;//if F it is a free var
                             if (firstInput != "F") {
                                 $(this).find("input[id^='free']").each(function (inputIndex, input) {

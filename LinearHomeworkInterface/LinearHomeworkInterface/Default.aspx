@@ -46,7 +46,7 @@
                 style="display: none; position: absolute; z-index: 1001; float: left; width: 200px; margin-top: 5px; margin-bottom: 5px; margin-left: 350px;">
                 <a class="close" data-dismiss="alert"
                     href="#">&times;</a>
-                Account Creation Successful!
+                Account Creation Successful! You may now sign in.
             </div>
             <div id="carousel" class="carousel slide" data-ride="carousel" style="height: 600px;">
 
