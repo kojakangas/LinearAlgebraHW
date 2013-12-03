@@ -64,18 +64,35 @@ namespace LinearHomeworkInterface
                 int hwcheck = 0;
                 //instance variable needed to check our homework assignments table
                 int hwscheck = 0;
+                //instance variable needed to check our user table
+                int users = 0;
                 //assignment id stuff
                 int aid;
                 //user id stuff
                 int usid;
                 msqcon.Open();
-                String query = "SELECT userId FROM user ORDER BY userId DESC LIMIT 1";
-                MySqlCommand msqcheck = new MySqlCommand(query, msqcon);
-                MySqlDataReader usbook = msqcheck.ExecuteReader();
-                usbook.Read();
-                usid = System.Convert.ToInt32(usbook["userId"]) + 1;
-                usbook.Close();
-                query = "insert into user (userId, username, first, last, password, role) values (@userId, @Username, @First, @Last, SHA(@Password), 'S')";
+                //check how many rows we have in our users table
+                MySqlCommand msqcheck = new MySqlCommand("SELECT COUNT(*) FROM user", msqcon);
+                MySqlDataReader numusbook = msqcheck.ExecuteReader();
+                numusbook.Read();
+                users = System.Convert.ToInt32(numusbook["COUNT(*)"]);
+                numusbook.Close();
+                //if we have users already
+                if (users > 0)
+                {
+                    String check = "SELECT userId FROM user ORDER BY userId DESC LIMIT 1";
+                    msqcheck = new MySqlCommand(check, msqcon);
+                    MySqlDataReader usbook = msqcheck.ExecuteReader();
+                    usbook.Read();
+                    usid = System.Convert.ToInt32(usbook["userId"]) + 1;
+                    usbook.Close();
+                }
+                //otherwise we do not have users and we are creating our first user
+                else
+                {
+                    usid = 1;
+                }
+                String query = "insert into user (userId, username, first, last, password, role) values (@userId, @Username, @First, @Last, SHA(@Password), 'S')";
                 MySqlCommand msqcmd = new MySqlCommand(query, msqcon);
                 msqcmd.Parameters.Add(new MySqlParameter("@userId", usid));
                 msqcmd.Parameters.Add(new MySqlParameter("@Username", details[0]));
