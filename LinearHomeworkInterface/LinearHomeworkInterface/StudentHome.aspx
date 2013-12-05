@@ -86,6 +86,7 @@
         $('#assignmentTable').dataTable({
             "bJQueryUI": true,
             "bSort": false,
+            "iDisplayLength": 50,
             "bFilter": true,
             'sPaginationType': 'full_numbers',
             "bAutoWidth": false,

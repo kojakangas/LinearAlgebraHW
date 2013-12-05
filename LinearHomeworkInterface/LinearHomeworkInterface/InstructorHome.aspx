@@ -19,6 +19,7 @@
             $('.dataTable-assignment').dataTable({
                 "bSort": false,
                 "bFilter": false,
+                "iDisplayLength": 50,
                 'sPaginationType': 'full_numbers',
                 "bAutoWidth": false,
                 "bJQueryUI": true,
@@ -31,6 +32,7 @@
             $('.dataTable-student').dataTable({
                 "bSort": false,
                 "bFilter": false,
+                "iDisplayLength": 50,
                 'sPaginationType': 'full_numbers',
                 "bAutoWidth": false,
                 "bJQueryUI": true,

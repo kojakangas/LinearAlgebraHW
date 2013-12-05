@@ -298,13 +298,16 @@ MathJax.Hub.Config({
                     if (inconsistentAnswer.length == 0) {
                         $("#answerDiv > div[id^='variable']").each(function (index, div) {
                             var answerString = "";
-                            var firstInput = eval($(this).find("#var" + index).val());
-                            answerString = firstInput;//if F it is a free var
+                            var firstInput = $(this).find("#var" + index).val();
+                            //if F it is a free var
                             if (firstInput != "F") {
+                                answerString = eval(firstInput);
                                 $(this).find("input[id^='free']").each(function (inputIndex, input) {
                                     var value = eval($(this).val());
                                     answerString += "," + value + "@" + $(this).attr("name");//Parsing can be done differently
                                 });
+                            } else {
+                                answerString = firstInput;
                             }
                             answer[index] = answerString;
                         });
