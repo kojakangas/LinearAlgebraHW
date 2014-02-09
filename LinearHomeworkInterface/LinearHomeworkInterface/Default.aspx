@@ -184,7 +184,7 @@
                     $("#retypedpass").addClass("error");
                     $("#password").tooltip({ trigger: "manual", title: "Passwords do not match!" });
                     $("#password").tooltip("show");
-                } else if (!$("#accessCode").val() || $("#accessCode").val() != "DU2014") {
+                } else if (!$("#accessCode").val() || ($("#accessCode").val() != "DU2014" && $("#accessCode").val() != "DU1337")) {
                     $("#accessCode").trigger("select");
                     $("#accessCode").addClass("error");
                     $("#accessCode").tooltip({ trigger: "manual", title: "Incorrect Access Code!" });
@@ -207,7 +207,7 @@
                                 $("#username").tooltip("show");
                             } else {
                                 var details = $("#username").val() + " " + $("#first").val() + " " + $("#last").val() + " "
-                                    + $("#password").val();
+                                    + $("#password").val() + " " + $("#accessCode").val();
                                 $.ajax({
                                     type: "POST",
                                     url: "Default.aspx/CreateAccount",

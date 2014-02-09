@@ -58,8 +58,16 @@ namespace LinearHomeworkInterface
             MySqlConnection msqcon = new MySqlConnection(connStr);
             try
             {
-                //placeholder for signing up account, may want to change if we decide to allow instructors to sign up
-                String newaccrole = "student";
+                //here the access code determines the role of the new account
+                String newaccrole = null;
+                if (details[4].Equals("DU2014"))
+                {
+                    newaccrole = "student";
+                }
+                else if (details[4].Equals("DU1337"))
+                {
+                    newaccrole = "instructor";
+                }
                 //instance variable needed to check our homework table
                 int hwcheck = 0;
                 //instance variable needed to check our homework assignments table
@@ -92,7 +100,16 @@ namespace LinearHomeworkInterface
                 {
                     usid = 1;
                 }
-                String query = "insert into user (userId, username, first, last, password, role) values (@userId, @Username, @First, @Last, SHA(@Password), 'S')";
+                //according to the role assigned to the account we modulate the query to enter that kind of account into the database
+                String query = null;
+                if (newaccrole.Equals("student"))
+                {
+                    query = "insert into user (userId, username, first, last, password, role) values (@userId, @Username, @First, @Last, SHA(@Password), 'S')";
+                }
+                else if (newaccrole.Equals("instructor"))
+                {
+                    query = "insert into user (userId, username, first, last, password, role) values (@userId, @Username, @First, @Last, SHA(@Password), 'I')";
+                }
                 MySqlCommand msqcmd = new MySqlCommand(query, msqcon);
                 msqcmd.Parameters.Add(new MySqlParameter("@userId", usid));
                 msqcmd.Parameters.Add(new MySqlParameter("@Username", details[0]));
