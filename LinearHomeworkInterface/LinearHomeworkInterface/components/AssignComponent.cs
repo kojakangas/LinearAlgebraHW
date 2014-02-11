@@ -224,7 +224,7 @@ namespace AssignComponent
         }
 
         //this is the logic that deletes a homework assignment from the database (has yet to be tested)
-        public String Delete(int hwid)
+        public static String Delete(int hwid)
         {
             //instance variable we will need set to homework number to delete
             int delID = hwid;

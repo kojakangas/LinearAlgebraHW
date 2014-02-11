@@ -10,6 +10,7 @@ using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Globalization;
+using AssignComponent;
 
 namespace LinearHomeworkInterface
 {
@@ -51,7 +52,7 @@ namespace LinearHomeworkInterface
                     sb.Append("<input type=\"text\" onkeypress=\"return validateNoInput(event)\" id=\"" + assignments.GetString(2) + "\" style=\"width: 80px; padding: 0px; margin-bottom: 0px;\" value=\"" + dueDate.ToString("yyyy-MM-dd") + "\" class=\"datepicker\">");
                     sb.Append("</td>");
                     sb.Append("<td>");
-                    sb.Append("<a id=\"delete\" name=\"" + assignments.GetString(2) + "\" style=\"cursor: pointer;\">Delete</a>");
+                    sb.Append("<a class=\"delete\" name=\"" + assignments.GetString(2) + "\" style=\"cursor: pointer;\">Delete</a>");
                     sb.Append("</td>");
 
                     sb.Append("</tr>");
@@ -79,6 +80,13 @@ namespace LinearHomeworkInterface
             {
                 throw;
             }
+        }
+
+        [WebMethod]
+        public static String deleteAssignment(String homeworkid)
+        {
+            int num = System.Convert.ToInt32(homeworkid);
+            return AssignComponent.Assigner.Delete(num);
         }
 
         protected void Check_User()
