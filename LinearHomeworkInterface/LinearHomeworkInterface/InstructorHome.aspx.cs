@@ -26,6 +26,8 @@ namespace LinearHomeworkInterface
 
             }
 
+
+
             string connStr = ConfigurationManager.ConnectionStrings["linearhmwkdb"].ConnectionString;
             MySqlConnection msqcon = new MySqlConnection(connStr);
             try
@@ -38,6 +40,7 @@ namespace LinearHomeworkInterface
                 assignments = msqcmd.ExecuteReader();
                 //build table
                 StringBuilder sb = new StringBuilder();
+                StringBuilder assignmentList = new StringBuilder();
                 while (assignments.Read())
                 {
                     char[] sep = { ' ' };
@@ -56,8 +59,13 @@ namespace LinearHomeworkInterface
                     sb.Append("</td>");
 
                     sb.Append("</tr>");
+
+                    assignmentList.Append("<option value=\"" + assignments.GetString(2) + "\">");
+                    assignmentList.Append(assignments.GetString(0));
+                    assignmentList.Append("</option>");
                 }
                 ltData.Text = sb.ToString();
+                AssignmentListLiteral.Text = assignmentList.ToString();
                 assignments.Close();
 
                 query = "SELECT u.first, u.last, u.userId FROM user AS u WHERE u.role='S' ORDER BY u.last";
@@ -135,6 +143,54 @@ namespace LinearHomeworkInterface
                         sb.Append(',');
                         sb.Append(studentGrades.GetString(1));
                         sb.Append('/'+studentGrades.GetString(2));
+                        sb.Append(';');
+                    }
+                    studentGrades.Close();
+                    String result = sb.ToString();
+                    result = result.Remove(result.Length - 1);
+                    String[] strings = result.Split(';');
+                    String[][] strings2 = new String[strings.Length][];
+                    for (int i = 0; i < strings.Length; i++)
+                    {
+                        strings2[i] = strings[i].Split(',');
+                    }
+                    return strings2;
+                }
+                else return null;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [WebMethod]
+        public static String[][] UpdateAssignmentGradeTable(String AssignmentID)
+        {
+            string connStr = ConfigurationManager.ConnectionStrings["linearhmwkdb"].ConnectionString;
+            MySqlConnection msqcon = new MySqlConnection(connStr);
+            try
+            {
+                msqcon.Open();
+                String query = "SELECT u.first, u.last, ha.grade, h.points, ha.status FROM hmwkassignment AS ha JOIN homework AS h JOIN user AS u WHERE ha.homeworkId=h.homeworkid AND h.homeworkid = @assignmentid AND ha.userID = u.userID ORDER BY ha.userid";
+                MySqlCommand msqcmd = new MySqlCommand(query, msqcon);
+                msqcmd.Parameters.Add(new MySqlParameter("@assignmentid", AssignmentID));
+                MySqlDataReader studentGrades = null;
+                studentGrades = msqcmd.ExecuteReader();
+                //build table
+                StringBuilder sb = new StringBuilder();
+                if (studentGrades.HasRows)
+                {
+                    while (studentGrades.Read())
+                    {
+                        sb.Append(studentGrades.GetString(0));
+                        sb.Append(' ');
+                        sb.Append(studentGrades.GetString(1));
+                        sb.Append(',');
+                        sb.Append(studentGrades.GetString(4));
+                        sb.Append(',');
+                        sb.Append(studentGrades.GetString(2));
+                        sb.Append('/' + studentGrades.GetString(3));
                         sb.Append(';');
                     }
                     studentGrades.Close();

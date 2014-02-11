@@ -38,7 +38,7 @@
                 "bJQueryUI": true,
                 "oLanguage": {
                     "sInfoEmpty": "",
-                    "sEmptyTable": "Select a student from the dropdown to view grades..."
+                    "sEmptyTable": "Select a student or assignment from above to view grades."
                 }
             });
 
@@ -71,6 +71,57 @@
                         alert("Could not retrieve student grades!");
                     }
                 });
+            });
+
+            $('#assignmentDropdown').change(function () {
+                $(".overlay").show();
+                $.ajax({
+                    type: "POST",
+                    url: "InstructorHome.aspx/UpdateAssignmentGradeTable",
+                    data: "{'AssignmentID': '" + $("#assignmentDropdown").val() + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (rows) {
+                        $(".overlay").hide();
+                        $('#studentGradeTable').dataTable().fnClearTable();
+                        $.each(rows, function (index, value) {
+                            if (value != null) {
+                                $.each(value, function (i, j) {
+                                    $('#studentGradeTable').dataTable().fnAddData([j[0], j[1], j[2]]);
+                                })
+                            }
+                            else {
+                                $('#studentGradeTable').dataTable().fnClearTable();
+                                $('#studentGradeTable').dataTable().fnAddData(["No students found for assignment", ""]);
+                            }
+                        })
+                    },
+                    error: function (msg) {
+                        $(".overlay").hide();
+                        alert("Could not retrieve assignment grades!");
+                    }
+                });
+            });
+
+            $('#gradeViewType').change(function () {
+                $(".overlay").show();
+                if ($('#gradeViewType').val() == '1') {
+                    $('#assignmentDropdown').hide();
+                    $('#studentNameDropdown').show();
+                    $('#assignmentDropdown').val('0');
+                    $('#dropDownHeader').text("Student");
+                    $('#columnHeader').text("Assignment");
+                    $('#studentGradeTable').dataTable().fnClearTable();
+                }
+                else {
+                    $('#assignmentDropdown').show();
+                    $('#studentNameDropdown').hide();
+                    $('#studentNameDropdown').val('0');
+                    $('#dropDownHeader').text("Assignment");
+                    $('#columnHeader').text("Student");
+                    $('#studentGradeTable').dataTable().fnClearTable();
+                }
+                $(".overlay").hide();
             });
         });
 
@@ -115,9 +166,18 @@
                     </div>
                 </div>
 
-                <div class="span6" style="margin-left: 10px; margin-right: 5px;">
-                    <h3 style="margin-left: 10px; float: left;">Students</h3>
-                    <select id="studentNameDropdown" style="margin-top: 15px; float: right;">
+                <div class="span6" style="margin-left: 10px; margin-right: 5px; ">
+                    <h3 style="margin-left: 10px; float: left;">Type</h3>
+                    <select id="gradeViewType" style="margin-top: 15px; float: right;">
+			            <option value="0" selected="selected">By Assignment</option>
+                        <option value="1">By Student</option>
+		            </select>
+                    <h3 id="dropDownHeader" style="margin-left: 10px; float: left;">Assignment</h3>
+                    <select id="assignmentDropdown" style="margin-top: 15px; float: right;">
+			            <option value="0" selected="selected" disabled="disabled">-- Select Assignment --</option>
+                        <asp:Literal runat="server" ID="AssignmentListLiteral"></asp:Literal>
+		            </select>
+                    <select id="studentNameDropdown" style="margin-left: 10px; float: left; display: none">
 			            <option value="0" selected="selected" disabled="disabled">-- Select Student --</option>
                         <asp:Literal runat="server" ID="StudentListLiteral"></asp:Literal>
 		            </select>
@@ -126,7 +186,7 @@
                         <table id="studentGradeTable" class="dataTable-student">
                             <thead>
                                 <tr>
-                                    <th style="text-align: right;">Assignment</th>
+                                    <th id="columnHeader" style="text-align: right;">Student</th>
                                     <th style="text-align: right;">Status</th>
                                     <th style="text-align: right;">Grade</th>
                                 </tr>
