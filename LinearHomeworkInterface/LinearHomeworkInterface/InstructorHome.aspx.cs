@@ -25,6 +25,8 @@ namespace LinearHomeworkInterface
 
             }
 
+
+
             string connStr = ConfigurationManager.ConnectionStrings["linearhmwkdb"].ConnectionString;
             MySqlConnection msqcon = new MySqlConnection(connStr);
             try
@@ -58,8 +60,8 @@ namespace LinearHomeworkInterface
                     sb.Append("</tr>");
 
                     assignmentList.Append("<option value=\"" + assignments.GetString(2) + "\">");
-                    sb.Append(assignments.GetString(0));
-                    sb.Append("</option>");
+                    assignmentList.Append(assignments.GetString(0));
+                    assignmentList.Append("</option>");
                 }
                 ltData.Text = sb.ToString();
                 AssignmentListLiteral.Text = assignmentList.ToString();
