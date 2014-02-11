@@ -44,6 +44,7 @@
 
 
             $('#studentNameDropdown').change(function () {
+                $(".overlay").show();
                 $.ajax({
                     type: "POST",
                     url: "InstructorHome.aspx/UpdateStudentGradeTable",
@@ -51,6 +52,7 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (rows) {
+                        $(".overlay").hide();
                         $('#studentGradeTable').dataTable().fnClearTable();
                         $.each(rows, function (index, value) {
                             if (value != null) {
@@ -65,6 +67,7 @@
                         })
                     },
                     error: function (msg) {
+                        $(".overlay").hide();
                         alert("Could not retrieve student grades!");
                     }
                 });
@@ -100,8 +103,9 @@
                         <table class="dataTable-assignment">
                             <thead>
                                 <tr>
-                                    <th>Assignment</th>
-                                    <th>Due Date</th>
+                                    <th style="width: 65%;">Assignment</th>
+                                    <th style="width: 20%;">Due Date</th>
+                                    <th style="width: 15%;"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -142,12 +146,38 @@
         </div>
     </form>
     <script type="text/javascript">
+        function validateNoInput(evt) {
+            return false;
+        }
+
         $(document).ready(function () {
             $(function () {
                 if ($('#refreshCheck')[0].checked)
                     window.location.reload();
 
                 $('#refreshCheck')[0].checked = true;
+            });
+
+            $(".datepicker").datepicker({
+                dateFormat: 'yy-mm-dd'
+            });
+
+            $(".datepicker").change(function () {
+                $(".overlay").show();
+                $.ajax({
+                    type: "POST",
+                    url: "InstructorHome.aspx/UpdateDueDate",
+                    data: "{'DueDate': '" + $(this).val() + "','homeworkid': '" + $(this).attr("id") + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (url) {
+                        $(".overlay").hide();
+                    },
+                    error: function (msg) {
+                        $(".overlay").hide();
+                        alert("Error Changing Due Date!");
+                    }
+                });
             });
 
             $("#signOut").click(function (e) {

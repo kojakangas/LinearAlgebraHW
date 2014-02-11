@@ -55,6 +55,7 @@ MathJax.Hub.Config({
                                     <li><a id="makeMatrix" class="btn" style="margin: 0px 5px 5px 5px;">Create</a></li>
                                 </ul>
                             </li>
+                            <li><a id="copymatrix" style="cursor: pointer;">Copy Last Matrix</a></li>
                             <li class="dropdown">
                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">Fraction <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
@@ -463,6 +464,27 @@ MathJax.Hub.Config({
             });
 
             $("#createAnsLink").attr("title", "You must row reduce the matrix to reduced row echelon form before creating an answer.");
+
+            $("#copymatrix").click(function () {
+                $("#makeMatrix").trigger('click');
+                var index = 0;
+                var values = [];
+                if (matrixNumber > 1) {
+                    $("#matrix" + (matrixNumber - 2)).find("tr").each(function (rowIndex, rowHTML) {
+                        $(this).find("td").each(function (cellIndex, cell) {
+                            values[index] = $(this).find("input").val();
+                            index++;
+                        });
+                    });
+                    index = 0;
+                    $("#matrix" + (matrixNumber - 1)).find("tr").each(function (rowIndex, rowHTML) {
+                        $(this).find("td").each(function (cellIndex, cell) {
+                            $(this).find("input").val(values[index]);
+                            index++;
+                        });
+                    });
+                }
+            });
 
         });
     </script>

@@ -9,6 +9,7 @@ using System.Web.Security;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Globalization;
 
 namespace LinearHomeworkInterface
 {
@@ -30,7 +31,7 @@ namespace LinearHomeworkInterface
             {
                 msqcon.Open();
                 //fetch data for assignments table
-                String query = "SELECT h.title, h.dueDate FROM homework AS h";
+                String query = "SELECT h.title, h.dueDate, h.homeworkid FROM homework AS h";
                 MySqlCommand msqcmd = new MySqlCommand(query, msqcon);
                 MySqlDataReader assignments = null;
                 assignments = msqcmd.ExecuteReader();
@@ -38,12 +39,19 @@ namespace LinearHomeworkInterface
                 StringBuilder sb = new StringBuilder();
                 while (assignments.Read())
                 {
+                    char[] sep = { ' ' };
+                    String[] splitDate = assignments.GetString(1).Split(sep);
+                    DateTime dueDate = DateTime.Parse(splitDate[0]);
+
                     sb.Append("<tr>");
                     sb.Append("<td>");
                     sb.Append(assignments.GetString(0));
                     sb.Append("</td>");
                     sb.Append("<td>");
-                    sb.Append(assignments.GetString(1));
+                    sb.Append("<input type=\"text\" onkeypress=\"return validateNoInput(event)\" id=\"" + assignments.GetString(2) + "\" style=\"width: 80px; padding: 0px; margin-bottom: 0px;\" value=\"" + dueDate.ToString("yyyy-MM-dd") + "\" class=\"datepicker\">");
+                    sb.Append("</td>");
+                    sb.Append("<td>");
+                    sb.Append("<a id=\"delete\" name=\"" + assignments.GetString(2) + "\" style=\"cursor: pointer;\">Delete</a>");
                     sb.Append("</td>");
 
                     sb.Append("</tr>");
@@ -140,5 +148,23 @@ namespace LinearHomeworkInterface
             }
         }
 
+
+        [WebMethod]
+        public static void UpdateDueDate(String DueDate, String homeworkid)
+        {
+            string connStr = ConfigurationManager.ConnectionStrings["linearhmwkdb"].ConnectionString;
+            MySqlConnection msqcon = new MySqlConnection(connStr);
+            try
+            {
+                msqcon.Open();
+                String query = "UPDATE homework set dueDate = '" + DueDate + " 23:59:59' where homeworkid= " + homeworkid;
+                MySqlCommand msqcmd = new MySqlCommand(query, msqcon);
+                msqcmd.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
