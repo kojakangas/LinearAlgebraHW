@@ -383,31 +383,26 @@ MathJax.Hub.Config({
                     success: function (data) {
                         //the value returned from the POST AJAX is not immediately returned, so we must pass
                         //it from the AJAX call to another function
-                        complete = data.d;
-                        nextStep(complete);
+                        if (data.d == "incomplete") {
+                            $('#nextQuestion').click(function () {
+                                $(".overlay").show();
+                                window.location.replace = "QuestionPage.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                                window.location.reload();
+                            });
+                        }
+                        if (data.d == "complete") {
+                            $('#nextQuestion').text('Finish');
+                            alert("Well done! This assignment is now complete.");
+                            $('#nextQuestion').click(function () {
+                                $(".overlay").show();
+                                window.location.href = "StudentHome.aspx";
+                            });
+                        }
                     },
                     error: function (msg) {
                         alert("Question Loading Failed, don't panic");
                     }
                 });
-
-                function nextStep(data) {
-                    if (complete == "incomplete") {
-                        $('#nextQuestion').click(function () {
-                            $(".overlay").show();
-                            window.location.replace = "QuestionPage.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
-                            window.location.reload();
-                        });
-                    }
-                    if (complete == "complete") {
-                        $('#nextQuestion').text('Finish');
-                        alert("Well done! This assignment is now complete.");
-                        $('#nextQuestion').click(function () {
-                            $(".overlay").show();
-                            window.location.href = "StudentHome.aspx";
-                        });
-                    }
-                }
             };
 
             $("#signOut").click(function (e) {
