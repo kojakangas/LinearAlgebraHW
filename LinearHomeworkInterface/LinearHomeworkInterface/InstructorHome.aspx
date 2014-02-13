@@ -132,7 +132,7 @@
             <div class="navbar-inner" style="position: fixed; width: 900px; z-index: 1000;">
                 <div class="nav-collapse collapse">
                     <ul class="nav" style="float: left; margin: 10px 0 0px 0;">
-                        <li style="float: left; padding: 0 20px 0 0;"><a href="InstructorHome.aspx">Home</a></li>
+                        <li id="goHome" style="float: left; padding: 0 20px 0 0;"><a href="InstructorHome.aspx">Home</a></li>
                     </ul>
                     <div class="navbar-form pull-right" style="">
                         <button id="signOut" class="btn" style="margin-top: 5px;" type="submit">Sign Out</button>
@@ -145,17 +145,17 @@
                 <div id="header">
                     <h1>Instructor Home</h1>
 
-                    <a href="CreateAssignment.aspx">Create New Assignment</a>
+                    <a id="createassignmentlink" href="CreateAssignment.aspx">Create New Assignment</a>
                 </div>
 
                 <div class="span6" style="margin-left: 5px;">
                     <h3>Assignments</h3>
-                    <div id="table" style="box-shadow: 2px 2px 6px #666666; border-radius: 5px;">
+                    <div id="table" style="box-shadow: 2px 2px 6px #666666; margin-top: 40px; border-radius: 5px;">
                         <table class="dataTable-assignment">
                             <thead>
                                 <tr>
-                                    <th style="width: 65%;">Assignment</th>
-                                    <th style="width: 20%;">Due Date</th>
+                                    <th style="width: 65%; text-align: left;">Assignment</th>
+                                    <th style="width: 20%;text-align: center;">Due Date</th>
                                     <th style="width: 15%;"></th>
                                 </tr>
                             </thead>
@@ -167,17 +167,17 @@
                 </div>
 
                 <div class="span6" style="margin-left: 10px; margin-right: 5px; ">
-                    <h3 style="margin-left: 10px; float: left;">Type</h3>
-                    <select id="gradeViewType" style="margin-top: 15px; float: right;">
+                    <h3 style="margin-left: 10px; float: left;">Grades By </h3>
+                    <select id="gradeViewType" style="margin-bottom: 0px; margin-top: 15px; float: right;">
 			            <option value="0" selected="selected">By Assignment</option>
                         <option value="1">By Student</option>
 		            </select>
-                    <h3 id="dropDownHeader" style="margin-left: 10px; float: left;">Assignment</h3>
-                    <select id="assignmentDropdown" style="margin-top: 15px; float: right;">
+                    <h3 id="dropDownHeader" style="margin-bottom: 0px; margin-left: 10px; float: left;">Assignment</h3>
+                    <select id="assignmentDropdown" style="float: right;">
 			            <option value="0" selected="selected" disabled="disabled">-- Select Assignment --</option>
                         <asp:Literal runat="server" ID="AssignmentListLiteral"></asp:Literal>
 		            </select>
-                    <select id="studentNameDropdown" style="margin-left: 10px; float: left; display: none">
+                    <select id="studentNameDropdown" style="margin-top: 5px; float: right; display: none">
 			            <option value="0" selected="selected" disabled="disabled">-- Select Student --</option>
                         <asp:Literal runat="server" ID="StudentListLiteral"></asp:Literal>
 		            </select>
@@ -186,9 +186,9 @@
                         <table id="studentGradeTable" class="dataTable-student">
                             <thead>
                                 <tr>
-                                    <th id="columnHeader" style="text-align: right;">Student</th>
-                                    <th style="text-align: right;">Status</th>
-                                    <th style="text-align: right;">Grade</th>
+                                    <th id="columnHeader" style="width: 59%; text-align: left;">Student</th>
+                                    <th style="width: 21%; text-align: left;">Status</th>
+                                    <th style="width: 20%; text-align: left;">Grade</th>
                                 </tr>
                             </thead>
                             <tbody id="gradeTableBody">
@@ -219,7 +219,8 @@
             });
 
             $(".datepicker").datepicker({
-                dateFormat: 'yy-mm-dd'
+                dateFormat: 'yy-mm-dd',
+                minDate: new Date()
             });
 
             $(".datepicker").change(function () {
@@ -241,7 +242,7 @@
             });
             
             $(".delete").click(function () {
-                if (confirm("Are you sure you wish to delete?")) {
+                if (confirm("Are you sure you wish to delete assignment \"" + $(this).attr("id") + "\"?")) {
                     $.ajax({
                         type: "POST",
                         url: "InstructorHome.aspx/deleteAssignment",
@@ -259,6 +260,10 @@
                         }
                     });
                 }
+            });
+
+            $("#createassignmentlink, #goHome").click(function () {
+                $('.overlay').show();
             });
 
             $("#signOut").click(function (e) {

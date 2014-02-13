@@ -52,10 +52,10 @@ namespace LinearHomeworkInterface
                     sb.Append(assignments.GetString(0));
                     sb.Append("</td>");
                     sb.Append("<td>");
-                    sb.Append("<input type=\"text\" onkeypress=\"return validateNoInput(event)\" id=\"" + assignments.GetString(2) + "\" style=\"width: 80px; padding: 0px; margin-bottom: 0px;\" value=\"" + dueDate.ToString("yyyy-MM-dd") + "\" class=\"datepicker\">");
+                    sb.Append("<input title=\"Click and select a date on the calendar to change the due date.\" type=\"text\" onkeypress=\"return validateNoInput(event)\" id=\"" + assignments.GetString(2) + "\" style=\"width: 80px; padding: 0px; margin-bottom: 0px;\" value=\"" + dueDate.ToString("yyyy-MM-dd") + "\" class=\"datepicker\">");
                     sb.Append("</td>");
                     sb.Append("<td>");
-                    sb.Append("<a class=\"delete\" name=\"" + assignments.GetString(2) + "\" style=\"cursor: pointer;\">Delete</a>");
+                    sb.Append("<a id=\"" + assignments.GetString(0) + "\" class=\"delete\" name=\"" + assignments.GetString(2) + "\" style=\"cursor: pointer;\">Delete</a>");
                     sb.Append("</td>");
 
                     sb.Append("</tr>");
@@ -135,6 +135,8 @@ namespace LinearHomeworkInterface
                 //build table
                 StringBuilder sb = new StringBuilder();
                 if(studentGrades.HasRows){
+                    float studentTotal = 0;
+                    int homeworkTotal = 0;
                     while (studentGrades.Read())
                     {
                         sb.Append(studentGrades.GetString(0));
@@ -144,7 +146,15 @@ namespace LinearHomeworkInterface
                         sb.Append(studentGrades.GetString(1));
                         sb.Append('/'+studentGrades.GetString(2));
                         sb.Append(';');
+
+                        studentTotal += float.Parse(studentGrades.GetString(1));
+                        homeworkTotal += int.Parse(studentGrades.GetString(2));
                     }
+                    sb.Append(',');
+                    sb.Append("Total,");
+                    sb.Append(studentTotal.ToString("0.00"));
+                    sb.Append('/'+homeworkTotal.ToString());
+                    sb.Append(';');
                     studentGrades.Close();
                     String result = sb.ToString();
                     result = result.Remove(result.Length - 1);

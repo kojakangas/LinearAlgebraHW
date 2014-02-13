@@ -83,7 +83,7 @@ namespace LinearHomeworkInterface
                     sb.Append("<td style=\"text-align: left;\">");
                     if (available)
                     {
-                        sb.Append("<a href = \"QuestionPage.aspx?assign=" + assignments.GetString(4) + "&question=" + assignments.GetString(6) +"\">");
+                        sb.Append("<a class=\"homeworkLink\" href = \"QuestionPage.aspx?assign=" + assignments.GetString(4) + "&question=" + assignments.GetString(6) +"\">");
                         sb.Append(assignments.GetString(0));
                         sb.Append("</a>");
                     }

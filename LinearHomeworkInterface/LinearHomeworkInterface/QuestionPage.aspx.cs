@@ -27,14 +27,14 @@ namespace LinearHomeworkInterface
         int m;
         int max;
         int min;
-        public static int numOfFreeVars;
-        public static Boolean inconsistent;
+        public int numOfFreeVars;
+        public Boolean inconsistent;
         String type;
         float[] vector1 = null;
         float[] vector2 = null;
-        public static float[] actualAnswer = null;
-        public static float[,] matrix = null;
-        public static int minNumOfRowOps = 0;
+        public float[] actualAnswer = null;
+        public float[,] matrix = null;
+        public int minNumOfRowOps = 0;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -194,6 +194,12 @@ namespace LinearHomeworkInterface
             {
                 throw;
             }
+
+            HttpContext.Current.Session["matrix"] = matrix;
+            HttpContext.Current.Session["actualAnswer"] = actualAnswer;
+            HttpContext.Current.Session["minNumOfRowOps"] = minNumOfRowOps;
+            HttpContext.Current.Session["inconsistent"] = inconsistent;
+            HttpContext.Current.Session["numOfFreeVars"] = numOfFreeVars;
         }
 
         //method to dynamically load the question using MATHJAX
@@ -355,6 +361,13 @@ namespace LinearHomeworkInterface
             float questionValue = 0;
             float currentGrade = 0;
 
+            //Get session variables
+            float[,] sessionMatrix = (float[,]) HttpContext.Current.Session["matrix"];
+            float[] sessionActualAnswer = (float[]) HttpContext.Current.Session["actualAnswer"];
+            int sessionMinNumOfRowsOps = (int) HttpContext.Current.Session["minNumOfRowOps"];
+            Boolean sessionInconsistent = (Boolean) HttpContext.Current.Session["inconsistent"];
+            int sessionNumOfFreeVars = (int) HttpContext.Current.Session["numOfFreeVars"];
+
             //query to fetch question's point value and their current grade on the assignment
             string connStr = ConfigurationManager.ConnectionStrings["linearhmwkdb"].ConnectionString;
             MySqlConnection msqcon = new MySqlConnection(connStr);
@@ -381,7 +394,7 @@ namespace LinearHomeworkInterface
 
             //get the amount to deduct by dividing the total points by our approximate number of steps to solve (+1 for first matrix) (+1 for copying the answer correctly)
             //shifted then rounded to keep it to 2 decimal points, then shifted back
-            float deductValue = (float)Math.Round((questionValue/((float)mb.countOperationsNeeded(matrix)+2F))*100F)/100F;
+            float deductValue = (float)Math.Round((questionValue/((float)mb.countOperationsNeeded(sessionMatrix)+2F))*100F)/100F;
             //if above gives a value of 0 (a rediculously large number of steps), correct to .01 so points are actually deducted
             if (deductValue == 0) deductValue = .01F;
 
@@ -389,7 +402,7 @@ namespace LinearHomeworkInterface
             float[,] augMatrix = null; 
             MatrixMap.TryGetValue(0, out augMatrix);
             //Not sure if this if works 
-            if (!mb.checkMatrixEquality(matrix,augMatrix))
+            if (!mb.checkMatrixEquality(sessionMatrix, augMatrix))
             {
                 feedback += "<div>The first matrix does not match the augmented matrix.<div>";
             }
@@ -397,7 +410,7 @@ namespace LinearHomeworkInterface
             if (AnswerJSON.Contains("I"))
             {
                 feedback += mb.checkSingleRowOperation(MatrixMap);
-                if (!inconsistent)
+                if (!sessionInconsistent)
                 {
                     feedback += "<div>The matrix is actually consistent.<div>";
                 }
@@ -405,12 +418,12 @@ namespace LinearHomeworkInterface
             else if (AnswerJSON.Contains("F"))
             {
                 feedback += mb.checkSingleRowOperation(MatrixMap);
-                if (numOfFreeVars > 0)
+                if (sessionNumOfFreeVars > 0)
                 {
                     Dictionary<int, String> AnswersConverted = JsonConvert.DeserializeObject<Dictionary<int, String>>(AnswerJSON);
                     String[] Answers = new String[AnswersConverted.Count()];
                     AnswersConverted.Values.CopyTo(Answers, 0);
-                    feedback += mb.checkFreeVariableAnswers(matrix, Answers);
+                    feedback += mb.checkFreeVariableAnswers(sessionMatrix, Answers);
                 }
                 else
                 {
@@ -425,7 +438,7 @@ namespace LinearHomeworkInterface
 
                 feedback += mb.checkSingleRowOperation(MatrixMap);
                 //Will need to also check answers here
-                feedback += mb.checkAnswers(actualAnswer, Answers);
+                feedback += mb.checkAnswers(sessionActualAnswer, Answers);
             }
 
             float grade = questionValue;
