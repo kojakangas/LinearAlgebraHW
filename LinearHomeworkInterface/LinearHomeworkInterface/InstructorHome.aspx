@@ -251,7 +251,6 @@
                         dataType: "json",
                         success: function (msg) {
                             $(".overlay").hide();
-                            alert(msg.d);
                             window.location.reload();
                         },
                         error: function (msg) {

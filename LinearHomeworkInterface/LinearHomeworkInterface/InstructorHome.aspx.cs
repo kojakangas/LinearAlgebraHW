@@ -231,8 +231,12 @@ namespace LinearHomeworkInterface
             try
             {
                 msqcon.Open();
-                String query = "UPDATE homework set dueDate = '" + DueDate + " 23:59:59' where homeworkid= " + homeworkid;
+                String query = "UPDATE homework set dueDate = '" + DueDate + " 23:59:59', status = 'Assigned' where homeworkid= " + homeworkid;
                 MySqlCommand msqcmd = new MySqlCommand(query, msqcon);
+                msqcmd.ExecuteNonQuery();
+
+                query = "UPDATE hmwkassignment set status = 'In Progress' where status = 'Late' and homeworkid= " + homeworkid;
+                msqcmd = new MySqlCommand(query, msqcon);
                 msqcmd.ExecuteNonQuery();
             }
             catch (Exception)
