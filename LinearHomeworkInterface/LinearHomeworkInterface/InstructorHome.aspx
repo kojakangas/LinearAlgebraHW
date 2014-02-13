@@ -241,22 +241,24 @@
             });
             
             $(".delete").click(function () {
-                $.ajax({
-                    type: "POST",
-                    url: "InstructorHome.aspx/deleteAssignment",
-                    data: "{'homeworkid': '" + $(this).attr("name") + "'}",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (msg) {
-                        $(".overlay").hide();
-                        alert(msg.d);
-                        window.location.reload();
-                    },
-                    error: function (msg) {
-                        $(".overlay").hide();
-                        alert("Error Deleting Assignment!");
-                    }
-                });
+                if (confirm("Are you sure you wish to delete?")) {
+                    $.ajax({
+                        type: "POST",
+                        url: "InstructorHome.aspx/deleteAssignment",
+                        data: "{'homeworkid': '" + $(this).attr("name") + "'}",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (msg) {
+                            $(".overlay").hide();
+                            alert(msg.d);
+                            window.location.reload();
+                        },
+                        error: function (msg) {
+                            $(".overlay").hide();
+                            alert("Error Deleting Assignment!");
+                        }
+                    });
+                }
             });
 
             $("#signOut").click(function (e) {
