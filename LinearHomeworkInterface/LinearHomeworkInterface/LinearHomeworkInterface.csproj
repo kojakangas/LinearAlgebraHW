@@ -39,11 +39,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="MySql.Data, Version=6.7.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <HintPath>Y:\MySQL\Connector NET 6.7.4\Assemblies\v4.5\MySql.Data.dll</HintPath>
+    <Reference Include="MySql.Data, Version=6.8.3.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\MySQL\Connector NET 6.8.3\Assemblies\v4.5\MySql.Data.dll</HintPath>
     </Reference>
-    <Reference Include="MySql.Data.Entity, Version=6.7.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <HintPath>Y:\MySQL\Connector NET 6.7.4\Assemblies\v4.5\MySql.Data.Entity.dll</HintPath>
+    <Reference Include="MySql.Web, Version=6.8.3.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\MySQL\Connector NET 6.8.3\Assemblies\v4.5\MySql.Web.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -68,6 +70,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="QuestionLinearDependence.aspx" />
     <Content Include="CreateAssignment.aspx" />
     <Content Include="javascript\jquery.js" />
     <Content Include="QuestionInverse.aspx" />
@@ -116,6 +119,13 @@
   <ItemGroup>
     <Compile Include="components\AssignComponent.cs" />
     <Compile Include="components\MatrixBuilder.cs" />
+    <Compile Include="QuestionLinearDependence.aspx.cs">
+      <DependentUpon>QuestionLinearDependence.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="QuestionLinearDependence.aspx.designer.cs">
+      <DependentUpon>QuestionLinearDependence.aspx</DependentUpon>
+    </Compile>
     <Compile Include="CreateAssignment.aspx.cs">
       <DependentUpon>CreateAssignment.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

@@ -100,7 +100,7 @@ namespace LinearHomeworkInterface
 
                         if (assignments.GetString(7) == "ID")
                         {
-                            sb.Append("<a class=\"homeworkLink\" href = \"QuestionPage.aspx?assign=" + assignments.GetString(4) + "&question=" + assignments.GetString(6) + "\">");
+                            sb.Append("<a class=\"homeworkLink\" href = \"QuestionLinearDependence.aspx?assign=" + assignments.GetString(4) + "&question=" + assignments.GetString(6) + "\">");
                         }
                             
                         sb.Append(assignments.GetString(0));

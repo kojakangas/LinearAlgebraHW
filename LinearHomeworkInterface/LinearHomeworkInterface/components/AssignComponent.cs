@@ -141,9 +141,17 @@ namespace AssignComponent
                         int cols = System.Convert.ToInt32(variables[3]);
                         int min = System.Convert.ToInt32(variables[4]);
                         int max = System.Convert.ToInt32(variables[5]);
-                        int freeVar = System.Convert.ToInt32(variables[6]);
+                        int freeVar;
+                        if (variables[6].Equals("N/A"))
+                        {
+                            freeVar = 0;
+                        }
+                        else
+                        {
+                            freeVar = System.Convert.ToInt32(variables[6]);
+                        }
                         int inconsistent;
-                        if (variables[7].Equals("Yes"))
+                        if (variables[7].Equals("Yes") || variables[7].Equals("Dependent"))
                         {
                             inconsistent = 1;
                         }
