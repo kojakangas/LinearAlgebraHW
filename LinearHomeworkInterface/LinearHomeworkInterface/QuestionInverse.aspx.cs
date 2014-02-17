@@ -532,7 +532,7 @@ namespace LinearHomeworkInterface
                 else
                 {
                     book.Close();
-                    String command = "UPDATE hmwkassignment SET status = 'Complete', currentQuestion = 0 WHERE assignmentId = " + assignment;
+                    String command = "UPDATE hmwkassignment SET status = 'Complete' WHERE assignmentId = " + assignment;
                     MySqlCommand msqcom = new MySqlCommand(command, msqcon);
                     msqcom.ExecuteNonQuery();
                     flag = "complete";

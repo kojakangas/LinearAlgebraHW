@@ -232,7 +232,7 @@ MathJax.Hub.Config({
 
                 $('#refreshCheck')[0].checked = true;
             });
-            $("#createAnsLink").click(function () { return false; });
+            //$("#createAnsLink").click(function () { return false; });
 
             $('.dropdown-menu input, #makeMatrix').click(function (e) {
                 e.stopPropagation();
