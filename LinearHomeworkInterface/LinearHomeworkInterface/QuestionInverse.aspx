@@ -1,9 +1,9 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="QuestionPage.aspx.cs" Inherits="LinearHomeworkInterface.QuestionPage" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="QuestionInverse.aspx.cs" Inherits="LinearHomeworkInterface.QuestionInverse" %>
 
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
+<head id="Head1" runat="server">
     <title>Assignment Questions</title>
     <link href="theme/bootstrap.css" rel="stylesheet" media="screen" />
     <link href="theme/jquery.dataTables.css" rel="stylesheet" media="screen" />
@@ -291,7 +291,7 @@ MathJax.Hub.Config({
                         });
                         matrixMap[index] = matrix;
                     });
-                  
+
                     //Gets the answer
                     var answer = new Object();
 
@@ -318,18 +318,18 @@ MathJax.Hub.Config({
 
                     //Then there will be an ajax call to grade this
                     //It will need both the matrixMap and answer variables
-					var complete = "";
-					var vars = [], hash;
-					var q = document.URL.split('?')[1];
-					if (q != undefined) {
-						q = q.split('&');
-						for (var i = 0; i < q.length; i++) {
-							hash = q[i].split('=');
-							vars.push(hash[1]);
-							vars[hash[0]] = hash[1];
-							vars[hash[0]] = vars[hash[0]].replace("#", "");
-						}
-					}
+                    var complete = "";
+                    var vars = [], hash;
+                    var q = document.URL.split('?')[1];
+                    if (q != undefined) {
+                        q = q.split('&');
+                        for (var i = 0; i < q.length; i++) {
+                            hash = q[i].split('=');
+                            vars.push(hash[1]);
+                            vars[hash[0]] = hash[1];
+                            vars[hash[0]] = vars[hash[0]].replace("#", "");
+                        }
+                    }
                     $.ajax({
                         type: "POST",
                         url: "QuestionPage.aspx/Grade",
@@ -394,10 +394,10 @@ MathJax.Hub.Config({
                                     window.location.replace = "QuestionInverse.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
                                 }
                                 else if (statusAndQType[1] === "ID") {
-                                    // window.location.replace = "QuestionInverse.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                                   // window.location.replace = "QuestionInverse.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
                                 }
                                 else if (statusAndQType[1] === "RtI") {
-                                    // window.location.replace = "QuestionInverse.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                                   // window.location.replace = "QuestionInverse.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
                                 }
                                 window.location.reload();
                             });

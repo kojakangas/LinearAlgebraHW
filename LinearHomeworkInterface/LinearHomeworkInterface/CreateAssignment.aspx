@@ -44,10 +44,9 @@
 			<span>Question Type:  </span>
 			<select id="questionType" style="margin-bottom: 5px;">
 				<option value="SoE">System of Equations</option>
-				<%--<option value="RtI">Reduce to Identity</option>
-				<option value="DP">Dot Product</option>
+			    <option value="RtI">Reduce to Identity</option>
 				<option value="I">Inverse</option>
-				<option value="D">Determinant</option>--%>
+				<option value="ID">Independence/Dependence</option>
 			</select>
 			<div id="SoE">
 				<span>Rows: </span>
@@ -70,16 +69,8 @@
 				<input id="minRtI" type="text" maxlength="3" class="span1"  onkeypress="return validateNumericInputAllowMinus(event)" placeholder="min"/> - 
 				<input id="maxRtI" type="text" maxlength="3" class="span1"  onkeypress="return validateNumericInputAllowMinus(event)" placeholder="max"/>
 			</div>
-			
-			<div id="DP" style="display:none;">
-				<span>Vector Size: </span>
-				<input id="sizeDP" type="text" maxlength="2" class="span1"  onkeypress="return validateNumericInput(event)" /><br />
-				<span>Coefficient Range: </span>
-				<input id="minDP" type="text" maxlength="3" class="span1"  onkeypress="return validateNumericInputAllowMinus(event)" placeholder="min"/> - 
-				<input id="maxDP" type="text" maxlength="3" class="span1"  onkeypress="return validateNumericInputAllowMinus(event)" placeholder="max"/>
-			</div>
-			
-			<div id="D" style="display:none;">
+						
+			<div id="ID" style="display:none;">
 				<span>Matrix Size: </span>
 				<input id="sizeD" type="text" maxlength="2" class="span1"  onkeypress="return validateNumericInput(event)" /><br />
 				<span>Coefficient Range: </span>
