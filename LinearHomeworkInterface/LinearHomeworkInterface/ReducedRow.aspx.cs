@@ -278,7 +278,7 @@ namespace LinearHomeworkInterface
             //should probably check if the first matrix is the actual first matrix
             float[,] augMatrix = null;
             MatrixMap.TryGetValue(0, out augMatrix);
-            //Not sure if this if works 
+            //Not sure if this if works
             if (!mb.checkMatrixEquality(sessionMatrix, augMatrix))
             {
                 feedback += "<div>The first matrix does not match the augmented matrix.<div>";
