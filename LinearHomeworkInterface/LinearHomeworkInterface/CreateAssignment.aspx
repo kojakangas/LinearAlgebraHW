@@ -43,11 +43,10 @@
 		<form class="well span4" style="padding-right:10px;">
 			<span>Question Type:  </span>
 			<select id="questionType" style="margin-bottom: 5px;">
-				<option value="SoE">System of Equations</option>
-				<%--<option value="RtI">Reduce to Identity</option>
-				<option value="DP">Dot Product</option>
-				<option value="I">Inverse</option>
-				<option value="D">Determinant</option>--%>
+				<option value="SoE">System of Equations (SoE)</option>
+			    <option value="RtI">Reduce to Identity (RtI)</option>
+				<option value="I">Inverse (I)</option>
+				<option value="ID">Independence/Dependence (ID)</option>
 			</select>
 			<div id="SoE">
 				<span>Rows: </span>
@@ -70,21 +69,17 @@
 				<input id="minRtI" type="text" maxlength="3" class="span1"  onkeypress="return validateNumericInputAllowMinus(event)" placeholder="min"/> - 
 				<input id="maxRtI" type="text" maxlength="3" class="span1"  onkeypress="return validateNumericInputAllowMinus(event)" placeholder="max"/>
 			</div>
-			
-			<div id="DP" style="display:none;">
-				<span>Vector Size: </span>
-				<input id="sizeDP" type="text" maxlength="2" class="span1"  onkeypress="return validateNumericInput(event)" /><br />
+						
+			<div id="ID" style="display:none;">
+                <span>Rows: </span>
+				<input id="rowsID" type="text" maxlength="2" class="span1"  onkeypress="return validateNumericInput(event)" placeholder="n"/>
+				<span>Columns: </span>
+				<input id="colsID" type="text" maxlength="2" class="span1"  onkeypress="return validateNumericInput(event)" placeholder="m"/><br />
 				<span>Coefficient Range: </span>
-				<input id="minDP" type="text" maxlength="3" class="span1"  onkeypress="return validateNumericInputAllowMinus(event)" placeholder="min"/> - 
-				<input id="maxDP" type="text" maxlength="3" class="span1"  onkeypress="return validateNumericInputAllowMinus(event)" placeholder="max"/>
-			</div>
-			
-			<div id="D" style="display:none;">
-				<span>Matrix Size: </span>
-				<input id="sizeD" type="text" maxlength="2" class="span1"  onkeypress="return validateNumericInput(event)" /><br />
-				<span>Coefficient Range: </span>
-				<input id="minD" type="text" maxlength="3" class="span1"  onkeypress="return validateNumericInputAllowMinus(event)" placeholder="min"/> - 
-				<input id="maxD" type="text" maxlength="3" class="span1"  onkeypress="return validateNumericInputAllowMinus(event)" placeholder="max"/>
+				<input id="minID" type="text" maxlength="3" class="span1"  onkeypress="return validateNumericInputAllowMinus(event)" placeholder="min"/> - 
+				<input id="maxID" type="text" maxlength="3" class="span1"  onkeypress="return validateNumericInputAllowMinus(event)" placeholder="max"/>
+                <span>Dependent: </span>
+				<input type="checkbox" id="dependentID" style="margin-top: 0px;" />
 			</div>
 			
 			<div id="I" style="display:none;">
@@ -254,20 +249,22 @@
 	                } else {
 	                    alert("Bad Question Parameters: \n1. Must specify Size, Min and Max Coefficients\n2. Max Coefficient must be greater than Min Coefficient");
 	                }
-	            } else if (questionType === "DP") {
-	                if ($("#minDP").val() <= $("#maxDP").val() && $("#sizeDP").val() && $("#minDP").val() && $("#maxDP").val()) {
+	            } else if (questionType === "ID") {
+	                if ($("#minID").val() <= $("#maxID").val() && $("#rowsID").val() > 0 && $("#colsID").val() > 0 && $("#minID").val() && $("#maxID").val()) {
+	                    var dependency;
+	                    if ($("#dependentID").is(":checked")) { dependency = "Dependent"; } else { dependency = "Independent"; }
 	                    questionNumber++;
 	                    $("#addedQuestionTable").dataTable().fnAddData([
 							questionNumber,
-							"DP",
-							$("#sizeDP").val(),
-							"1",
-							$("#minDP").val(),
-							$("#maxDP").val(),
-							"0",
-							"No"]);
+							"ID",
+							$("#rowsID").val(),
+							$("#colsID").val(),
+							$("#minID").val(),
+							$("#maxID").val(),
+							"N/A",
+							dependency]);
 	                } else {
-	                    alert("Bad Question Parameters: \n1. Must specify Size, Min and Max Coefficients\n2. Max Coefficient must be greater than Min Coefficient");
+	                    alert("Bad Question Parameters: \n1. Must specify Rows and Columns, Min and Max Coefficients\n2. Must have at least one row and column\n3. Max Coefficient must be greater than Min Coefficient");
 	                }
 	            } else if (questionType === "D") {
 	                if ($("#minD").val() <= $("#maxD").val() && $("#sizeD").val() && $("#minD").val() && $("#maxD").val()) {
@@ -382,7 +379,8 @@
 	                    //if the function executed successfully
 	                    success: function (msg) {
 	                        //give the result of this call as an alert for the instructor
-	                        alert(msg.d);
+                            //THIS WAS REMOVED BECAUSE IT WAS NOT NEEDED
+	                        // alert(msg.d);
                             //redirect browser to the instructor's homepage
 	                        window.location.href = "InstructorHome.aspx";
 	                    },

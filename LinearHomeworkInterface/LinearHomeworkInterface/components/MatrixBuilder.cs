@@ -17,6 +17,56 @@ namespace MatrixBuilder
 
         }
 
+        //When reduced, has a pivot row for every column. For use when rows>=cols
+        public float[,] generateIndependentMatrix(int rows, int cols, int min, int max)
+        {
+            bool independent = false;
+            float[,] matrix = new float[rows,cols];
+            if (rows >= cols)
+            {
+                while (!independent)
+                {
+                    matrix = generateRandomMatrix(rows, cols, min, max);
+                    float[,] reduced = new float[rows,cols];
+                    for (int i = 0; i < rows; i++)
+                    {
+                        for (int j = 0; j < cols; j++)
+                        {
+                            reduced[i, j] = matrix[i, j];
+                        }
+                    }
+                    reduced = reduceMatrix(reduced);
+                    independent = checkMainDiagonalForOnes(reduced, cols);
+                }
+            }
+            return matrix;
+        }
+
+        //When reduced, doesn't have a pivot row for every column.
+        public float[,] generateDependentMatrix(int rows, int cols, int min, int max)
+        {
+            bool independent = true;
+            float[,] matrix = new float[rows, cols];
+            if (rows >= cols)
+            {
+                while (independent)
+                {
+                    matrix = generateRandomMatrix(rows, cols, min, max);
+                    float[,] reduced = new float[rows, cols];
+                    for (int i = 0; i < rows; i++)
+                    {
+                        for (int j = 0; j < cols; j++)
+                        {
+                            reduced[i, j] = matrix[i, j];
+                        }
+                    }
+                    reduced = reduceMatrix(reduced);
+                    independent = checkMainDiagonalForOnes(reduced, cols);
+                }
+            }
+            return matrix;
+        }
+
         //Can be considered augmented or not
         public float[,] generateRandomMatrix(int rows, int cols, int min, int max)
         {
@@ -520,6 +570,23 @@ namespace MatrixBuilder
             }
 
             return isAddMultipleOfRow;
+        }
+
+        //Checks every column for a 1 along the main diagonal (for use with independence/dependence, will break if rows>cols)
+        public bool checkMainDiagonalForOnes(float[,] matrix, int columns)
+        {
+            bool onlyones = true;
+            float[,] tempMatrix = matrix;
+            float[,] reducedMatrix = reduceMatrix(tempMatrix);
+            for (int columnpointer = 0; columnpointer < columns; columnpointer++)
+            {
+                if (reducedMatrix[columnpointer, columnpointer] != 1)
+                {
+                    onlyones = false;
+                    break;
+                }
+            }
+            return onlyones;
         }
 
         //Will error with incorrect size matrices

@@ -61,7 +61,7 @@ namespace LinearHomeworkInterface
                 idfetch.Close();
 
                 //fetch current homework assignments
-                String query = "SELECT  h.title, h.dueDate, ha.grade, ha.status, ha.assignmentId, h.points, ha.currentQuestion FROM hmwkassignment AS ha JOIN homework AS h WHERE ha.homeworkId=h.homeworkid AND ha.userID = @userid ORDER BY ha.assignmentID";
+                String query = "SELECT distinct h.title, h.dueDate, ha.grade, ha.status, ha.assignmentId, h.points, ha.currentQuestion, q.type FROM hmwkassignment AS ha JOIN homework AS h JOIN question AS q WHERE ha.homeworkId=h.homeworkid AND ha.userID = @userid AND q.number = ha.currentQuestion AND q.homeworkid = h.homeworkid ORDER BY ha.assignmentID";
                 msqcmd = new MySqlCommand(query, msqcon);
                 msqcmd.Parameters.Add(new MySqlParameter("@userid", userid));
                 MySqlDataReader assignments = null;
@@ -83,7 +83,26 @@ namespace LinearHomeworkInterface
                     sb.Append("<td style=\"text-align: left;\">");
                     if (available)
                     {
-                        sb.Append("<a class=\"homeworkLink\" href = \"QuestionPage.aspx?assign=" + assignments.GetString(4) + "&question=" + assignments.GetString(6) +"\">");
+                        if (assignments.GetString(7) == "SoE")
+                        {
+                            sb.Append("<a class=\"homeworkLink\" href = \"QuestionPage.aspx?assign=" + assignments.GetString(4) + "&question=" + assignments.GetString(6) + "\">");
+                        }
+
+                        if (assignments.GetString(7) == "I")
+                        {
+                            sb.Append("<a class=\"homeworkLink\" href = \"QuestionInverse.aspx?assign=" + assignments.GetString(4) + "&question=" + assignments.GetString(6) + "\">");
+                        }
+
+                        if (assignments.GetString(7) == "RtI")
+                        {
+                            sb.Append("<a class=\"homeworkLink\" href = \"QuestionPage.aspx?assign=" + assignments.GetString(4) + "&question=" + assignments.GetString(6) + "\">");
+                        }
+
+                        if (assignments.GetString(7) == "ID")
+                        {
+                            sb.Append("<a class=\"homeworkLink\" href = \"QuestionLinearDependence.aspx?assign=" + assignments.GetString(4) + "&question=" + assignments.GetString(6) + "\">");
+                        }
+                            
                         sb.Append(assignments.GetString(0));
                         sb.Append("</a>");
                     }
