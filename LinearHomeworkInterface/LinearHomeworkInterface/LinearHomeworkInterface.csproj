@@ -70,6 +70,7 @@
   <ItemGroup>
     <Content Include="CreateAssignment.aspx" />
     <Content Include="javascript\jquery.js" />
+    <Content Include="ReducedRow.aspx" />
     <Content Include="StudentHome.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="InstructorHome.aspx" />
@@ -144,6 +145,13 @@
     </Compile>
     <Compile Include="QuestionPage.aspx.designer.cs">
       <DependentUpon>QuestionPage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ReducedRow.aspx.cs">
+      <DependentUpon>ReducedRow.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReducedRow.aspx.designer.cs">
+      <DependentUpon>ReducedRow.aspx</DependentUpon>
     </Compile>
     <Compile Include="StudentHome.aspx.cs">
       <DependentUpon>StudentHome.aspx</DependentUpon>

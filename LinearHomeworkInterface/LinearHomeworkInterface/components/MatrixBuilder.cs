@@ -744,6 +744,17 @@ namespace MatrixBuilder
             return feedback.Equals("") ? null : feedback;
         }
 
+        //overload method for checking answers as matrices
+        public String checkAnswers(float[,] correctAnswers, float[,] studentAnswers)
+        {
+            String feedback = "";
+            if (!this.checkMatrixEquality(correctAnswers, studentAnswers))
+            {
+                feedback += "<div>Your reduced matrix is incorrect.<div>\n";
+            }
+            return feedback.Equals("") ? null : feedback;
+        }
+
         public String checkFreeVariableAnswers(float[,] startingMatrix, String[] studentAnswers)
         {
             String feedback = "";

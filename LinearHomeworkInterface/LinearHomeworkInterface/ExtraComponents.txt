@@ -72,3 +72,200 @@ function setSolutionKey() {
                 x++;
             }
         }
+
+//additional overload method for generating dot product problem
+        public void buildQuestionDisplay(float[] vector1, float[] vector2)
+        {
+            //form our vectors with dot in between
+            String expression;
+            expression = "$$\\begin{pmatrix}";
+            for (int i = 0; i < n; i++)
+            {
+                expression += vector1[i];
+                expression += " \\\\";
+            }
+            expression += "\\end{pmatrix}";
+            expression += "\\cdot";
+            expression += "\\begin{pmatrix}";
+            for (int i = 0; i < n; i++)
+            {
+                expression += vector2[i];
+                expression += " \\\\";
+            }
+            expression += "\\end{pmatrix}$$";
+            question.Text = question.Text + expression;
+        }
+
+//problem creation for dot product
+		public float[,] Create_Problem(int n, int m, int min, int max, int numOfFreeVars, bool inconsistent, string type, float[] answer)
+        {
+            MatrixBuilder.MatrixOperations mb = new MatrixBuilder.MatrixOperations();
+			vector1 = mb.generateRandomVector(n, min, max);
+            vector2 = mb.generateRandomVector(n, min, max);
+
+                //Do the parsing and text adding for question
+                instruction.Text = instruction.Text + "<h4 style=\"margin: 0px;\">Question " + queId + "</h4>\n"
+                    + "<p style=\"margin: 0px; line-height: 25px; font-size: 14px;\">Find the dot product between the following two vectors.</p>";
+        }
+
+//additional overload method for generating dot product problem
+        public void buildQuestionDisplay(float[] vector1, float[] vector2)
+        {
+            //form our vectors with dot in between
+            String expression;
+            expression = "$$\\begin{pmatrix}";
+            for (int i = 0; i < n; i++)
+            {
+                expression += vector1[i];
+                expression += " \\\\";
+            }
+            expression += "\\end{pmatrix}";
+            expression += "\\cdot";
+            expression += "\\begin{pmatrix}";
+            for (int i = 0; i < n; i++)
+            {
+                expression += vector2[i];
+                expression += " \\\\";
+            }
+            expression += "\\end{pmatrix}$$";
+            question.Text = question.Text + expression;
+        }
+
+//method to dynamically load the question using MATHJAX for System of Equations problem
+		public void buildQuestionDisplay(float[,] matrix)
+		{
+			for (int i = 0; i < n; i++)
+                {
+                    char[] a = new char[1];
+                    String expression = new String(a);
+                    for (int j = 0; j < m; j++)
+                    {
+                        if (j == 0)
+                        {
+                            expression = "$${";
+                            expression += matrix[i, j];
+                            expression += "x_";
+                            expression += j + 1;
+                            expression += " ";
+                        }
+                        else if (j < (m - 2))
+                        {
+                            if (matrix[i, j] >= 0) expression += "+ ";
+                            else expression += " ";
+                            expression += matrix[i, j];
+                            expression += "x_";
+                            expression += j + 1;
+                            expression += " ";
+                        }
+                        else if (j == (m - 2))
+                        {
+                            if (matrix[i, j] >= 0) expression += "+ ";
+                            else expression += " ";
+                            expression += matrix[i, j];
+                            expression += "x_";
+                            expression += j + 1;
+                            expression += "} = ";
+                        }
+                        else if (j == (m - 1))
+                        {
+                            expression += matrix[i, j];
+                            expression += "$$";
+                        }
+                    }
+                    question.Text = question.Text + expression;
+				}
+
+//method to dynamically load the question using MATHJAX for Reduce to Identity, Determinant, or Inverse problem
+        public void buildQuestionDisplay(float[,] matrix)
+        {
+			String expression;
+                expression = "$$\\begin{bmatrix}";
+                for (int i = 0; i < n; i++)
+                {
+                    for (int j = 0; j < m; j++)
+                    {
+                        if (j == (m - 1))
+                        {
+                            expression += matrix[i, j];
+                            expression += " \\\\";
+                        }
+                        else
+                        {
+                            expression += matrix[i, j];
+                            expression += " & ";
+                        }
+                    }
+                }
+                expression += "\\end{bmatrix}$$";
+                question.Text = question.Text + expression;
+           }
+
+//this is how the problem finishes generation in different question scenarios
+public float[,] Create_Problem(int n, int m, int min, int max, int numOfFreeVars, bool inconsistent, string type, float[] answer)
+        {
+            MatrixBuilder.MatrixOperations mb = new MatrixBuilder.MatrixOperations();
+			//insert below code if a System of Equations problem
+			
+                if ((n == m || (n + 1) == m) && !inconsistent && numOfFreeVars <= 0)
+                {//has unique solution if n = m + 1; will have free var if n < m + 1
+                    matrix = mb.generateUniqueSolutionMatrix(n, m, min, max, answer);
+                }
+                else if (n <= m && inconsistent && numOfFreeVars <= 0)
+                {//inconsistent matrix
+                    matrix = mb.generateInconsistentMatrix(n, m, min, max);
+                }
+                else if (n <= m && !inconsistent && numOfFreeVars > 0)
+                {//free variable matrix
+                    matrix = mb.generateMatrixWithFreeVariables(n, m, min, max, answer, numOfFreeVars);
+                }
+                else
+                {
+                    //This is the catch all. Not sure how accurate it is
+                    matrix = mb.generateRandomMatrix(n, m, min, max);
+                }
+                int rowOpsCount = mb.countOperationsNeeded(matrix) - 2;
+                rowOpsNeeded.Text = System.Convert.ToString(rowOpsCount);
+
+                //Do the parsing and text adding for question
+                instruction.Text = instruction.Text + "<h4 style=\"margin: 0px;\">Question " + queId + "</h4>\n"
+                    + "<p style=\"margin: 0px; line-height: 25px; font-size: 14px;\">Solve the system of linear equations by using elementary row operations.</p>";
+            
+			//end code, insert below code if a Reduce to Identity problem
+			
+                matrix = mb.generateRandomIdentityMatrix(n, min, max);
+
+                //Do the parsing and text adding for question
+                instruction.Text = instruction.Text + "<h4 style=\"margin: 0px;\">Question " + queId + "</h4>\n"
+                    + "<p style=\"margin: 0px; line-height: 25px; font-size: 14px;\">Reduce this matrix to an identity matrix.</p>";
+            
+			//end code, insert below code if a finding Determinant problem
+			
+				matrix = mb.generateRandomIdentityMatrix(n, min, max);
+
+                //Do the parsing and text adding for question
+                instruction.Text = instruction.Text + "<h4 style=\"margin: 0px;\">Question " + queId + "</h4>\n"
+                    + "<p style=\"margin: 0px; line-height: 25px; font-size: 14px;\">Find the determinant.</p>";
+			
+			//end code, insert below code if a Dot Product problem
+			
+				MatrixBuilder.MatrixOperations mb = new MatrixBuilder.MatrixOperations();
+				vector1 = mb.generateRandomVector(n, min, max);
+				vector2 = mb.generateRandomVector(n, min, max);
+
+                //Do the parsing and text adding for question
+                instruction.Text = instruction.Text + "<h4 style=\"margin: 0px;\">Question " + queId + "</h4>\n"
+                    + "<p style=\"margin: 0px; line-height: 25px; font-size: 14px;\">Find the dot product between the following two vectors.</p>";
+			
+			//end code, insert below code if an Identity problem
+			
+                matrix = mb.generateRandomIdentityMatrix(n, min, max);
+
+                //Do the parsing and text adding for question
+                instruction.Text = instruction.Text + "<h4 style=\"margin: 0px;\">Question " + queId + "</h4>\n"
+                    + "<p style=\"margin: 0px; line-height: 25px; font-size: 14px;\">Find the inverse of the following matrix.</p>";
+            
+			//end code, in ANY scenario include the following:
+
+			return matrix;
+
+		}
