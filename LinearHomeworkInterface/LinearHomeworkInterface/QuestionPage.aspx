@@ -388,18 +388,17 @@ MathJax.Hub.Config({
                             $('#nextQuestion').click(function () {
                                 $(".overlay").show();
                                 if (statusAndQType[1] === "SoE") {
-                                    window.location.replace = "QuestionPage.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                                    window.location = "QuestionPage.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
                                 }
                                 else if (statusAndQType[1] === "I") {
-                                    window.location.replace = "QuestionInverse.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                                    window.location = "QuestionInverse.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
                                 }
                                 else if (statusAndQType[1] === "ID") {
-                                    // window.location.replace = "QuestionInverse.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                                    window.location = "QuestionLinearDependence.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
                                 }
                                 else if (statusAndQType[1] === "RtI") {
                                     // window.location.replace = "QuestionInverse.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
                                 }
-                                window.location.reload();
                             });
                         }
                         if (statusAndQType[0] == "complete") {

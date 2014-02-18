@@ -520,7 +520,7 @@ namespace LinearHomeworkInterface
                     MySqlCommand msqcom = new MySqlCommand(command, msqcon);
                     msqcom.ExecuteNonQuery();
 
-                    command = "SELECT q.type FROM question AS q JOIN homework AS h WHERE h.homeworkId=q.homeworkid AND q.number = " + (System.Convert.ToInt32(question) + 1);
+                    command = "SELECT q.type FROM question AS q JOIN hmwkassignment AS h WHERE h.assignmentId=" + assignment + " AND q.homeworkid = h.homeworkid AND q.number = " + (System.Convert.ToInt32(question) + 1);
                     msqcom = new MySqlCommand(command, msqcon);
                     MySqlDataReader qType = msqcom.ExecuteReader();
                     qType.Read();

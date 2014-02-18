@@ -43,10 +43,10 @@
 		<form class="well span4" style="padding-right:10px;">
 			<span>Question Type:  </span>
 			<select id="questionType" style="margin-bottom: 5px;">
-				<option value="SoE">System of Equations</option>
-			    <option value="RtI">Reduce to Identity</option>
-				<option value="I">Inverse</option>
-				<option value="ID">Independence/Dependence</option>
+				<option value="SoE">System of Equations (SoE)</option>
+			    <option value="RtI">Reduce to Identity (RtI)</option>
+				<option value="I">Inverse (I)</option>
+				<option value="ID">Independence/Dependence (ID)</option>
 			</select>
 			<div id="SoE">
 				<span>Rows: </span>
@@ -379,7 +379,8 @@
 	                    //if the function executed successfully
 	                    success: function (msg) {
 	                        //give the result of this call as an alert for the instructor
-	                        alert(msg.d);
+                            //THIS WAS REMOVED BECAUSE IT WAS NOT NEEDED
+	                        // alert(msg.d);
                             //redirect browser to the instructor's homepage
 	                        window.location.href = "InstructorHome.aspx";
 	                    },
