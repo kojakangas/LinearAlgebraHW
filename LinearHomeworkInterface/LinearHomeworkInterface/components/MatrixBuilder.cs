@@ -17,56 +17,6 @@ namespace MatrixBuilder
 
         }
 
-        //When reduced, has a pivot row for every column. For use when rows>=cols
-        public float[,] generateIndependentMatrix(int rows, int cols, int min, int max)
-        {
-            bool independent = false;
-            float[,] matrix = new float[rows,cols];
-            if (rows >= cols)
-            {
-                while (!independent)
-                {
-                    matrix = generateRandomMatrix(rows, cols, min, max);
-                    float[,] reduced = new float[rows,cols];
-                    for (int i = 0; i < rows; i++)
-                    {
-                        for (int j = 0; j < cols; j++)
-                        {
-                            reduced[i, j] = matrix[i, j];
-                        }
-                    }
-                    reduced = reduceMatrix(reduced);
-                    independent = checkMainDiagonalForOnes(reduced, cols);
-                }
-            }
-            return matrix;
-        }
-
-        //When reduced, doesn't have a pivot row for every column.
-        public float[,] generateDependentMatrix(int rows, int cols, int min, int max)
-        {
-            bool independent = true;
-            float[,] matrix = new float[rows, cols];
-            if (rows >= cols)
-            {
-                while (independent)
-                {
-                    matrix = generateRandomMatrix(rows, cols, min, max);
-                    float[,] reduced = new float[rows, cols];
-                    for (int i = 0; i < rows; i++)
-                    {
-                        for (int j = 0; j < cols; j++)
-                        {
-                            reduced[i, j] = matrix[i, j];
-                        }
-                    }
-                    reduced = reduceMatrix(reduced);
-                    independent = checkMainDiagonalForOnes(reduced, cols);
-                }
-            }
-            return matrix;
-        }
-
         //Can be considered augmented or not
         public float[,] generateRandomMatrix(int rows, int cols, int min, int max)
         {
@@ -247,6 +197,136 @@ namespace MatrixBuilder
             for (int i = 0; i < size; i++)
                 vector[i] = rand.Next(min, max);
             return vector;
+        }
+
+        //When reduced, has a pivot row for every column. For use when rows>=cols
+
+        public float[,] generateIndependentMatrix(int rows, int cols, int min, int max)
+
+        {
+
+            bool independent = false;
+
+            float[,] matrix = new float[rows,cols];
+
+            if (rows >= cols)
+
+            {
+
+                while (!independent)
+
+                {
+
+                    matrix = generateRandomMatrix(rows, cols, min, max);
+
+                    float[,] reduced = new float[rows,cols];
+
+                    for (int i = 0; i < rows; i++)
+
+                    {
+
+                        for (int j = 0; j < cols; j++)
+
+                        {
+
+                            reduced[i, j] = matrix[i, j];
+
+                        }
+
+                    }
+
+                    reduced = reduceMatrix(reduced);
+
+                    independent = checkMainDiagonalForOnes(reduced, cols);
+
+                }
+
+            }
+
+            return matrix;
+
+        }
+
+
+
+        //When reduced, doesn't have a pivot row for every column.
+
+        public float[,] generateDependentMatrix(int rows, int cols, int min, int max)
+
+        {
+
+            bool independent = true;
+
+            float[,] matrix = new float[rows, cols];
+
+            if (rows >= cols)
+
+            {
+
+                while (independent)
+
+                {
+
+                    matrix = generateRandomMatrix(rows, cols, min, max);
+
+                    float[,] reduced = new float[rows, cols];
+
+                    for (int i = 0; i < rows; i++)
+
+                    {
+
+                        for (int j = 0; j < cols; j++)
+
+                        {
+
+                            reduced[i, j] = matrix[i, j];
+
+                        }
+
+                    }
+
+                    reduced = reduceMatrix(reduced);
+
+                    independent = checkMainDiagonalForOnes(reduced, cols);
+
+                }
+
+            }
+
+            return matrix;
+
+        }
+
+        //Checks every column for a 1 along the main diagonal (for use with independence/dependence, will break if rows>cols)
+
+        public bool checkMainDiagonalForOnes(float[,] matrix, int columns)
+
+        {
+
+            bool onlyones = true;
+
+            float[,] tempMatrix = matrix;
+
+            float[,] reducedMatrix = reduceMatrix(tempMatrix);
+
+            for (int columnpointer = 0; columnpointer < columns; columnpointer++)
+
+            {
+
+                if (reducedMatrix[columnpointer, columnpointer] != 1)
+
+                {
+
+                    onlyones = false;
+
+                    break;
+
+                }
+
+            }
+
+            return onlyones;
+
         }
 
         public float[,] reduceMatrix(float[,] matrix)
@@ -572,23 +652,6 @@ namespace MatrixBuilder
             return isAddMultipleOfRow;
         }
 
-        //Checks every column for a 1 along the main diagonal (for use with independence/dependence, will break if rows>cols)
-        public bool checkMainDiagonalForOnes(float[,] matrix, int columns)
-        {
-            bool onlyones = true;
-            float[,] tempMatrix = matrix;
-            float[,] reducedMatrix = reduceMatrix(tempMatrix);
-            for (int columnpointer = 0; columnpointer < columns; columnpointer++)
-            {
-                if (reducedMatrix[columnpointer, columnpointer] != 1)
-                {
-                    onlyones = false;
-                    break;
-                }
-            }
-            return onlyones;
-        }
-
         //Will error with incorrect size matrices
         public float[,] matrixMultiplication(float[,] matrix, float[,] matrix2)
         {
@@ -812,10 +875,14 @@ namespace MatrixBuilder
         }
 
         //overload method for checking answers as matrices
-        public String checkAnswers(float[,] correctAnswers, float[,] studentAnswers)
+        public String checkAnswers(Dictionary<int, float[,]> correctAnswers, Dictionary<int, float[,]> studentAnswers)
         {
             String feedback = "";
-            if (!this.checkMatrixEquality(correctAnswers, studentAnswers))
+            float[,] matrix1 = null;
+            correctAnswers.TryGetValue(0, out matrix1);
+            float[,] matrix2 = null;
+            studentAnswers.TryGetValue(0, out matrix2);
+            if (!checkMatrixEquality(matrix1, matrix2))
             {
                 feedback += "<div>Your reduced matrix is incorrect.<div>\n";
             }

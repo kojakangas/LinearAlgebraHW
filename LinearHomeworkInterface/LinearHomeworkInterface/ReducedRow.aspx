@@ -277,28 +277,9 @@ MathJax.Hub.Config({
                     });
 
                     //Gets the answer
-                    var answer = new Object();
+                    var answer = matrixMap[index];
 
-                    var inconsistentAnswer = $("#answerDiv:has(input#inconsistentAnswer)");
-                    if (inconsistentAnswer.length == 0) {
-                        $("#answerDiv > div[id^='variable']").each(function (index, div) {
-                            var answerString = "";
-                            var firstInput = $(this).find("#var" + index).val();
-                            //if F it is a free var
-                            if (firstInput != "F") {
-                                answerString = eval(firstInput);
-                                $(this).find("input[id^='free']").each(function (inputIndex, input) {
-                                    var value = eval($(this).val());
-                                    answerString += "," + value + "@" + $(this).attr("name");//Parsing can be done differently
-                                });
-                            } else {
-                                answerString = firstInput;
-                            }
-                            answer[index] = answerString;
-                        });
-                    } else {
-                        answer = "I";//I is for inconsistent. possible to use boolean or 0 and 1
-                    }
+                    
 
                     //Then there will be an ajax call to grade this
                     //It will need both the matrixMap and answer variables
