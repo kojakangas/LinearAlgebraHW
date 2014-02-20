@@ -852,6 +852,28 @@ namespace MatrixBuilder
             return feedback.Equals("") ? null : feedback;
         }
 
+        public String checkSingleRowOperationInverseQuestion(Dictionary<int, float[,]> matrixMap)
+        {
+            String feedback = "";
+            for (int i = 1; i < matrixMap.Count(); i++)
+            {
+                float[,] matrix1 = null;
+                matrixMap.TryGetValue(i, out matrix1);
+                float[,] matrix2 = null;
+                matrixMap.TryGetValue(i + 1, out matrix2);
+                if (checkMatrixEquality(matrix1, matrix2))
+                {
+                    feedback += "<div>No row operation between matrix " + i + " and matrix " + (i + 1) + ".<div>";
+                }
+                else if (!checkAddMultipleOfRow(matrix1, matrix2) && !checkTimesScalar(matrix1, matrix2)
+                      && !checkRowSwap(matrix1, matrix2))
+                {
+                    feedback += "<div>Mistake between matrix " + i + " and matrix " + (i + 1) + ".<div>";
+                }
+            }
+            return feedback.Equals("") ? null : feedback;
+        }
+
         public String checkAnswers(float[] correctAnswers, float[] studentAnswers)
         {
             String feedback = "";
@@ -1056,6 +1078,65 @@ namespace MatrixBuilder
             }
 
             return numOfRowOps;
+        }
+
+        public bool checkInverse(float[,] matrix, float[,] inverse)
+        {
+            bool isInverse = true;
+            int numOfRows = matrix.GetLength(0);
+            int numOfCols = matrix.GetLength(1);
+            if (matrix.GetLength(0) == inverse.GetLength(0) && matrix.GetLength(1) == inverse.GetLength(1))
+            {
+                float[,] product = crossProduct(matrix, inverse);
+                for (int i = 0; i < numOfRows; i++)
+                {
+                    for (int j = 0; j < numOfCols; j++)
+                    {
+                        if (i == j && Math.Abs(1 - product[i,j]) > offset)
+                        {
+                            isInverse = false;
+                        }
+                        else if (i != j && Math.Abs(product[i,j]) > offset)
+                        {
+                            isInverse = false;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                isInverse = false;
+            }
+            return isInverse;
+        }
+
+        public float[,] crossProduct(float[,] matrix, float[,] matrix2)
+        {
+            float[,] product = null;
+            if (matrix.GetLength(1) == matrix2.GetLength(0))
+            {
+                product = new float[matrix.GetLength(0), matrix2.GetLength(1)];
+                for (int i = 0; i < product.GetLength(0); i++)
+                {
+                    float[] vector = new float[matrix2.GetLength(0)];
+                    for (int k = 0; k < matrix2.GetLength(0); k++)
+                    {
+                        vector[k] = matrix2[k, i];
+                    }
+                    for (int j = 0; j < product.GetLength(1); j++)
+                    {
+                        float[] row = new float[matrix.GetLength(1)];
+                        for (int k = 0; k < row.GetLength(0); k++)
+                        {
+                            row[k] = matrix[j, k];
+                        }
+                        product[j, i] = dotProduct(row, vector);
+                    }
+                }
+
+            }
+
+            return product;
         }
     }
 }

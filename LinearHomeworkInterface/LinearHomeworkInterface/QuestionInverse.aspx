@@ -68,20 +68,13 @@ MathJax.Hub.Config({
                             <li class="dropdown">
                                 <a id="createAnsLink" data-toggle="dropdown" class="dropdown-toggle" href="#">Answer <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
-                                    <li style="margin-left: 5px;">
-                                        <h5>Solution: </h5>
-                                    </li>
-                                        <li>
-                                            <input id="variables" type="text" onkeypress="return validateNumericInput(event)" class="span10" style="float: left; margin-left: 13px" placeholder="# of elements" />
-                                        </li>
-                                        <li style="margin-bottom: 5px;">
-                                            <span style="margin-left: 13px;">Inconsistent: </span>
-                                            <input id="inconsistent" type="checkbox" style="margin-bottom: 5px;" />
-                                        </li>
-                                    <li><a id="makeAnswers" class="btn" style="margin: 0px 5px 5px 5px;">Create</a></li>
+                                    <li style="margin-left: 10px;">To submit an answer: Create a matrix of the correct size and input the inverse of the starting matrix then click Submit Answer.</li>
                                 </ul>
                             </li>
                             <li><a id="resetQuestion" onclick="resetQuestion()" href="#">Reset Question</a></li>
+                            <li><button id="instructionButton" class="btn btn-warning btn-small" style="" data-toggle="modal" data-target="#myModal">
+                                  Sample Question
+                                </button></li>
                         </ul>
                     </div>
                     <!--/.well -->
@@ -102,10 +95,30 @@ MathJax.Hub.Config({
                     <form id="form1" runat="server">
                         <div id="matrixHolder" style="display: inline-block; width: 100%;">
                             <!-- jQuery appends the matrices here-->
-                            <div id="info" style="color: #888;">Note: You must start by creating the augmented matrix from the equations above.<br /> Only one row operation is allowed between matrices.<br /> Empty entries must contain 0. </div>
+                            <div id="info" style="color: #888;">
+                                <!-- Button trigger modal -->
+                                
+                                Note: Only one row operation is allowed between matrices.<br /> Empty entries must contain 0. </div>
                         </div>
+
+                        
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="myModal" style="width: 900px; left: 100%;" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-body">
+                                <img src="theme/images/InverseInstructions.png" alt="ImageName" />
+                              </div>
+                              <div class="modal-footer">
+                                <button id="close" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
                         <hr style="margin-bottom: 0px; margin-top: 0px;" />
-                        <button id="submitAnswer" disabled="disabled" class="btn btn-primary" title="Note: Must create an answer to submit." type="button" style="margin-top: 5px; float: right; margin-bottom: 50px;">Submit Answer</button>
+                        <button id="submitAnswer" class="btn btn-primary" disabled="disabled" type="button" style="margin-top: 5px; float: right; margin-bottom: 50px;">Submit Answer</button>
                         <button id="nextQuestion" class="btn btn-primary" type="button" style="display: none; margin-top: 5px; float: right; margin-bottom: 50px;">Next Question</button>
                         <asp:Label id="rowOpsNeeded" style="display: none;" runat="server"></asp:Label>
                         <!--possibly unessarcary now-->
@@ -164,43 +177,6 @@ MathJax.Hub.Config({
             }
         }
 
-        function addFreeVariable(index) {
-            $('#var' + index).val("F");
-            $('#var' + index).attr("disabled", "true");
-            $('#freeLink' + index).remove();
-            var variables = $("div[id^='variable']");
-            var c = variables.length;
-            variables.each(function (i, el) {
-                if (i != index) {
-                    if ($("#var" + i).val() != "F") {
-                        el.innerHTML += "+ ";
-                        var input = document.createElement("input");
-                        input.id = "free" + index;
-                        input.name = index;
-                        input.style.width = "27px";
-                        input.className = "gradingInputs";
-                        el.appendChild(input);
-                        el.innerHTML += "x<sub>" + (index + 1) + "</sub>";
-                    } else {
-                        var input = document.getElementById("var" + i);
-                        el.innerHTML = "";
-                        el.appendChild(input);
-                    }
-                } else {
-                    var input = document.getElementById("var" + i);
-                    el.innerHTML = "";
-                    el.appendChild(input);
-                }
-            });
-        }
-
-        function removeFreeVariable(index) {
-            $('#var' + index).val("");
-            $('#var' + index).removeAttr("disabled");
-            $('#freeLink' + index).text("Set Free Variable ");
-            $('#freeLink' + index).attr("onclick", "addFreeVariable(" + index + ")");
-        }
-
         function removeLastMatrix(index) {
             if (confirm("Remove Last Matrix?")) {
                 $("#row" + index).remove();
@@ -225,6 +201,11 @@ MathJax.Hub.Config({
         }
 
         $(document).ready(function () {
+
+            $("#instructionButton").click(function () {
+                $("#myModal").css("left", "40%");
+            });
+
             $(function () {
                 //potentially unnessarcary now
                 if ($('#refreshCheck')[0].checked)
@@ -256,9 +237,8 @@ MathJax.Hub.Config({
                     $('#row' + matrixNumber).append("<a id=\"removeRow\" tabindex=\"-1\" onClick=\"removeLastMatrix(" + matrixNumber + ")\" style=\"cursor: pointer; display:flex; float: right;\">Remove Matrix</a>");
                     matrixNumber = matrixNumber + 1;
                     var numOfRowOpsNeeded = parseInt($("#rowOpsNeeded").text());
-                    if (matrixNumber >= numOfRowOpsNeeded) {
-                        $("#createAnsLink").off("click");
-                    }
+
+                    $("#submitAnswer").removeAttr('disabled');
                 }
             });
 
@@ -292,30 +272,6 @@ MathJax.Hub.Config({
                         matrixMap[index] = matrix;
                     });
 
-                    //Gets the answer
-                    var answer = new Object();
-
-                    var inconsistentAnswer = $("#answerDiv:has(input#inconsistentAnswer)");
-                    if (inconsistentAnswer.length == 0) {
-                        $("#answerDiv > div[id^='variable']").each(function (index, div) {
-                            var answerString = "";
-                            var firstInput = $(this).find("#var" + index).val();
-                            //if F it is a free var
-                            if (firstInput != "F") {
-                                answerString = eval(firstInput);
-                                $(this).find("input[id^='free']").each(function (inputIndex, input) {
-                                    var value = eval($(this).val());
-                                    answerString += "," + value + "@" + $(this).attr("name");//Parsing can be done differently
-                                });
-                            } else {
-                                answerString = firstInput;
-                            }
-                            answer[index] = answerString;
-                        });
-                    } else {
-                        answer = "I";//I is for inconsistent. possible to use boolean or 0 and 1
-                    }
-
                     //Then there will be an ajax call to grade this
                     //It will need both the matrixMap and answer variables
                     var complete = "";
@@ -332,11 +288,12 @@ MathJax.Hub.Config({
                     }
                     $.ajax({
                         type: "POST",
-                        url: "QuestionPage.aspx/Grade",
-                        data: "{'MatrixMapJSON': '" + JSON.stringify(matrixMap) + "','AnswerJSON': '" + JSON.stringify(answer) + "','question': '" + vars['question'] + "','assignment': '" + vars['assign'] + "'}",
+                        url: "QuestionInverse.aspx/Grade",
+                        data: "{'MatrixMapJSON': '" + JSON.stringify(matrixMap) + "','question': '" + vars['question'] + "','assignment': '" + vars['assign'] + "'}",
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (gradingMsg) {
+                            $("#matrixHolder").append("<div id=\"answerDiv\"></div>");
                             $("#answerDiv").append("<h4>Results:<h4>");
                             $("#resultsDiv").remove();
                             $("#removeRow").remove();
@@ -434,42 +391,6 @@ MathJax.Hub.Config({
                     }
                 });
             });
-
-            $('#inconsistent').click(function () {
-                if ($("#inconsistent").is(":checked")) {
-                    $("#variables").val("");
-                    $("#variables").attr("disabled", "true");
-                } else {
-                    $("#variables").removeAttr("disabled");
-                }
-            });
-
-
-            $('#makeAnswers').click(function () {
-                var variables = $('#variables').val();
-                $('#matrixHolder').append("<div id=\"answerDiv\"></div>");
-                if (!(variables === "") && generatedAnswer === false) {
-                    generatedAnswer = true;
-                    $('#answerDiv').append("<h4>Answer: </h4>");
-                    $('#answerDiv').append("<a id=\"removeAnswer\" tabindex=\"-1\" onClick=\"removeAnswer()\" style=\"cursor: pointer; display:flex; float: right;\">Remove Answer</a>");
-                    for (var i = 0; i < variables; i++) {
-                        $('#answerDiv').append("<strong>x<sub>" + (i + 1) + "</sub> = </strong>" +
-                            "<div style=\"display: inline;\" id=\"variable" + i + "\"><input id=\"var" + i + "\" class=\"gradingInputs\" maxlength=\"7\" onkeypress=\"return validateNumericInput(event)\" style=\"width: 35px; margin-right: 3px;\" /></div>" +
-                            "<a id=\"freeLink" + i + "\" class=\"freeLinks\" onclick=\"addFreeVariable(" + i + ")\" style=\"cursor: pointer;\">Set Free Variable</a></br>");
-                    }
-                } else if ($("#inconsistent").is(":checked")) {
-                    generatedAnswer = true;
-                    $('#answerDiv').append("<h4>Answer: </h4>");
-                    $('#answerDiv').append("<a id=\"removeAnswer\" tabindex=\"-1\" onClick=\"removeAnswer()\" style=\"cursor: pointer; display:flex; float: right;\">Remove Answer</a>");
-                    $("#answerDiv").append("<div style=\"margin-bottom: 10px;\"><span>The matrix is inconsistent.</span><input id=\"inconsistentAnswer\" type=\"checkbox\" checked=\"true\" style=\"display:none;\" /></div>");
-
-                }
-                $("#removeRow").remove();
-                $("#createAnsLink").click(function () { return false; });
-                $("#submitAnswer").removeAttr('disabled');
-            });
-
-            $("#createAnsLink").attr("title", "You must row reduce the matrix to reduced row echelon form before creating an answer.");
 
             $("#goHome").click(function () {
                 $('.overlay').show();
