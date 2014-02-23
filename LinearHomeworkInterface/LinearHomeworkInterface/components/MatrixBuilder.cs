@@ -817,6 +817,33 @@ namespace MatrixBuilder
             return isEqual;
         }
 
+        public String checkForIdentity(float[,] matrix, float[,] sesmatrix)
+        {
+
+            if (matrix.GetLength(0) == sesmatrix.GetLength(0) && matrix.GetLength(1) == sesmatrix.GetLength(1))
+            {
+                for (int i = 0; i < matrix.GetLength(0); i++)
+                {
+                    for (int j = 0; j < matrix.GetLength(1); j++)
+                    {
+                        if (i == j && matrix[i, j] != 1)
+                        {
+                            return "<div>You have not successfully reduced your matrix.<div>\n";
+                        }
+                        else if (i != j && matrix[i, j] != 0)
+                        {
+                            return "<div>You have not sucessfully reduced your matrix.<div>\n";
+                        }
+                    }
+                }
+            }
+            else
+            {
+                return "<div>You have an incorrect size for your answer matrix.<div>\n";
+            }
+            return "";
+        }
+
         protected float[,] copyMatrix(float[,] matrix)
         {
             float[,] newArray = new float[matrix.GetLength(0), matrix.GetLength(1)];

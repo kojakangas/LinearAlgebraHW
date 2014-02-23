@@ -65,6 +65,15 @@ MathJax.Hub.Config({
                                     <li style="margin-left: 5px;">Ex. 1 2/3 or 1.6666... must be written as 5/3</li>
                                 </ul>
                             </li>
+                            <li class="dropdown">
+                                <a id="createAnsLink" data-toggle="dropdown" class="dropdown-toggle" href="#">Answer <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li style="margin-left: 5px;">Creating your answer:</li>
+                                    <li style="margin-left: 5px;">You have no need to create an answer here.</li>
+                                    <li style="margin-left: 5px;">Simply reduce the matrix to Reduced Row Echelon Form</li>
+                                    <li style="margin-left: 5px;">Simply hit "Submit Answer" when finished.</li>
+                                </ul>
+                            </li>
                             <li><a id="resetQuestion" onclick="resetQuestion()" href="#">Reset Question</a></li>
                         </ul>
                     </div>
@@ -242,6 +251,7 @@ MathJax.Hub.Config({
                     var numOfRowOpsNeeded = parseInt($("#rowOpsNeeded").text());
                     if (matrixNumber >= numOfRowOpsNeeded) {
                         $("#createAnsLink").off("click");
+                        $("#submitAnswer").removeAttr('disabled');
                     }
                 }
             });
@@ -277,9 +287,9 @@ MathJax.Hub.Config({
                     });
 
                     //Gets the answer
-                    var answer = matrixMap[index];
+                    var answer = new Object();
 
-                    
+                    answer = matrixMap;
 
                     //Then there will be an ajax call to grade this
                     //It will need both the matrixMap and answer variables
@@ -302,6 +312,7 @@ MathJax.Hub.Config({
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (gradingMsg) {
+                            $('#matrixHolder').append("<div id=\"answerDiv\"></div>");
                             $("#answerDiv").append("<h4>Results:<h4>");
                             $("#resultsDiv").remove();
                             $("#removeRow").remove();
@@ -341,19 +352,32 @@ MathJax.Hub.Config({
                 }
                 $.ajax({
                     type: "POST",
-                    url: "QuestionPage.aspx/updateForNextQuestion",
+                    url: "QuestionInverse.aspx/updateForNextQuestion",
                     data: "{'question': '" + vars['question'] + "','assignment': '" + vars['assign'] + "'}",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (data) {
-                        if (data.d == "incomplete") {
+                        //the value returned from the POST AJAX is not immediately returned, so we must pass
+                        //it from the AJAX call to another function
+                        var statusAndQType = data.d.split(" ");
+                        if (statusAndQType[0] == "incomplete") {
                             $('#nextQuestion').click(function () {
                                 $(".overlay").show();
-                                window.location.replace = "QuestionPage.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
-                                window.location.reload();
+                                if (statusAndQType[1] === "SoE") {
+                                    window.location = "QuestionPage.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                                }
+                                else if (statusAndQType[1] === "I") {
+                                    window.location = "QuestionInverse.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                                }
+                                else if (statusAndQType[1] === "ID") {
+                                    window.location = "QuestionLinearDependence.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                                }
+                                else if (statusAndQType[1] === "RtI") {
+                                     window.location.replace = "ReducedRow.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                                }
                             });
                         }
-                        if (data.d == "complete") {
+                        if (statusAndQType[0] == "complete") {
                             $('#nextQuestion').text('Finish');
                             alert("Well done! This assignment is now complete.");
                             $('#nextQuestion').click(function () {
@@ -396,7 +420,38 @@ MathJax.Hub.Config({
                 }
             });
 
+            $('#makeAnswers').click(function () {
+                var variables = $('#variables').val();
+                var rows = $("#rowssol").val();
+                var cols = $("#columnssol").val();
+                $('#matrixHolder').append("<div id=\"answerDiv\"></div>");
+                if (!(variables === "") && generatedAnswer === false) {
+                    generatedAnswer = true;
+                    $('#answerDiv').append("<h4>Answer: </h4>");
+                    $('#answerDiv').append("<a id=\"removeAnswer\" tabindex=\"-1\" onClick=\"removeAnswer()\" style=\"cursor: pointer; display:flex; float: right;\">Remove Answer</a>");
+                    $('#answerDiv').append("<div id=\"row" + matrixNumber + "\" class=\"row-fluid\"></div>");
+                    $('#row' + matrixNumber).append("<div style=\"font-size: 25px; margin-bottom: 5px;\"> &rarr; </div>");
+                    $('#row' + matrixNumber).append("<table id=\"table" + matrixNumber + "\" class=\"span12\" style=\"margin-left: 0px; width: auto;\"><tbody id=\"matrix" + matrixNumber + "\"></tbody></table>");
+                    for (var i = 0; i < rows; i++) {
+                        $('#table' + matrixNumber).append("<tr id=\"matrix" + matrixNumber + "row" + i + "\"></tr>");
+                        for (var j = 0; j < cols; j++) {
+                            $('#matrix' + matrixNumber + 'row' + i).append("<td><input class=\"gradingInputs\" maxlength=\"7\" onkeypress=\"return validateNumericInput(event)\" style=\"width: 35px;\"></input></td>");
+                        }
+                    }
+                    $('#row' + matrixNumber).append("<div id = \"feedback" + matrixNumber + "\" class=\"row-fluid\"></div>");
+                } else if ($("#inconsistent").is(":checked")) {
+                    generatedAnswer = true;
+                    $('#answerDiv').append("<h4>Answer: </h4>");
+                    $('#answerDiv').append("<a id=\"removeAnswer\" tabindex=\"-1\" onClick=\"removeAnswer()\" style=\"cursor: pointer; display:flex; float: right;\">Remove Answer</a>");
+                    $("#answerDiv").append("<div style=\"margin-bottom: 10px;\"><span>The matrix is inconsistent.</span><input id=\"inconsistentAnswer\" type=\"checkbox\" checked=\"true\" style=\"display:none;\" /></div>");
 
+                }
+                $("#removeRow").remove();
+                $("#createAnsLink").click(function () { return false; });
+                $("#submitAnswer").removeAttr('disabled');
+            });
+
+            $("#createAnsLink").attr("title", "You must row reduce the matrix to reduced row echelon form before creating an answer.");
 
             $("#goHome").click(function () {
                 $('.overlay').show();

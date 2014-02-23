@@ -432,13 +432,13 @@ namespace LinearHomeworkInterface
             }
             else
             {
-                Dictionary<int, float> AnswersConverted = JsonConvert.DeserializeObject<Dictionary<int, float>>(AnswerJSON);
-                float[] Answers = new float[AnswersConverted.Count()];
-                AnswersConverted.Values.CopyTo(Answers, 0);
+                //Dictionary<int, float> AnswersConverted = JsonConvert.DeserializeObject<Dictionary<int, float>>(AnswerJSON);
+                //float[] Answers = new float[AnswersConverted.Count()];
+                //AnswersConverted.Values.CopyTo(Answers, 0);
 
                 feedback += mb.checkSingleRowOperation(MatrixMap);
                 //Will need to also check answers here
-                feedback += mb.checkAnswers(sessionActualAnswer, Answers);
+                //feedback += mb.checkAnswers(sessionActualAnswer, Answers);
             }
 
             float grade = questionValue;
