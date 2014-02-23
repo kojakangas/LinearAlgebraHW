@@ -252,7 +252,7 @@ namespace LinearHomeworkInterface
                 }
             }
             //if this is a Reduce to Identity, Determinant, or Inverse problem
-            else if (type == "RtI" || type == "D" || type == "I" || type == "ID")
+            else if (type == "RtI" || type == "D" || type == "I")
             {
                 String expression;
                 expression = "$$\\begin{bmatrix}";
@@ -275,17 +275,23 @@ namespace LinearHomeworkInterface
                 expression += "\\end{bmatrix}$$";
                 question.Text = question.Text + expression;
             }
-                /*
             //if this is a Linear Dependence/Independence Question
             else if (type == "ID")
             {
-                String expression;
-                expression = "Give the vectors:\n";
-                expression = expression + "$$<1,2,3>,<2,3,4>,<3,4,5>$$";
-                expression = expression + "\nDetermine if the system is dependent or independent.";
-                question.Text = question.Text + expression;
+                String expression = "$$";
+                for (int j = 0; j < m; j++)
+                {
+                    expression += "\\begin{pmatrix}";
+                    for (int i = 0; i < n; i++)
+                    {
+                        expression += matrix[i,j];
+                        expression += " \\\\";
+                    }
+                    expression += "\\end{pmatrix}";
+                    if (j<m-1) expression += ",";
+                }
+                question.Text = question.Text + expression + "$$";
             }
-                 */
             //fallback for if we are trying to display a question we haven't implemented
             else
             {
@@ -381,6 +387,8 @@ namespace LinearHomeworkInterface
             }
             else if (type.Equals("ID"))
             {
+                instruction.Text = instruction.Text + "<h4 style=\"margin: 0px;\">Question " + queId + "</h4>\n"
+                    + "<p style=\"margin: 0px; line-height: 25px; font-size: 14px;\">Determing if the following vectors are linearly dependent or independent.</p>";
                 if (inconsistent)
                 {
                     matrix = mb.generateDependentMatrix(n, m, min, max);
@@ -449,24 +457,17 @@ namespace LinearHomeworkInterface
             if (AnswerJSON.Contains("I"))
             {
                 feedback += mb.checkSingleRowOperation(MatrixMap);
-                if (!sessionInconsistent)
+                if (sessionInconsistent)
                 {
-                    feedback += "<div>The matrix is actually consistent.<div>";
+                    feedback += "<div>The matrix is actually dependent.<div>";
                 }
             }
-            else if (AnswerJSON.Contains("F"))
+            else if (AnswerJSON.Contains("D"))
             {
                 feedback += mb.checkSingleRowOperation(MatrixMap);
-                if (sessionNumOfFreeVars > 0)
+                if (!sessionInconsistent)
                 {
-                    Dictionary<int, String> AnswersConverted = JsonConvert.DeserializeObject<Dictionary<int, String>>(AnswerJSON);
-                    String[] Answers = new String[AnswersConverted.Count()];
-                    AnswersConverted.Values.CopyTo(Answers, 0);
-                    feedback += mb.checkFreeVariableAnswers(sessionMatrix, Answers);
-                }
-                else
-                {
-                    feedback += "<div>The solution actually contains no free variables.<div>";
+                    feedback += "<div>The matrix is actually independent.<div>";
                 }
             }
             else

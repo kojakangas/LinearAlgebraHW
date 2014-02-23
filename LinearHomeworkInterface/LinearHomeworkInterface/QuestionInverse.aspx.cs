@@ -366,14 +366,14 @@ namespace LinearHomeworkInterface
 
                 //Do the parsing and text adding for question
                 instruction.Text = instruction.Text + "<h4 style=\"margin: 0px;\">Question " + queId + "</h4>\n"
-                    + "<p style=\"margin: 0px; line-height: 25px; font-size: 14px;\">Find the inverse of the following matrix.</p>";
+                    + "<p style=\"margin: 0px; line-height: 25px; font-size: 14px;\">Find the inverse of the following matrix.</p><p>Instructions: Start by creating the initial matrix, then create a matrix that will include the initial matrix and identity, then row reduce to the identity. Once the matrix is row reduced to the identity, create a matrix of the correct size and input the inverse as your answer.</p>";
             }
 
             return matrix;
         }
 
         [WebMethod]
-        public static string Grade(String MatrixMapJSON, String AnswerJSON, String question, String assignment)
+        public static string Grade(String MatrixMapJSON, String question, String assignment)
         {
             //initialize floats for total point value and their grade so far on assignment
             float questionValue = 0;
@@ -419,44 +419,23 @@ namespace LinearHomeworkInterface
             //should probably check if the first matrix is the actual first matrix
             float[,] augMatrix = null;
             MatrixMap.TryGetValue(0, out augMatrix);
-            //Not sure if this if works 
+            
             if (!mb.checkMatrixEquality(sessionMatrix, augMatrix))
             {
                 feedback += "<div>The first matrix does not match the augmented matrix.<div>";
             }
-
-            if (AnswerJSON.Contains("I"))
-            {
-                feedback += mb.checkSingleRowOperation(MatrixMap);
-                if (!sessionInconsistent)
-                {
-                    feedback += "<div>The matrix is actually consistent.<div>";
-                }
+            List<int> keysToInclude = new List<int>();
+            for(int i = 1; i < MatrixMap.Count-2; i++){
+                keysToInclude.Add(i);
             }
-            else if (AnswerJSON.Contains("F"))
-            {
-                feedback += mb.checkSingleRowOperation(MatrixMap);
-                if (sessionNumOfFreeVars > 0)
-                {
-                    Dictionary<int, String> AnswersConverted = JsonConvert.DeserializeObject<Dictionary<int, String>>(AnswerJSON);
-                    String[] Answers = new String[AnswersConverted.Count()];
-                    AnswersConverted.Values.CopyTo(Answers, 0);
-                    feedback += mb.checkFreeVariableAnswers(sessionMatrix, Answers);
-                }
-                else
-                {
-                    feedback += "<div>The solution actually contains no free variables.<div>";
-                }
-            }
-            else
-            {
-                Dictionary<int, float> AnswersConverted = JsonConvert.DeserializeObject<Dictionary<int, float>>(AnswerJSON);
-                float[] Answers = new float[AnswersConverted.Count()];
-                AnswersConverted.Values.CopyTo(Answers, 0);
+            Dictionary<int, float[,]> MatrixMapWithoutFirstOrLast = MatrixMap.Where(kvp => keysToInclude.Contains(kvp.Key)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            feedback += mb.checkSingleRowOperationInverseQuestion(MatrixMapWithoutFirstOrLast);
 
-                feedback += mb.checkSingleRowOperation(MatrixMap);
-                //Will need to also check answers here
-                feedback += mb.checkAnswers(sessionActualAnswer, Answers);
+            float[,] studentInverse = null;
+            MatrixMap.TryGetValue(MatrixMap.Count-1, out studentInverse);
+            if (!mb.checkInverse(sessionMatrix, studentInverse))
+            {
+                feedback += "<div>The final matrix does not match the inverse for this matrix.<div>";
             }
 
             float grade = questionValue;
