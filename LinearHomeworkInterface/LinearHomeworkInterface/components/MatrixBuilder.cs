@@ -293,6 +293,8 @@ namespace MatrixBuilder
 
             }
 
+            else matrix = generateRandomMatrix(rows, cols, min, max);
+
             return matrix;
 
         }
@@ -327,6 +329,67 @@ namespace MatrixBuilder
 
             return onlyones;
 
+        }
+
+        public bool checkColumnEquality(float[,] matrixBase, float[,] matrixCompare)
+        {
+            bool columnEquality = true;
+
+            if (matrixBase.GetLength(0) == matrixCompare.GetLength(0) && matrixBase.GetLength(1) == matrixCompare.GetLength(1))
+            {
+                List<float[]> compareColumns= new List<float[]>();
+                for (int compareColumn = 0; compareColumn < matrixCompare.GetLength(1); compareColumn++)
+                {
+                    float[] column = new float[matrixCompare.GetLength(0)];
+                    for (int compareRow = 0; compareRow < matrixCompare.GetLength(0); compareRow++)
+                    {
+                        column[compareRow] = matrixCompare[compareRow, compareColumn];
+                    }
+                    compareColumns.Add(column);
+                }
+
+                List<float[]> baseColumns = new List<float[]>();
+                for (int baseColumn = 0; baseColumn < matrixBase.GetLength(1); baseColumn++)
+                {
+                    float[] column = new float[matrixBase.GetLength(0)];
+                    for (int baseRow = 0; baseRow < matrixBase.GetLength(0); baseRow++)
+                    {
+                        column[baseRow] = matrixBase[baseRow, baseColumn];
+                    }
+                    baseColumns.Add(column);
+                }
+
+                for (int i = 0; i < baseColumns.Count; i++)
+                {
+                    bool match = true;
+                    float[] baseArray = baseColumns[i];
+                    for (int curColumn = 0; curColumn < compareColumns.Count; curColumn++)
+                    {
+                        float[] compareArray = compareColumns[curColumn];
+                        match = true;
+                        for (int j = 0; j < baseArray.Length; j++)
+                        {
+                            if (baseArray[j] != compareArray[j])
+                            {
+                                match = false;
+                                break;
+                            }
+                        }
+                        if (match)
+                        {
+                            compareColumns.Remove(compareColumns[curColumn]);
+                            break;
+                        }
+                    }
+                    if (!match)
+                    {
+                        columnEquality = false;
+                        break;
+                    }
+                }
+            }
+            else columnEquality = false;
+            return columnEquality;
         }
 
         public float[,] reduceMatrix(float[,] matrix)

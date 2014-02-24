@@ -79,7 +79,7 @@
 				<input id="minID" type="text" maxlength="3" class="span1"  onkeypress="return validateNumericInputAllowMinus(event)" placeholder="min"/> - 
 				<input id="maxID" type="text" maxlength="3" class="span1"  onkeypress="return validateNumericInputAllowMinus(event)" placeholder="max"/>
                 <span>Dependent: </span>
-				<input type="checkbox" id="dependentID" style="margin-top: 0px;" />
+				<input type="checkbox" id="dependentID" style="margin-top: 0px;"/>
 			</div>
 			
 			<div id="I" style="display:none;">
@@ -399,6 +399,15 @@
 
 	        $("#goHome").click(function () {
 	            $('.overlay').show();
+	        });
+
+	        $("#rowsID, #colsID").change(function(){
+	            if($("#rowsID").val() < $("#colsID").val()){
+	                $("#dependentID").prop('checked', true);
+	                $("#dependentID").attr('disabled','disabled');
+	            } else {
+	                $("#dependentID").removeAttr('disabled');
+	            }
 	        });
 
 	        $("#signOut").click(function (e) {

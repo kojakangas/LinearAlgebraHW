@@ -73,7 +73,7 @@ MathJax.Hub.Config({
                                     </li>
                                         <li style="margin-bottom: 5px; margin-left: 10px;">
                                             Independent<input type="radio" name="answer" value="independent" style="margin-bottom: 5px; margin-left: 5px;" /><br />
-                                            Dependents<input type="radio" name="answer" value="dependent" style="margin-bottom: 5px; margin-left: 7px;" />
+                                            Dependent<input type="radio" name="answer" value="dependent" style="margin-bottom: 5px; margin-left: 7px;" />
                                         </li>
                                     <li><a id="makeAnswers" class="btn" style="margin: 0px 5px 5px 5px;">Create</a></li>
                                 </ul>
@@ -395,12 +395,12 @@ MathJax.Hub.Config({
                         generatedAnswer = true;
                         $('#answerDiv').append("<h4>Answer: </h4>");
                         $('#answerDiv').append("<a id=\"removeAnswer\" tabindex=\"-1\" onClick=\"removeAnswer()\" style=\"cursor: pointer; display:flex; float: right;\">Remove Answer</a>");
-                        $("#answerDiv").append("<div style=\"margin-bottom: 10px;\"><span>The set of vector is linearly independent.</span><input id=\"independentAnswer\" type=\"checkbox\" checked=\"true\" style=\"display:none;\" /></div>");
+                        $("#answerDiv").append("<div style=\"margin-bottom: 10px;\"><span>The set of vectors are linearly independent.</span><input id=\"independentAnswer\" type=\"checkbox\" checked=\"true\" style=\"display:none;\" /></div>");
                     } else if (answervalue == "dependent") {
                         generatedAnswer = true;
                         $('#answerDiv').append("<h4>Answer: </h4>");
                         $('#answerDiv').append("<a id=\"removeAnswer\" tabindex=\"-1\" onClick=\"removeAnswer()\" style=\"cursor: pointer; display:flex; float: right;\">Remove Answer</a>");
-                        $("#answerDiv").append("<div style=\"margin-bottom: 10px;\"><span>The set of vector is linearly dependent.</span><input id=\"independentAnswer\" type=\"checkbox\" checked=\"false\" style=\"display:none;\" /></div>");
+                        $("#answerDiv").append("<div style=\"margin-bottom: 10px;\"><span>The set of vectors are linearly dependent.</span><input id=\"independentAnswer\" type=\"checkbox\" checked=\"false\" style=\"display:none;\" /></div>");
 
                     }
                     $("#removeRow").remove();
