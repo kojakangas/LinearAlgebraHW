@@ -449,9 +449,9 @@ namespace LinearHomeworkInterface
             float[,] augMatrix = null;
             MatrixMap.TryGetValue(0, out augMatrix);
             //Not sure if this if works 
-            if (!mb.checkColumnEquality(sessionMatrix, augMatrix))
+            if (!mb.checkMatrixEquality(sessionMatrix, augMatrix))
             {
-                feedback += "<div>The first matrix does not contain the correct set of vectors.<div>";
+                if(!mb.checkColumnEquality(sessionMatrix, augMatrix)) feedback += "<div>The first matrix does not contain the correct set of vectors.<div>";
             }
 
             if (AnswerJSON.Contains("I"))
