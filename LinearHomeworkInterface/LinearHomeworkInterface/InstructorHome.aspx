@@ -219,7 +219,8 @@
             });
 
             $(".datepicker").datepicker({
-                dateFormat: 'yy-mm-dd'
+                dateFormat: 'yy-mm-dd',
+                minDate: new Date()
             });
 
             $(".datepicker").change(function () {

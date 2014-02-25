@@ -151,7 +151,7 @@ namespace AssignComponent
                             freeVar = System.Convert.ToInt32(variables[6]);
                         }
                         int inconsistent;
-                        if (variables[7].Equals("Yes") || variables[7].Equals("Dependent"))
+                        if (variables[7].Equals("Inconsistent") || variables[7].Equals("Dependent"))
                         {
                             inconsistent = 1;
                         }

@@ -108,7 +108,7 @@
 					    <th>Min</th>
 					    <th>Max</th>
 					    <th>Free</th>
-					    <th>Inconsistent</th>
+					    <th>Other</th>
                     </tr>
 				</thead>
 			</table>
@@ -220,7 +220,7 @@
 	                if (freeVars === "") { freeVars = "0"; }
 	                if ($("#minSoE").val() <= $("#maxSoE").val() && $("#rowsSoE").val() && $("#colsSoE").val() && $("#minSoE").val() && $("#maxSoE").val() && (parseInt(freeVars) >= 0) && (parseInt(freeVars) < parseInt($("#rowsSoE").val())) && ((parseInt($("#rowsSoE").val()) + 1) == parseInt($("#colsSoE").val()))) {
 	                    var inconsistent;
-	                    if ($("#inconsistentSoE").is(":checked")) { inconsistent = "Yes"; } else { inconsistent = "No"; }
+	                    if ($("#inconsistentSoE").is(":checked")) { inconsistent = "Inconsistent"; } else { inconsistent = "Consistent"; }
 	                    questionNumber++;
 	                    $("#addedQuestionTable").dataTable().fnAddData([
 							questionNumber,
@@ -244,8 +244,8 @@
 							$("#sizeRtI").val(),
 							$("#minRtI").val(),
 							$("#maxRtI").val(),
-							"0",
-							"No"]);
+							"N/A",
+							"N/A"]);
 	                } else {
 	                    alert("Bad Question Parameters: \n1. Must specify Size, Min and Max Coefficients\n2. Max Coefficient must be greater than Min Coefficient");
 	                }
@@ -276,8 +276,8 @@
 							$("#sizeD").val(),
 							$("#minD").val(),
 							$("#maxD").val(),
-							"0",
-							"No"]);
+							"N/A",
+							"N/A"]);
 	                } else {
 	                    alert("Bad Question Parameters: \n1. Must specify Size, Min and Max Coefficients\n2. Max Coefficient must be greater than Min Coefficient");
 	                }
@@ -291,8 +291,8 @@
 							$("#sizeI").val(),
 							$("#minI").val(),
 							$("#maxI").val(),
-							"0",
-							"No"]);
+							"N/A",
+							"N/A"]);
 	                } else {
 	                    alert("Bad Question Parameters: \n1. Must specify Size, Min and Max Coefficients\n2. Max Coefficient must be greater than Min Coefficient");
 	                }
