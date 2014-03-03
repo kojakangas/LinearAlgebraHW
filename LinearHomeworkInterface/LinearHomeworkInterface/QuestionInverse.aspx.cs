@@ -366,7 +366,7 @@ namespace LinearHomeworkInterface
 
                 //Do the parsing and text adding for question
                 instruction.Text = instruction.Text + "<h4 style=\"margin: 0px;\">Question " + queId + "</h4>\n"
-                    + "<p style=\"margin: 0px; line-height: 25px; font-size: 14px;\">Find the inverse of the following matrix.</p><p>Instructions: Start by creating the initial matrix, then create a matrix that will include the initial matrix and identity, then row reduce to the identity. Once the matrix is row reduced to the identity, create a matrix of the correct size and input the inverse as your answer.</p>";
+                    + "<p style=\"margin: 0px; line-height: 25px; font-size: 14px;\">Find the inverse of the following matrix.</p>";
             }
 
             return matrix;

@@ -48,9 +48,9 @@ MathJax.Hub.Config({
                                         <h5>Matrix Size: </h5>
                                     </li>
                                         <li style="line-height: 25px;">
-                                            <input id="rows" type="text" onkeypress="return validateNumericInputMatrixSize(event)" class="span4" style="float: left; margin-left: 20px" placeholder="n" />
+                                            <input id="rows" type="text" onkeypress="return validateNumericInputMatrixSize(event)" class="span4" style="float: left; margin-left: 20px" placeholder="rows" />
                                             <div style="display: inline; margin-left: 5px;">X</div>
-                                            <input id="columns" type="text" onkeypress="return validateNumericInputMatrixSize(event)" class="span4" style="float: right; margin-right: 20px" placeholder="m" />
+                                            <input id="columns" type="text" onkeypress="return validateNumericInputMatrixSize(event)" class="span4" style="float: right; margin-right: 20px" placeholder="cols" />
                                         </li>
                                     <li><a id="makeMatrix" class="btn" style="margin: 0px 5px 5px 5px;">Create</a></li>
                                 </ul>
@@ -95,13 +95,9 @@ MathJax.Hub.Config({
                     <form id="form1" runat="server">
                         <div id="matrixHolder" style="display: inline-block; width: 100%;">
                             <!-- jQuery appends the matrices here-->
-                            <div id="info" style="color: #888;">
-                                <!-- Button trigger modal -->
-                                
-                                Note: Only one row operation is allowed between matrices.<br /> Empty entries must contain 0. </div>
+                            <div id="info" style="color: #888;">Instructions: Start by creating the initial matrix, then create a matrix that will include the initial matrix and identity, <br />then row reduce to the identity. Once the matrix is row reduced to the identity, create a matrix of the correct size and input the inverse as your answer. <br />Note: Only one row operation is allowed between matrices. Empty entries must contain 0.<br /> Use the tools on the left to work the problem. </div>
                         </div>
 
-                        
 
                         <!-- Modal -->
                         <div class="modal fade" id="myModal" style="width: 900px; left: 100%;" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -120,7 +116,7 @@ MathJax.Hub.Config({
                         <hr style="margin-bottom: 0px; margin-top: 0px;" />
                         <button id="submitAnswer" class="btn btn-primary" disabled="disabled" type="button" style="margin-top: 5px; float: right; margin-bottom: 50px;">Submit Answer</button>
                         <button id="nextQuestion" class="btn btn-primary" type="button" style="display: none; margin-top: 5px; float: right; margin-bottom: 50px;">Next Question</button>
-                        <asp:Label id="rowOpsNeeded" style="display: none;" runat="server"></asp:Label>
+                        <asp:Label id="rowOpsNeeded" style="display: none;" runat="server">2</asp:Label>
                         <!--possibly unessarcary now-->
                         <asp:CheckBox id="refreshCheck" style="display: none;" runat="server"></asp:CheckBox>
                     </form>
@@ -159,9 +155,10 @@ MathJax.Hub.Config({
 
         function validateNumericInput(evt) {
             var charCode = (evt.which) ? evt.which : evt.keyCode
-            if (charCode > 31 && (charCode < 48 || charCode > 57) && !(charCode == 47 && evt.currentTarget.value != "" && evt.currentTarget.value.indexOf('/') === -1) && !(charCode == 45 && evt.currentTarget.value === "")) {
+            if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 45 && charCode != 37 && charCode != 39 && !(charCode == 47 && evt.currentTarget.value != "" && evt.currentTarget.value.indexOf('/') === -1)) {
                 return false;
             }
+            else if (charCode == 13) $("#copymatrix").trigger('click');
             return true;
         }
 
@@ -174,6 +171,7 @@ MathJax.Hub.Config({
                 matrixNumber = 0;
                 generatedAnswer = false;
                 $('#matrixHolder').empty();
+                $("#matrixHolder").append("<div id=\"info\" style=\"color: #888;\">Instructions: Start by creating the initial matrix, then create a matrix that will include the initial matrix and identity, <br />then row reduce to the identity. Once the matrix is row reduced to the identity, create a matrix of the correct size and input the inverse as your answer. <br />Note: Only one row operation is allowed between matrices. Empty entries must contain 0.<br /> Use the tools on the left to work the problem. </div>");
             }
         }
 
@@ -183,20 +181,7 @@ MathJax.Hub.Config({
                 $("#row" + (index - 1)).append("<a id=\"removeRow\" href=\"#\" onClick=\"removeLastMatrix(" + (index - 1) + ")\" style=\"display:flex; float: right;\">Remove Matrix</a>");
                 matrixNumber = matrixNumber - 1;
                 var numOfRowOpsNeeded = parseInt($("#rowOpsNeeded").text());
-                if (matrixNumber < numOfRowOpsNeeded) {
-                    $("#createAnsLink").click(function () { return false; });
-                }
                 return false;
-            }
-        }
-
-        function removeAnswer() {
-            if (confirm("Remove Answer?")) {
-                $("#answerDiv").remove();
-                $("#row" + (matrixNumber - 1)).append("<a id=\"removeRow\" href=\"#\" onClick=\"removeLastMatrix(" + (matrixNumber - 1) + ")\" style=\"display:flex; float: right;\">Remove Matrix</a>");
-                $("#createAnsLink").off("click");
-                generatedAnswer = false;
-                $("#submitAnswer").attr("disabled", true);
             }
         }
 
@@ -213,7 +198,6 @@ MathJax.Hub.Config({
 
                 $('#refreshCheck')[0].checked = true;
             });
-            //$("#createAnsLink").click(function () { return false; });
 
             $('.dropdown-menu input, #makeMatrix').click(function (e) {
                 e.stopPropagation();
@@ -237,84 +221,103 @@ MathJax.Hub.Config({
                     $('#row' + matrixNumber).append("<a id=\"removeRow\" tabindex=\"-1\" onClick=\"removeLastMatrix(" + matrixNumber + ")\" style=\"cursor: pointer; display:flex; float: right;\">Remove Matrix</a>");
                     matrixNumber = matrixNumber + 1;
                     var numOfRowOpsNeeded = parseInt($("#rowOpsNeeded").text());
-
-                    $("#submitAnswer").removeAttr('disabled');
+                    
+                    if (matrixNumber >= numOfRowOpsNeeded) {
+                        $("#submitAnswer").removeAttr('disabled');
+                    }
                 }
             });
 
             $("#submitAnswer").click(function () {
-                var hasEmptyInput = false;
+                if (confirm("Submit Answer?")) {
+                    var hasEmptyInput = false;
 
-                $(".gradingInputs").each(function (i, input) {
-                    if (input.value === "") {
-                        hasEmptyInput = true;
-                    }
-                });
-
-                if (hasEmptyInput) {
-                    alert("Cannot leave inputs blank.");
-                } else {
-
-                    $(".overlay").show();
-
-                    //Puts all matrices in a javascript object
-                    var matrixMap = new Object();
-
-                    $("tbody[id^='matrix']").each(function (index, matrixHTML) {
-                        var matrix = [];
-                        $("#" + matrixHTML.id).find("tr").each(function (rowIndex, rowHTML) {
-                            var row = [];
-                            $(this).find("td").each(function (cellIndex, cell) {
-                                row[cellIndex] = eval($(this).find("input").val());
-                            });
-                            matrix[rowIndex] = row;
-                        });
-                        matrixMap[index] = matrix;
-                    });
-
-                    //Then there will be an ajax call to grade this
-                    //It will need both the matrixMap and answer variables
-                    var complete = "";
-                    var vars = [], hash;
-                    var q = document.URL.split('?')[1];
-                    if (q != undefined) {
-                        q = q.split('&');
-                        for (var i = 0; i < q.length; i++) {
-                            hash = q[i].split('=');
-                            vars.push(hash[1]);
-                            vars[hash[0]] = hash[1];
-                            vars[hash[0]] = vars[hash[0]].replace("#", "");
+                    $(".gradingInputs").each(function (i, input) {
+                        if (input.value === "") {
+                            hasEmptyInput = true;
                         }
-                    }
-                    $.ajax({
-                        type: "POST",
-                        url: "QuestionInverse.aspx/Grade",
-                        data: "{'MatrixMapJSON': '" + JSON.stringify(matrixMap) + "','question': '" + vars['question'] + "','assignment': '" + vars['assign'] + "'}",
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        success: function (gradingMsg) {
-                            $("#matrixHolder").append("<div id=\"answerDiv\"></div>");
-                            $("#answerDiv").append("<h4>Results:<h4>");
-                            $("#resultsDiv").remove();
-                            $("#removeRow").remove();
-                            $("#removeAnswer").remove();
-                            $(".freeLinks").remove();
-                            $(".gradingInputs").attr("disabled", "true");
-                            $("#submitAnswer").remove();
-                            $("#nextQuestion").show();
-                            $(".overlay").hide();
-                            if (gradingMsg.d.indexOf("!") === -1) {
-                                $("#answerDiv").append("<div id=\"resultsDiv\" class=\"alert alert-danger\" style=\"display:flex;\">" + gradingMsg.d + "</div>");
-                            } else {
-                                $("#answerDiv").append("<div id=\"resultsDiv\" class=\"alert alert-success\" style=\"display:flex;\"><div>Correct!<div><div>" + gradingMsg.d + "</div></div>");
+                        else {
+                            try {
+                                eval(input.value);
+                                var temp = input.value;
+                                var firstChar = temp.charAt(0);
+                                // the g in the regular expression says to search the whole string 
+                                // rather than just find the first occurrence
+                                // match returns and array of -'s. Length will be the count for -.
+                                var count = temp.match(/-/g);
+                                if (count != null) {
+                                    if (count.length > 1 || firstChar != '-') hasEmptyInput = true;
+                                }
                             }
-                            nextQuestionUpdate();
-                        },
-                        error: function (msg) {
-                            $(".overlay").hide();
-                            alert("Grading Failed, don't panic");
+                            catch (err) {
+                                hasEmptyInput = true;
+                            }
                         }
                     });
+
+                    if (hasEmptyInput) {
+                        alert("Cannot leave inputs blank.\n\"-\" should only be placed at the beginning an input.\nEnsure all inputs have a number.");
+                    } else {
+
+                        $(".overlay").show();
+
+                        //Puts all matrices in a javascript object
+                        var matrixMap = new Object();
+
+                        $("tbody[id^='matrix']").each(function (index, matrixHTML) {
+                            var matrix = [];
+                            $("#" + matrixHTML.id).find("tr").each(function (rowIndex, rowHTML) {
+                                var row = [];
+                                $(this).find("td").each(function (cellIndex, cell) {
+                                    row[cellIndex] = eval($(this).find("input").val());
+                                });
+                                matrix[rowIndex] = row;
+                            });
+                            matrixMap[index] = matrix;
+                        });
+
+                        //Then there will be an ajax call to grade this
+                        //It will need both the matrixMap and answer variables
+                        var complete = "";
+                        var vars = [], hash;
+                        var q = document.URL.split('?')[1];
+                        if (q != undefined) {
+                            q = q.split('&');
+                            for (var i = 0; i < q.length; i++) {
+                                hash = q[i].split('=');
+                                vars.push(hash[1]);
+                                vars[hash[0]] = hash[1];
+                                vars[hash[0]] = vars[hash[0]].replace("#", "");
+                            }
+                        }
+                        $.ajax({
+                            type: "POST",
+                            url: "QuestionInverse.aspx/Grade",
+                            data: "{'MatrixMapJSON': '" + JSON.stringify(matrixMap) + "','question': '" + vars['question'] + "','assignment': '" + vars['assign'] + "'}",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (gradingMsg) {
+                                $("#matrixHolder").append("<div id=\"answerDiv\"></div>");
+                                $("#answerDiv").append("<h4>Results:<h4>");
+                                $("#resultsDiv").remove();
+                                $("#removeRow").remove();
+                                $(".gradingInputs").attr("disabled", "true");
+                                $("#submitAnswer").remove();
+                                $("#nextQuestion").show();
+                                $(".overlay").hide();
+                                if (gradingMsg.d.indexOf("!") === -1) {
+                                    $("#answerDiv").append("<div id=\"resultsDiv\" class=\"alert alert-danger\" style=\"display:flex;\">" + gradingMsg.d + "</div>");
+                                } else {
+                                    $("#answerDiv").append("<div id=\"resultsDiv\" class=\"alert alert-success\" style=\"display:flex;\"><div>Correct!<div><div>" + gradingMsg.d + "</div></div>");
+                                }
+                                nextQuestionUpdate();
+                            },
+                            error: function (msg) {
+                                $(".overlay").hide();
+                                alert("Grading Failed, don't panic");
+                            }
+                        });
+                    }
                 }
             });
 
@@ -355,6 +358,8 @@ MathJax.Hub.Config({
                                 }
                                 else if (statusAndQType[1] === "RtI") {
                                     window.location = "ReducedRow.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                                } else {
+                                    window.location.reload();
                                 }
                             });
                         }

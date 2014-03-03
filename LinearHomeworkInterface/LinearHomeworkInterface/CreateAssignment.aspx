@@ -282,7 +282,7 @@
 	                    alert("Bad Question Parameters: \n1. Must specify Size, Min and Max Coefficients\n2. Max Coefficient must be greater than Min Coefficient");
 	                }
 	            } else if (questionType === "I") {
-	                if ($("#minI").val() <= $("#maxI").val() && $("#sizeI").val() && $("#minI").val() && $("#maxI").val()) {
+	                if ($("#minI").val() < $("#maxI").val() && $("#sizeI").val() && $("#minI").val() && $("#maxI").val()) {
 	                    questionNumber++;
 	                    $("#addedQuestionTable").dataTable().fnAddData([
 							questionNumber,

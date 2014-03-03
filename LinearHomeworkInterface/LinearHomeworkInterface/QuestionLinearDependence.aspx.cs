@@ -397,6 +397,9 @@ namespace LinearHomeworkInterface
                 {
                     matrix = mb.generateIndependentMatrix(n, m, min, max);
                 }
+                int rowOpsCount = mb.countOperationsNeeded(matrix) - 2;
+                if (rowOpsCount < 1) rowOpsCount = 1;
+                rowOpsNeeded.Text = System.Convert.ToString(rowOpsCount);
             }
             return matrix;
         }
