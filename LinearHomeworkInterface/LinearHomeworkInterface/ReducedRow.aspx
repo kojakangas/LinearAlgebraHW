@@ -70,7 +70,6 @@ MathJax.Hub.Config({
                                 <ul class="dropdown-menu">
                                     <li style="margin-left: 5px;">Creating your answer:</li>
                                     <li style="margin-left: 5px;">You have no need to create an answer here.</li>
-                                    <li style="margin-left: 5px;">Simply reduce the matrix to Reduced Row Echelon Form</li>
                                     <li style="margin-left: 5px;">Simply hit "Submit Answer" when finished.</li>
                                 </ul>
                             </li>
