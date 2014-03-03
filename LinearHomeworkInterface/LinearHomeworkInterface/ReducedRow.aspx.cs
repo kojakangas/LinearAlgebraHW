@@ -340,7 +340,7 @@ namespace LinearHomeworkInterface
 
                 //Do the parsing and text adding for question
                 instruction.Text = instruction.Text + "<h4 style=\"margin: 0px;\">Question " + queId + "</h4>\n"
-                    + "<p style=\"margin: 0px; line-height: 25px; font-size: 14px;\">Reduce this matrix to an identity matrix.</p>";
+                    + "<p style=\"margin: 0px; line-height: 25px; font-size: 14px;\">Reduce the following matrix.</p>";
             }
             else if (type.Equals("DP"))
             {
