@@ -885,17 +885,14 @@ namespace MatrixBuilder
 
             if (matrix.GetLength(0) == sesmatrix.GetLength(0) && matrix.GetLength(1) == sesmatrix.GetLength(1))
             {
+                sesmatrix = reduceMatrix(sesmatrix);
                 for (int i = 0; i < matrix.GetLength(0); i++)
                 {
                     for (int j = 0; j < matrix.GetLength(1); j++)
                     {
-                        if (i == j && matrix[i, j] != 1)
+                        if (matrix[i, j] != sesmatrix[i,j])
                         {
                             return "<div>You have not successfully reduced your matrix.<div>\n";
-                        }
-                        else if (i != j && matrix[i, j] != 0)
-                        {
-                            return "<div>You have not sucessfully reduced your matrix.<div>\n";
                         }
                     }
                 }

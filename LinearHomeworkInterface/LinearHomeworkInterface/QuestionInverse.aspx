@@ -354,7 +354,7 @@ MathJax.Hub.Config({
                                    window.location = "QuestionLinearDependence.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
                                 }
                                 else if (statusAndQType[1] === "RtI") {
-                                   // window.location = "QuestionInverse.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                                    window.location = "ReducedRow.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
                                 }
                             });
                         }

@@ -249,10 +249,10 @@ MathJax.Hub.Config({
                     $('#row' + matrixNumber).append("<a id=\"removeRow\" tabindex=\"-1\" onClick=\"removeLastMatrix(" + matrixNumber + ")\" style=\"cursor: pointer; display:flex; float: right;\">Remove Matrix</a>");
                     matrixNumber = matrixNumber + 1;
                     var numOfRowOpsNeeded = parseInt($("#rowOpsNeeded").text());
-                    if (matrixNumber >= numOfRowOpsNeeded) {
+                    //if (matrixNumber >= numOfRowOpsNeeded) {
                         $("#createAnsLink").off("click");
                         $("#submitAnswer").removeAttr('disabled');
-                    }
+                    //}
                 }
             });
 
@@ -373,7 +373,7 @@ MathJax.Hub.Config({
                                     window.location = "QuestionLinearDependence.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
                                 }
                                 else if (statusAndQType[1] === "RtI") {
-                                     window.location.replace = "ReducedRow.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                                     window.location = "ReducedRow.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
                                 }
                             });
                         }
