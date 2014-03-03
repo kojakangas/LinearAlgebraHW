@@ -48,9 +48,9 @@ MathJax.Hub.Config({
                                         <h5>Matrix Size: </h5>
                                     </li>
                                         <li style="line-height: 25px;">
-                                            <input id="rows" type="text" onkeypress="return validateNumericInputMatrixSize(event)" class="span4" style="float: left; margin-left: 20px" placeholder="n" />
+                                            <input id="rows" type="text" onkeypress="return validateNumericInputMatrixSize(event)" class="span4" style="float: left; margin-left: 20px" placeholder="rows" />
                                             <div style="display: inline; margin-left: 5px;">X</div>
-                                            <input id="columns" type="text" onkeypress="return validateNumericInputMatrixSize(event)" class="span4" style="float: right; margin-right: 20px" placeholder="m" />
+                                            <input id="columns" type="text" onkeypress="return validateNumericInputMatrixSize(event)" class="span4" style="float: right; margin-right: 20px" placeholder="cols" />
                                         </li>
                                     <li><a id="makeMatrix" class="btn" style="margin: 0px 5px 5px 5px;">Create</a></li>
                                 </ul>
@@ -100,7 +100,7 @@ MathJax.Hub.Config({
                         <hr style="margin-bottom: 0px; margin-top: 0px;" />
                         <button id="submitAnswer" disabled="disabled" class="btn btn-primary" title="Note: Must create an answer to submit." type="button" style="margin-top: 5px; float: right; margin-bottom: 50px;">Submit Answer</button>
                         <button id="nextQuestion" class="btn btn-primary" type="button" style="display: none; margin-top: 5px; float: right; margin-bottom: 50px;">Next Question</button>
-                        <asp:Label id="rowOpsNeeded" style="display: none;" runat="server"></asp:Label>
+                        <asp:Label id="rowOpsNeeded" style="display: none;" runat="server">1</asp:Label>
                         <!--possibly unessarcary now-->
                         <asp:CheckBox id="refreshCheck" style="display: none;" runat="server"></asp:CheckBox>
                     </form>
@@ -201,10 +201,6 @@ MathJax.Hub.Config({
                 $("#row" + index).remove();
                 $("#row" + (index - 1)).append("<a id=\"removeRow\" href=\"#\" onClick=\"removeLastMatrix(" + (index - 1) + ")\" style=\"display:flex; float: right;\">Remove Matrix</a>");
                 matrixNumber = matrixNumber - 1;
-                var numOfRowOpsNeeded = parseInt($("#rowOpsNeeded").text());
-                if (matrixNumber < numOfRowOpsNeeded) {
-                    $("#createAnsLink").click(function () { return false; });
-                }
                 return false;
             }
         }
@@ -394,7 +390,9 @@ MathJax.Hub.Config({
                                     window.location = "QuestionLinearDependence.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
                                 }
                                 else if (statusAndQType[1] === "RtI") {
-                                    window.location.replace = "ReducedRow.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                                    window.location = "ReducedRow.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                                } else {
+                                    window.location.reload();
                                 }
                             });
                         }

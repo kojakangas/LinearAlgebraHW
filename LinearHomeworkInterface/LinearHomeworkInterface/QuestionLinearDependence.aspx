@@ -48,9 +48,9 @@ MathJax.Hub.Config({
                                         <h5>Matrix Size: </h5>
                                     </li>
                                         <li style="line-height: 25px;">
-                                            <input id="rows" type="text" onkeypress="return validateNumericInputMatrixSize(event)" class="span4" style="float: left; margin-left: 20px" placeholder="n" />
+                                            <input id="rows" type="text" onkeypress="return validateNumericInputMatrixSize(event)" class="span4" style="float: left; margin-left: 20px" placeholder="rows" />
                                             <div style="display: inline; margin-left: 5px;">X</div>
-                                            <input id="columns" type="text" onkeypress="return validateNumericInputMatrixSize(event)" class="span4" style="float: right; margin-right: 20px" placeholder="m" />
+                                            <input id="columns" type="text" onkeypress="return validateNumericInputMatrixSize(event)" class="span4" style="float: right; margin-right: 20px" placeholder="cols" />
                                         </li>
                                     <li><a id="makeMatrix" class="btn" style="margin: 0px 5px 5px 5px;">Create</a></li>
                                 </ul>
@@ -366,6 +366,8 @@ MathJax.Hub.Config({
                                 }
                                 else if (statusAndQType[1] === "RtI") {
                                    window.location = "ReducedRow.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                                } else {
+                                    window.location.reload();
                                 }
                             });
                         }

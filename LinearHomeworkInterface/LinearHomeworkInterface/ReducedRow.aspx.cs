@@ -328,8 +328,6 @@ namespace LinearHomeworkInterface
                     //This is the catch all. Not sure how accurate it is
                     matrix = mb.generateRandomMatrix(n, m, min, max);
                 }
-                int rowOpsCount = mb.countOperationsNeeded(matrix) - 2;
-                rowOpsNeeded.Text = System.Convert.ToString(rowOpsCount);
 
                 //Do the parsing and text adding for question
                 instruction.Text = instruction.Text + "<h4 style=\"margin: 0px;\">Question " + queId + "</h4>\n"
@@ -339,8 +337,6 @@ namespace LinearHomeworkInterface
             {
                 matrix = mb.generateRandomIdentityMatrix(n, min, max);
 
-                int rowOpsCount = mb.countOperationsNeeded(matrix) - 2;
-                rowOpsNeeded.Text = System.Convert.ToString(rowOpsCount);
 
                 //Do the parsing and text adding for question
                 instruction.Text = instruction.Text + "<h4 style=\"margin: 0px;\">Question " + queId + "</h4>\n"

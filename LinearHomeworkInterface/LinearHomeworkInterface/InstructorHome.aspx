@@ -243,6 +243,7 @@
             
             $(".delete").click(function () {
                 if (confirm("Are you sure you wish to delete assignment \"" + $(this).attr("id") + "\"?")) {
+                    $('.overlay').show();
                     $.ajax({
                         type: "POST",
                         url: "InstructorHome.aspx/deleteAssignment",
@@ -250,7 +251,6 @@
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (msg) {
-                            $(".overlay").hide();
                             window.location.reload();
                         },
                         error: function (msg) {

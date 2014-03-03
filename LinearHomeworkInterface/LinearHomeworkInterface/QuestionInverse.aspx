@@ -48,9 +48,9 @@ MathJax.Hub.Config({
                                         <h5>Matrix Size: </h5>
                                     </li>
                                         <li style="line-height: 25px;">
-                                            <input id="rows" type="text" onkeypress="return validateNumericInputMatrixSize(event)" class="span4" style="float: left; margin-left: 20px" placeholder="n" />
+                                            <input id="rows" type="text" onkeypress="return validateNumericInputMatrixSize(event)" class="span4" style="float: left; margin-left: 20px" placeholder="rows" />
                                             <div style="display: inline; margin-left: 5px;">X</div>
-                                            <input id="columns" type="text" onkeypress="return validateNumericInputMatrixSize(event)" class="span4" style="float: right; margin-right: 20px" placeholder="m" />
+                                            <input id="columns" type="text" onkeypress="return validateNumericInputMatrixSize(event)" class="span4" style="float: right; margin-right: 20px" placeholder="cols" />
                                         </li>
                                     <li><a id="makeMatrix" class="btn" style="margin: 0px 5px 5px 5px;">Create</a></li>
                                 </ul>
@@ -95,7 +95,7 @@ MathJax.Hub.Config({
                     <form id="form1" runat="server">
                         <div id="matrixHolder" style="display: inline-block; width: 100%;">
                             <!-- jQuery appends the matrices here-->
-                            <div id="info" style="color: #888;">Note: Only one row operation is allowed between matrices. Empty entries must contain 0.<br /> Use the tools on the left to work the problem. </div>
+                            <div id="info" style="color: #888;">Instructions: Start by creating the initial matrix, then create a matrix that will include the initial matrix and identity, <br />then row reduce to the identity. Once the matrix is row reduced to the identity, create a matrix of the correct size and input the inverse as your answer. <br />Note: Only one row operation is allowed between matrices. Empty entries must contain 0.<br /> Use the tools on the left to work the problem. </div>
                         </div>
 
 
@@ -116,7 +116,7 @@ MathJax.Hub.Config({
                         <hr style="margin-bottom: 0px; margin-top: 0px;" />
                         <button id="submitAnswer" class="btn btn-primary" disabled="disabled" type="button" style="margin-top: 5px; float: right; margin-bottom: 50px;">Submit Answer</button>
                         <button id="nextQuestion" class="btn btn-primary" type="button" style="display: none; margin-top: 5px; float: right; margin-bottom: 50px;">Next Question</button>
-                        <asp:Label id="rowOpsNeeded" style="display: none;" runat="server"></asp:Label>
+                        <asp:Label id="rowOpsNeeded" style="display: none;" runat="server">2</asp:Label>
                         <!--possibly unessarcary now-->
                         <asp:CheckBox id="refreshCheck" style="display: none;" runat="server"></asp:CheckBox>
                     </form>
@@ -171,7 +171,7 @@ MathJax.Hub.Config({
                 matrixNumber = 0;
                 generatedAnswer = false;
                 $('#matrixHolder').empty();
-                $("#matrixHolder").append("<div id=\"info\" style=\"color: #888;\">Note: Only one row operation is allowed between matrices. Empty entries must contain 0.<br /> Use the tools on the left to work the problem. </div>");
+                $("#matrixHolder").append("<div id=\"info\" style=\"color: #888;\">Instructions: Start by creating the initial matrix, then create a matrix that will include the initial matrix and identity, <br />then row reduce to the identity. Once the matrix is row reduced to the identity, create a matrix of the correct size and input the inverse as your answer. <br />Note: Only one row operation is allowed between matrices. Empty entries must contain 0.<br /> Use the tools on the left to work the problem. </div>");
             }
         }
 
@@ -181,20 +181,7 @@ MathJax.Hub.Config({
                 $("#row" + (index - 1)).append("<a id=\"removeRow\" href=\"#\" onClick=\"removeLastMatrix(" + (index - 1) + ")\" style=\"display:flex; float: right;\">Remove Matrix</a>");
                 matrixNumber = matrixNumber - 1;
                 var numOfRowOpsNeeded = parseInt($("#rowOpsNeeded").text());
-                if (matrixNumber < numOfRowOpsNeeded) {
-                    $("#createAnsLink").click(function () { return false; });
-                }
                 return false;
-            }
-        }
-
-        function removeAnswer() {
-            if (confirm("Remove Answer?")) {
-                $("#answerDiv").remove();
-                $("#row" + (matrixNumber - 1)).append("<a id=\"removeRow\" href=\"#\" onClick=\"removeLastMatrix(" + (matrixNumber - 1) + ")\" style=\"display:flex; float: right;\">Remove Matrix</a>");
-                $("#createAnsLink").off("click");
-                generatedAnswer = false;
-                $("#submitAnswer").attr("disabled", true);
             }
         }
 
@@ -211,7 +198,6 @@ MathJax.Hub.Config({
 
                 $('#refreshCheck')[0].checked = true;
             });
-            //$("#createAnsLink").click(function () { return false; });
 
             $('.dropdown-menu input, #makeMatrix').click(function (e) {
                 e.stopPropagation();
@@ -235,8 +221,10 @@ MathJax.Hub.Config({
                     $('#row' + matrixNumber).append("<a id=\"removeRow\" tabindex=\"-1\" onClick=\"removeLastMatrix(" + matrixNumber + ")\" style=\"cursor: pointer; display:flex; float: right;\">Remove Matrix</a>");
                     matrixNumber = matrixNumber + 1;
                     var numOfRowOpsNeeded = parseInt($("#rowOpsNeeded").text());
-
-                    $("#submitAnswer").removeAttr('disabled');
+                    
+                    if (matrixNumber >= numOfRowOpsNeeded) {
+                        $("#submitAnswer").removeAttr('disabled');
+                    }
                 }
             });
 
@@ -313,8 +301,6 @@ MathJax.Hub.Config({
                                 $("#answerDiv").append("<h4>Results:<h4>");
                                 $("#resultsDiv").remove();
                                 $("#removeRow").remove();
-                                $("#removeAnswer").remove();
-                                $(".freeLinks").remove();
                                 $(".gradingInputs").attr("disabled", "true");
                                 $("#submitAnswer").remove();
                                 $("#nextQuestion").show();
@@ -372,6 +358,8 @@ MathJax.Hub.Config({
                                 }
                                 else if (statusAndQType[1] === "RtI") {
                                    window.location = "ReducedRow.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                                } else {
+                                    window.location.reload();
                                 }
                             });
                         }

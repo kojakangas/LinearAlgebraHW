@@ -644,7 +644,7 @@ namespace MatrixBuilder
                 int[] rows = (int[])changedRows.ToArray(typeof(int));
                 int row1 = rows[0];
                 int row2 = rows[1];
-                for (int i = 0; i < oldMatrix.GetLength(0); i++)
+                for (int i = 0; i < oldMatrix.GetLength(1); i++)
                 {
                     if (oldMatrix[row1, i] != newMatrix[row2, i] || oldMatrix[row2, i] != newMatrix[row1, i])
                     {
