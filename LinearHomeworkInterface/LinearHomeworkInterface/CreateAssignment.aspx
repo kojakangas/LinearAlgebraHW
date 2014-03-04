@@ -44,7 +44,7 @@
 			<span>Question Type:  </span>
 			<select id="questionType" style="margin-bottom: 5px;">
 				<option value="SoE">System of Equations (SoE)</option>
-			    <option value="RtI">Reduce to Identity (RtI)</option>
+			    <option value="RtI">Row Reduction (RtI)</option>
 				<option value="I">Inverse (I)</option>
 				<option value="ID">Independence/Dependence (ID)</option>
 			</select>
