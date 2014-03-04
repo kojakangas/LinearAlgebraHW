@@ -422,7 +422,7 @@ namespace LinearHomeworkInterface
             
             if (!mb.checkMatrixEquality(sessionMatrix, augMatrix))
             {
-                feedback += "<div>The first matrix does not match the augmented matrix.<div>";
+                feedback += "<div>The first matrix does not match the given matrix.<div>";
             }
             List<int> keysToInclude = new List<int>();
             for(int i = 1; i < MatrixMap.Count-2; i++){

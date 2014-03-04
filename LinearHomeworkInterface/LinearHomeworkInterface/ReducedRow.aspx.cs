@@ -421,7 +421,7 @@ namespace LinearHomeworkInterface
             //Not sure if this if works 
             if (!mb.checkMatrixEquality(sessionMatrix, augMatrix))
             {
-                feedback += "<div>The first matrix does not match the augmented matrix.<div>";
+                feedback += "<div>The first matrix does not match the given matrix.<div>";
             }
 
             if (AnswerJSON.Contains("I"))
