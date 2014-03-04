@@ -218,24 +218,24 @@
 	            if (questionType === "SoE") {
 	                var freeVars = $("#freeVarsSoE").val();
 	                if (freeVars === "") { freeVars = "0"; }
-	                if ($("#minSoE").val() <= $("#maxSoE").val() && $("#rowsSoE").val() && $("#colsSoE").val() && $("#minSoE").val() && $("#maxSoE").val() && (parseInt(freeVars) >= 0) && (parseInt(freeVars) < parseInt($("#rowsSoE").val())) && ((parseInt($("#rowsSoE").val()) + 1) == parseInt($("#colsSoE").val()))) {
+	                if (parseInt($("#minSoE").val()) < parseInt($("#maxSoE").val()) && $("#rowsSoE").val() && $("#colsSoE").val() && $("#minSoE").val() && $("#maxSoE").val() && (parseInt(freeVars) >= 0) && (parseInt(freeVars) < parseInt($("#rowsSoE").val())) && ((parseInt($("#rowsSoE").val()) + 1) == parseInt($("#colsSoE").val()))) {
 	                    var inconsistent;
 	                    if ($("#inconsistentSoE").is(":checked")) { inconsistent = "Inconsistent"; } else { inconsistent = "Consistent"; }
 	                    questionNumber++;
 	                    $("#addedQuestionTable").dataTable().fnAddData([
-							questionNumber,
-							"SoE",
-							$("#rowsSoE").val(),
-							$("#colsSoE").val(),
-							$("#minSoE").val(),
-							$("#maxSoE").val(),
-							freeVars,
-							inconsistent]);
+                            questionNumber,
+                            "SoE",
+                            $("#rowsSoE").val(),
+                            $("#colsSoE").val(),
+                            $("#minSoE").val(),
+                            $("#maxSoE").val(),
+                            freeVars,
+                            inconsistent]);
 	                } else {
 	                    alert("Bad Question Parameters: \n1. Must specify Rows, Columns, Min and Max Coefficients\n2. Max Coefficient must be greater than Min Coefficient\n3. Must have Rows + 1 Columns (for now)\n4. Number of free variables must be from 0 to 1 less than the number of total variables");
 	                }
 	            } else if (questionType === "RtI") {
-	                if ($("#minRtI").val() <= $("#maxRtI").val() && $("#sizeRtI").val() && $("#minRtI").val() && $("#maxRtI").val()) {
+	                if (parseInt($("#minRtI").val()) < parseInt($("#maxRtI").val()) && $("#sizeRtI").val() && $("#minRtI").val() && $("#maxRtI").val() && parseInt($("#sizeRtI").val()) > 0) {
 	                    questionNumber++;
 	                    $("#addedQuestionTable").dataTable().fnAddData([
 							questionNumber,
@@ -247,10 +247,10 @@
 							"N/A",
 							"N/A"]);
 	                } else {
-	                    alert("Bad Question Parameters: \n1. Must specify Size, Min and Max Coefficients\n2. Max Coefficient must be greater than Min Coefficient");
+	                    alert("Bad Question Parameters: \n1. Must specify Size > 0, Min and Max Coefficients\n2. Max Coefficient must be greater than Min Coefficient");
 	                }
 	            } else if (questionType === "ID") {
-	                if ($("#minID").val() <= $("#maxID").val() && $("#rowsID").val() > 0 && $("#colsID").val() > 0 && $("#minID").val() && $("#maxID").val()) {
+	                if (parseInt($("#minID").val()) < parseInt($("#maxID").val()) && parseInt($("#rowsID").val()) > 0 && parseInt($("#colsID").val()) > 0 && $("#minID").val() && $("#maxID").val()) {
 	                    var dependency;
 	                    if ($("#dependentID").is(":checked")) { dependency = "Dependent"; } else { dependency = "Independent"; }
 	                    questionNumber++;
@@ -267,7 +267,7 @@
 	                    alert("Bad Question Parameters: \n1. Must specify Rows and Columns, Min and Max Coefficients\n2. Must have at least one row and column\n3. Max Coefficient must be greater than Min Coefficient");
 	                }
 	            } else if (questionType === "D") {
-	                if ($("#minD").val() <= $("#maxD").val() && $("#sizeD").val() && $("#minD").val() && $("#maxD").val()) {
+	                if (parseInt($("#minD").val()) < parseInt($("#maxD").val()) && $("#sizeD").val() && $("#minD").val() && $("#maxD").val() && parseInt($("#sizeD").val()) > 0) {
 	                    questionNumber++;
 	                    $("#addedQuestionTable").dataTable().fnAddData([
 							questionNumber,
@@ -279,10 +279,10 @@
 							"N/A",
 							"N/A"]);
 	                } else {
-	                    alert("Bad Question Parameters: \n1. Must specify Size, Min and Max Coefficients\n2. Max Coefficient must be greater than Min Coefficient");
+	                    alert("Bad Question Parameters: \n1. Must specify Size > 0, Min and Max Coefficients\n2. Max Coefficient must be greater than Min Coefficient");
 	                }
 	            } else if (questionType === "I") {
-	                if ($("#minI").val() < $("#maxI").val() && $("#sizeI").val() && $("#minI").val() && $("#maxI").val()) {
+	                if (parseInt($("#minI").val()) < parseInt($("#maxI").val()) && $("#sizeI").val() && $("#minI").val() && $("#maxI").val() && parseInt($("#sizeI").val()) > 0) {
 	                    questionNumber++;
 	                    $("#addedQuestionTable").dataTable().fnAddData([
 							questionNumber,
@@ -294,7 +294,7 @@
 							"N/A",
 							"N/A"]);
 	                } else {
-	                    alert("Bad Question Parameters: \n1. Must specify Size, Min and Max Coefficients\n2. Max Coefficient must be greater than Min Coefficient");
+	                    alert("Bad Question Parameters: \n1. Must specify Size > 0, Min and Max Coefficients\n2. Max Coefficient must be greater than Min Coefficient");
 	                }
 	            }
 	        });
