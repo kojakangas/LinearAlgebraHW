@@ -26,7 +26,7 @@ MathJax.Hub.Config({
         <div class="navbar-inner" style="position: fixed; width: 900px; z-index: 1000;">
             <div class="nav-collapse collapse">
                 <ul class="nav" style="float: left; margin: 10px 0 0px 0;">
-                    <li style="float: left; padding: 0 20px 0 0;"><a href="StudentHome.aspx">Home</a></li>
+                    <li id="goHome" style="float: left; padding: 0 20px 0 0;"><a href="StudentHome.aspx">Home</a></li>
                 </ul>
                 <form class="navbar-form pull-right" style="">
                     <button id="signOut" class="btn" style="margin-top: 5px;" type="submit">Sign Out</button>
@@ -48,13 +48,14 @@ MathJax.Hub.Config({
                                         <h5>Matrix Size: </h5>
                                     </li>
                                         <li style="line-height: 25px;">
-                                            <input id="rows" type="text" onkeypress="return validateNumericInputMatrixSize(event)" class="span4" style="float: left; margin-left: 20px" placeholder="n" />
+                                            <input id="rows" type="text" onkeypress="return validateNumericInputMatrixSize(event)" class="span4" style="float: left; margin-left: 20px" placeholder="rows" />
                                             <div style="display: inline; margin-left: 5px;">X</div>
-                                            <input id="columns" type="text" onkeypress="return validateNumericInputMatrixSize(event)" class="span4" style="float: right; margin-right: 20px" placeholder="m" />
+                                            <input id="columns" type="text" onkeypress="return validateNumericInputMatrixSize(event)" class="span4" style="float: right; margin-right: 20px" placeholder="cols" />
                                         </li>
                                     <li><a id="makeMatrix" class="btn" style="margin: 0px 5px 5px 5px;">Create</a></li>
                                 </ul>
                             </li>
+                            <li><a id="copymatrix" style="cursor: pointer;">Copy Last Matrix</a></li>
                             <li class="dropdown">
                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">Fraction <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
@@ -101,7 +102,7 @@ MathJax.Hub.Config({
                     <form id="form1" runat="server">
                         <div id="matrixHolder" style="display: inline-block; width: 100%;">
                             <!-- jQuery appends the matrices here-->
-                            <div id="info" style="color: #888;">Note: You must start by creating the augmented matrix from the equations above.<br /> Only one row operation is allowed between matrices.<br /> Empty entries must contain 0. </div>
+                            <div id="info" style="color: #888;">Note: You must start by creating the augmented matrix from the equations above.<br /> Only one row operation is allowed between matrices. Empty entries must contain 0.<br /> Use the tools on the left to work the problem and create your answer. </div>
                         </div>
                         <hr style="margin-bottom: 0px; margin-top: 0px;" />
                         <button id="submitAnswer" disabled="disabled" class="btn btn-primary" title="Note: Must create an answer to submit." type="button" style="margin-top: 5px; float: right; margin-bottom: 50px;">Submit Answer</button>
@@ -145,9 +146,10 @@ MathJax.Hub.Config({
 
         function validateNumericInput(evt) {
             var charCode = (evt.which) ? evt.which : evt.keyCode
-            if (charCode > 31 && (charCode < 48 || charCode > 57) && !(charCode == 47 && evt.currentTarget.value != "" && evt.currentTarget.value.indexOf('/') === -1) && !(charCode == 45 && evt.currentTarget.value === "")) {
+            if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 45 && charCode != 46 && charCode != 37 && charCode != 39 && !(charCode == 47 && evt.currentTarget.value != "" && evt.currentTarget.value.indexOf('/') === -1)) {
                 return false;
             }
+            else if (charCode == 13) $("#copymatrix").trigger('click');
             return true;
         }
 
@@ -160,6 +162,8 @@ MathJax.Hub.Config({
                 matrixNumber = 0;
                 generatedAnswer = false;
                 $('#matrixHolder').empty();
+                $("#matrixHolder").append("<div id=\"info\" style=\"color: #888;\">Note: You must start by creating the augmented matrix from the equations above.<br /> Only one row operation is allowed between matrices. Empty entries must contain 0.<br /> Use the tools on the left to work the problem and create your answer. </div>");
+                $("#createAnsLink").click(function () { return false; });
             }
         }
 
@@ -247,7 +251,7 @@ MathJax.Hub.Config({
                     for (var i = 0; i < rows; i++) {
                         $('#table' + matrixNumber).append("<tr id=\"matrix" + matrixNumber + "row" + i + "\"></tr>");
                         for (var j = 0; j < cols; j++) {
-                            $('#matrix' + matrixNumber + 'row' + i).append("<td><input class=\"gradingInputs\" maxlength=\"7\" onkeypress=\"return validateNumericInput(event)\" style=\"width: 35px;\"></input></td>");
+                            $('#matrix' + matrixNumber + 'row' + i).append("<td><input class=\"gradingInputs\" maxlength=\"10\" onkeypress=\"return validateNumericInput(event)\" style=\"width: 35px;\"></input></td>");
                         }
                     }
                     $('#row' + matrixNumber).append("<div id = \"feedback" + matrixNumber + "\" class=\"row-fluid\"></div>");
@@ -262,101 +266,120 @@ MathJax.Hub.Config({
             });
 
             $("#submitAnswer").click(function () {
-                var hasEmptyInput = false;
+                if (confirm("Submit Answer?")) {
+                    var hasEmptyInput = false;
 
-                $(".gradingInputs").each(function (i, input) {
-                    if (input.value === "") {
-                        hasEmptyInput = true;
-                    }
-                });
-
-                if (hasEmptyInput) {
-                    alert("Cannot leave inputs blank.");
-                } else {
-
-                    $(".overlay").show();
-
-                    //Puts all matrices in a javascript object
-                    var matrixMap = new Object();
-
-                    $("tbody[id^='matrix']").each(function (index, matrixHTML) {
-                        var matrix = [];
-                        $("#" + matrixHTML.id).find("tr").each(function (rowIndex, rowHTML) {
-                            var row = [];
-                            $(this).find("td").each(function (cellIndex, cell) {
-                                row[cellIndex] = eval($(this).find("input").val());
-                            });
-                            matrix[rowIndex] = row;
-                        });
-                        matrixMap[index] = matrix;
-                    });
-                  
-                    //Gets the answer
-                    var answer = new Object();
-
-                    var inconsistentAnswer = $("#answerDiv:has(input#inconsistentAnswer)");
-                    if (inconsistentAnswer.length == 0) {
-                        $("#answerDiv > div[id^='variable']").each(function (index, div) {
-                            var answerString = "";
-                            var firstInput = $(this).find("#var" + index).val();
-                            //if F it is a free var
-                            if (firstInput != "F") {
-                                answerString = eval(firstInput);
-                                $(this).find("input[id^='free']").each(function (inputIndex, input) {
-                                    var value = eval($(this).val());
-                                    answerString += "," + value + "@" + $(this).attr("name");//Parsing can be done differently
-                                });
-                            } else {
-                                answerString = firstInput;
+                    $(".gradingInputs").each(function (i, input) {
+                        if (input.value === "") {
+                            hasEmptyInput = true;
+                        }
+                        else {
+                            try {
+                                eval(input.value);
+                                var temp = input.value;
+                                var firstChar = temp.charAt(0);
+                                // the g in the regular expression says to search the whole string 
+                                // rather than just find the first occurrence
+                                // match returns and array of -'s. Length will be the count for -.
+                                var count = temp.match(/-/g);
+                                if (count != null) {
+                                    if (count.length > 1 || firstChar != '-') hasEmptyInput = true;
+                                }
                             }
-                            answer[index] = answerString;
-                        });
-                    } else {
-                        answer = "I";//I is for inconsistent. possible to use boolean or 0 and 1
-                    }
-
-                    //Then there will be an ajax call to grade this
-                    //It will need both the matrixMap and answer variables
-					var complete = "";
-					var vars = [], hash;
-					var q = document.URL.split('?')[1];
-					if (q != undefined) {
-						q = q.split('&');
-						for (var i = 0; i < q.length; i++) {
-							hash = q[i].split('=');
-							vars.push(hash[1]);
-							vars[hash[0]] = hash[1];
-							vars[hash[0]] = vars[hash[0]].replace("#", "");
-						}
-					}
-                    $.ajax({
-                        type: "POST",
-                        url: "QuestionPage.aspx/Grade",
-                        data: "{'MatrixMapJSON': '" + JSON.stringify(matrixMap) + "','AnswerJSON': '" + JSON.stringify(answer) + "','question': '" + vars['question'] + "','assignment': '" + vars['assign'] + "'}",
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        success: function (gradingMsg) {
-                            $("#answerDiv").append("<h4>Results:<h4>");
-                            $("#resultsDiv").remove();
-                            $("#removeRow").remove();
-                            $("#removeAnswer").remove();
-                            $(".freeLinks").remove();
-                            $(".gradingInputs").attr("disabled", "true");
-                            $("#submitAnswer").remove();
-                            $("#nextQuestion").show();
-                            $(".overlay").hide();
-                            if (gradingMsg.d.indexOf("!") === -1) {
-                                $("#answerDiv").append("<div id=\"resultsDiv\" class=\"alert alert-danger\" style=\"display:flex;\">" + gradingMsg.d + "</div>");
-                            } else {
-                                $("#answerDiv").append("<div id=\"resultsDiv\" class=\"alert alert-success\" style=\"display:flex;\"><div>Correct!<div><div>" + gradingMsg.d + "</div></div>");
+                            catch (err) {
+                                hasEmptyInput = true;
                             }
-                            nextQuestionUpdate();
-                        },
-                        error: function (msg) {
-                            $(".overlay").hide();
-                            alert("Grading Failed, don't panic");
                         }
                     });
+
+                    if (hasEmptyInput) {
+                        alert("Cannot leave inputs blank.\n\"-\" should only be placed at the beginning an input.\nEnsure all inputs have a number.");
+                    } else {
+
+                        $(".overlay").show();
+
+                        //Puts all matrices in a javascript object
+                        var matrixMap = new Object();
+
+                        $("tbody[id^='matrix']").each(function (index, matrixHTML) {
+                            var matrix = [];
+                            $("#" + matrixHTML.id).find("tr").each(function (rowIndex, rowHTML) {
+                                var row = [];
+                                $(this).find("td").each(function (cellIndex, cell) {
+                                    row[cellIndex] = eval($(this).find("input").val());
+                                });
+                                matrix[rowIndex] = row;
+                            });
+                            matrixMap[index] = matrix;
+                        });
+
+                        //Gets the answer
+                        var answer = new Object();
+
+                        var inconsistentAnswer = $("#answerDiv:has(input#inconsistentAnswer)");
+                        if (inconsistentAnswer.length == 0) {
+                            $("#answerDiv > div[id^='variable']").each(function (index, div) {
+                                var answerString = "";
+                                var firstInput = $(this).find("#var" + index).val();
+                                //if F it is a free var
+                                if (firstInput != "F") {
+                                    answerString = eval(firstInput);
+                                    $(this).find("input[id^='free']").each(function (inputIndex, input) {
+                                        var value = eval($(this).val());
+                                        answerString += "," + value + "@" + $(this).attr("name");//Parsing can be done differently
+                                    });
+                                } else {
+                                    answerString = firstInput;
+                                }
+                                answer[index] = answerString;
+                            });
+                        } else {
+                            answer = "I";//I is for inconsistent. possible to use boolean or 0 and 1
+                        }
+
+                        //Then there will be an ajax call to grade this
+                        //It will need both the matrixMap and answer variables
+                        var complete = "";
+                        var vars = [], hash;
+                        var q = document.URL.split('?')[1];
+                        if (q != undefined) {
+                            q = q.split('&');
+                            for (var i = 0; i < q.length; i++) {
+                                hash = q[i].split('=');
+                                vars.push(hash[1]);
+                                vars[hash[0]] = hash[1];
+                                vars[hash[0]] = vars[hash[0]].replace("#", "");
+                            }
+                        }
+                        $.ajax({
+                            type: "POST",
+                            url: "QuestionPage.aspx/Grade",
+                            data: "{'MatrixMapJSON': '" + JSON.stringify(matrixMap) + "','AnswerJSON': '" + JSON.stringify(answer) + "','question': '" + vars['question'] + "','assignment': '" + vars['assign'] + "'}",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (gradingMsg) {
+                                $("#answerDiv").append("<h4>Results:<h4>");
+                                $("#resultsDiv").remove();
+                                $("#removeRow").remove();
+                                $("#removeAnswer").remove();
+                                $(".freeLinks").remove();
+                                $(".gradingInputs").attr("disabled", "true");
+                                $("#submitAnswer").remove();
+                                $("#nextQuestion").show();
+                                $(".overlay").hide();
+                                if (gradingMsg.d.indexOf("!") === -1) {
+                                    $("#answerDiv").append("<div id=\"resultsDiv\" class=\"alert alert-danger\" style=\"display:flex;\">" + gradingMsg.d + "</div>");
+                                } else {
+                                    $("#answerDiv").append("<div id=\"resultsDiv\" class=\"alert alert-success\" style=\"display:flex;\"><div>Correct!<div><div>" + gradingMsg.d + "</div></div>");
+                                }
+                                nextQuestionUpdate();
+                            },
+                            error: function (msg) {
+                                $(".overlay").hide();
+                                alert("Grading Failed, don't panic");
+                            }
+                        });
+                    }
                 }
             });
 
@@ -375,38 +398,46 @@ MathJax.Hub.Config({
                 }
                 $.ajax({
                     type: "POST",
-                    url: "QuestionPage.aspx/updateForNextQuestion",
+                    url: "QuestionInverse.aspx/updateForNextQuestion",
                     data: "{'question': '" + vars['question'] + "','assignment': '" + vars['assign'] + "'}",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (data) {
                         //the value returned from the POST AJAX is not immediately returned, so we must pass
                         //it from the AJAX call to another function
-                        complete = data.d;
-                        nextStep(complete);
+                        var statusAndQType = data.d.split(" ");
+                        if (statusAndQType[0] == "incomplete") {
+                            $('#nextQuestion').click(function () {
+                                $(".overlay").show();
+                                if (statusAndQType[1] === "SoE") {
+                                    window.location = "QuestionPage.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                                }
+                                else if (statusAndQType[1] === "I") {
+                                    window.location = "QuestionInverse.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                                }
+                                else if (statusAndQType[1] === "ID") {
+                                    window.location = "QuestionLinearDependence.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                                }
+                                else if (statusAndQType[1] === "RtI") {
+                                    window.location = "ReducedRow.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                                } else {
+                                    window.location.reload();
+                                }
+                            });
+                        }
+                        if (statusAndQType[0] == "complete") {
+                            $('#nextQuestion').text('Finish');
+                            alert("Well done! This assignment is now complete.");
+                            $('#nextQuestion').click(function () {
+                                $(".overlay").show();
+                                window.location.href = "StudentHome.aspx";
+                            });
+                        }
                     },
                     error: function (msg) {
                         alert("Question Loading Failed, don't panic");
                     }
                 });
-
-                function nextStep(data) {
-                    if (complete == "incomplete") {
-                        $('#nextQuestion').click(function () {
-                            $(".overlay").show();
-                            window.location.replace = "QuestionPage.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
-                            window.location.reload();
-                        });
-                    }
-                    if (complete == "complete") {
-                        $('#nextQuestion').text('Finish');
-                        alert("Well done! This assignment is now complete.");
-                        $('#nextQuestion').click(function () {
-                            $(".overlay").show();
-                            window.location.href = "StudentHome.aspx";
-                        });
-                    }
-                }
             };
 
             $("#signOut").click(function (e) {
@@ -463,6 +494,31 @@ MathJax.Hub.Config({
             });
 
             $("#createAnsLink").attr("title", "You must row reduce the matrix to reduced row echelon form before creating an answer.");
+
+            $("#goHome").click(function () {
+                $('.overlay').show();
+            });
+
+            $("#copymatrix").click(function () {
+                $("#makeMatrix").trigger('click');
+                var index = 0;
+                var values = [];
+                if (matrixNumber > 1) {
+                    $("#matrix" + (matrixNumber - 2)).find("tr").each(function (rowIndex, rowHTML) {
+                        $(this).find("td").each(function (cellIndex, cell) {
+                            values[index] = $(this).find("input").val();
+                            index++;
+                        });
+                    });
+                    index = 0;
+                    $("#matrix" + (matrixNumber - 1)).find("tr").each(function (rowIndex, rowHTML) {
+                        $(this).find("td").each(function (cellIndex, cell) {
+                            $(this).find("input").val(values[index]);
+                            index++;
+                        });
+                    });
+                }
+            });
 
         });
     </script>

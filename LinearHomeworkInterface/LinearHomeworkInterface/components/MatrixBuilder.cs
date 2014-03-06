@@ -199,6 +199,199 @@ namespace MatrixBuilder
             return vector;
         }
 
+        //When reduced, has a pivot row for every column. For use when rows>=cols
+
+        public float[,] generateIndependentMatrix(int rows, int cols, int min, int max)
+
+        {
+
+            bool independent = false;
+
+            float[,] matrix = new float[rows,cols];
+
+            if (rows >= cols)
+
+            {
+
+                while (!independent)
+
+                {
+
+                    matrix = generateRandomMatrix(rows, cols, min, max);
+
+                    float[,] reduced = new float[rows,cols];
+
+                    for (int i = 0; i < rows; i++)
+
+                    {
+
+                        for (int j = 0; j < cols; j++)
+
+                        {
+
+                            reduced[i, j] = matrix[i, j];
+
+                        }
+
+                    }
+
+                    reduced = reduceMatrix(reduced);
+
+                    independent = checkMainDiagonalForOnes(reduced, cols);
+
+                }
+
+            }
+
+            return matrix;
+
+        }
+
+
+
+        //When reduced, doesn't have a pivot row for every column.
+
+        public float[,] generateDependentMatrix(int rows, int cols, int min, int max)
+
+        {
+
+            bool independent = true;
+
+            float[,] matrix = new float[rows, cols];
+
+            if (rows >= cols)
+
+            {
+
+                while (independent)
+
+                {
+
+                    matrix = generateRandomMatrix(rows, cols, min, max);
+
+                    float[,] reduced = new float[rows, cols];
+
+                    for (int i = 0; i < rows; i++)
+
+                    {
+
+                        for (int j = 0; j < cols; j++)
+
+                        {
+
+                            reduced[i, j] = matrix[i, j];
+
+                        }
+
+                    }
+
+                    reduced = reduceMatrix(reduced);
+
+                    independent = checkMainDiagonalForOnes(reduced, cols);
+
+                }
+
+            }
+
+            else matrix = generateRandomMatrix(rows, cols, min, max);
+
+            return matrix;
+
+        }
+
+        //Checks every column for a 1 along the main diagonal (for use with independence/dependence, will break if rows>cols)
+
+        public bool checkMainDiagonalForOnes(float[,] matrix, int columns)
+
+        {
+
+            bool onlyones = true;
+
+            float[,] tempMatrix = matrix;
+
+            float[,] reducedMatrix = reduceMatrix(tempMatrix);
+
+            for (int columnpointer = 0; columnpointer < columns; columnpointer++)
+
+            {
+
+                if (reducedMatrix[columnpointer, columnpointer] != 1)
+
+                {
+
+                    onlyones = false;
+
+                    break;
+
+                }
+
+            }
+
+            return onlyones;
+
+        }
+
+        public bool checkColumnEquality(float[,] matrixBase, float[,] matrixCompare)
+        {
+            bool columnEquality = true;
+
+            if (matrixBase.GetLength(0) == matrixCompare.GetLength(0) && matrixBase.GetLength(1) == matrixCompare.GetLength(1))
+            {
+                List<float[]> compareColumns= new List<float[]>();
+                for (int compareColumn = 0; compareColumn < matrixCompare.GetLength(1); compareColumn++)
+                {
+                    float[] column = new float[matrixCompare.GetLength(0)];
+                    for (int compareRow = 0; compareRow < matrixCompare.GetLength(0); compareRow++)
+                    {
+                        column[compareRow] = matrixCompare[compareRow, compareColumn];
+                    }
+                    compareColumns.Add(column);
+                }
+
+                List<float[]> baseColumns = new List<float[]>();
+                for (int baseColumn = 0; baseColumn < matrixBase.GetLength(1); baseColumn++)
+                {
+                    float[] column = new float[matrixBase.GetLength(0)];
+                    for (int baseRow = 0; baseRow < matrixBase.GetLength(0); baseRow++)
+                    {
+                        column[baseRow] = matrixBase[baseRow, baseColumn];
+                    }
+                    baseColumns.Add(column);
+                }
+
+                for (int i = 0; i < baseColumns.Count; i++)
+                {
+                    bool match = true;
+                    float[] baseArray = baseColumns[i];
+                    for (int curColumn = 0; curColumn < compareColumns.Count; curColumn++)
+                    {
+                        float[] compareArray = compareColumns[curColumn];
+                        match = true;
+                        for (int j = 0; j < baseArray.Length; j++)
+                        {
+                            if (baseArray[j] != compareArray[j])
+                            {
+                                match = false;
+                                break;
+                            }
+                        }
+                        if (match)
+                        {
+                            compareColumns.Remove(compareColumns[curColumn]);
+                            break;
+                        }
+                    }
+                    if (!match)
+                    {
+                        columnEquality = false;
+                        break;
+                    }
+                }
+            }
+            else columnEquality = false;
+            return columnEquality;
+        }
+
         public float[,] reduceMatrix(float[,] matrix)
         {
             int numOfRows = matrix.GetLength(0);
@@ -451,7 +644,7 @@ namespace MatrixBuilder
                 int[] rows = (int[])changedRows.ToArray(typeof(int));
                 int row1 = rows[0];
                 int row2 = rows[1];
-                for (int i = 0; i < oldMatrix.GetLength(0); i++)
+                for (int i = 0; i < oldMatrix.GetLength(1); i++)
                 {
                     if (oldMatrix[row1, i] != newMatrix[row2, i] || oldMatrix[row2, i] != newMatrix[row1, i])
                     {
@@ -687,6 +880,30 @@ namespace MatrixBuilder
             return isEqual;
         }
 
+        public String checkForIdentity(float[,] matrix, float[,] sesmatrix)
+        {
+
+            if (matrix.GetLength(0) == sesmatrix.GetLength(0) && matrix.GetLength(1) == sesmatrix.GetLength(1))
+            {
+                sesmatrix = reduceMatrix(sesmatrix);
+                for (int i = 0; i < matrix.GetLength(0); i++)
+                {
+                    for (int j = 0; j < matrix.GetLength(1); j++)
+                    {
+                        if (matrix[i, j] != sesmatrix[i,j])
+                        {
+                            return "<div>You have not successfully reduced your matrix.<div>\n";
+                        }
+                    }
+                }
+            }
+            else
+            {
+                return "<div>You have an incorrect size for your answer matrix.<div>\n";
+            }
+            return "";
+        }
+
         protected float[,] copyMatrix(float[,] matrix)
         {
             float[,] newArray = new float[matrix.GetLength(0), matrix.GetLength(1)];
@@ -722,6 +939,28 @@ namespace MatrixBuilder
             return feedback.Equals("") ? null : feedback;
         }
 
+        public String checkSingleRowOperationInverseQuestion(Dictionary<int, float[,]> matrixMap)
+        {
+            String feedback = "";
+            for (int i = 1; i < matrixMap.Count(); i++)
+            {
+                float[,] matrix1 = null;
+                matrixMap.TryGetValue(i, out matrix1);
+                float[,] matrix2 = null;
+                matrixMap.TryGetValue(i + 1, out matrix2);
+                if (checkMatrixEquality(matrix1, matrix2))
+                {
+                    feedback += "<div>No row operation between matrix " + i + " and matrix " + (i + 1) + ".<div>";
+                }
+                else if (!checkAddMultipleOfRow(matrix1, matrix2) && !checkTimesScalar(matrix1, matrix2)
+                      && !checkRowSwap(matrix1, matrix2))
+                {
+                    feedback += "<div>Mistake between matrix " + i + " and matrix " + (i + 1) + ".<div>";
+                }
+            }
+            return feedback.Equals("") ? null : feedback;
+        }
+
         public String checkAnswers(float[] correctAnswers, float[] studentAnswers)
         {
             String feedback = "";
@@ -740,6 +979,21 @@ namespace MatrixBuilder
             else
             {
                 feedback = "Your answer has an incorrect number of variables.";
+            }
+            return feedback.Equals("") ? null : feedback;
+        }
+
+        //overload method for checking answers as matrices
+        public String checkAnswers(Dictionary<int, float[,]> correctAnswers, Dictionary<int, float[,]> studentAnswers)
+        {
+            String feedback = "";
+            float[,] matrix1 = null;
+            correctAnswers.TryGetValue(0, out matrix1);
+            float[,] matrix2 = null;
+            studentAnswers.TryGetValue(0, out matrix2);
+            if (!checkMatrixEquality(matrix1, matrix2))
+            {
+                feedback += "<div>Your reduced matrix is incorrect.<div>\n";
             }
             return feedback.Equals("") ? null : feedback;
         }
@@ -911,6 +1165,65 @@ namespace MatrixBuilder
             }
 
             return numOfRowOps;
+        }
+
+        public bool checkInverse(float[,] matrix, float[,] inverse)
+        {
+            bool isInverse = true;
+            int numOfRows = matrix.GetLength(0);
+            int numOfCols = matrix.GetLength(1);
+            if (matrix.GetLength(0) == inverse.GetLength(0) && matrix.GetLength(1) == inverse.GetLength(1))
+            {
+                float[,] product = crossProduct(matrix, inverse);
+                for (int i = 0; i < numOfRows; i++)
+                {
+                    for (int j = 0; j < numOfCols; j++)
+                    {
+                        if (i == j && Math.Abs(1 - product[i,j]) > offset)
+                        {
+                            isInverse = false;
+                        }
+                        else if (i != j && Math.Abs(product[i,j]) > offset)
+                        {
+                            isInverse = false;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                isInverse = false;
+            }
+            return isInverse;
+        }
+
+        public float[,] crossProduct(float[,] matrix, float[,] matrix2)
+        {
+            float[,] product = null;
+            if (matrix.GetLength(1) == matrix2.GetLength(0))
+            {
+                product = new float[matrix.GetLength(0), matrix2.GetLength(1)];
+                for (int i = 0; i < product.GetLength(0); i++)
+                {
+                    float[] vector = new float[matrix2.GetLength(0)];
+                    for (int k = 0; k < matrix2.GetLength(0); k++)
+                    {
+                        vector[k] = matrix2[k, i];
+                    }
+                    for (int j = 0; j < product.GetLength(1); j++)
+                    {
+                        float[] row = new float[matrix.GetLength(1)];
+                        for (int k = 0; k < row.GetLength(0); k++)
+                        {
+                            row[k] = matrix[j, k];
+                        }
+                        product[j, i] = dotProduct(row, vector);
+                    }
+                }
+
+            }
+
+            return product;
         }
     }
 }

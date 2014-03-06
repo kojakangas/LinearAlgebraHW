@@ -141,9 +141,17 @@ namespace AssignComponent
                         int cols = System.Convert.ToInt32(variables[3]);
                         int min = System.Convert.ToInt32(variables[4]);
                         int max = System.Convert.ToInt32(variables[5]);
-                        int freeVar = System.Convert.ToInt32(variables[6]);
+                        int freeVar;
+                        if (variables[6].Equals("N/A"))
+                        {
+                            freeVar = 0;
+                        }
+                        else
+                        {
+                            freeVar = System.Convert.ToInt32(variables[6]);
+                        }
                         int inconsistent;
-                        if (variables[7].Equals("Yes"))
+                        if (variables[7].Equals("Inconsistent") || variables[7].Equals("Dependent"))
                         {
                             inconsistent = 1;
                         }
@@ -221,6 +229,38 @@ namespace AssignComponent
                 return "The homework was successfully assigned, but the attempt to assign currently unsupported questions was detected. "
                     + "In the future you will, in fact, be able to assign this type of question. We apologize for the inconvenience.";
             }
+        }
+
+        //this is the logic that deletes a homework assignment from the database (has yet to be tested)
+        public static String Delete(int hwid)
+        {
+            //instance variable we will need set to homework number to delete
+            int delID = hwid;
+            //first we establish our connection string to our database
+            string connStr = ConfigurationManager.ConnectionStrings["linearhmwkdb"].ConnectionString;
+            MySqlConnection msqcon = new MySqlConnection(connStr);
+            try
+            {
+                //open the connection
+                msqcon.Open();
+                //delete from the homework table first
+                MySqlCommand msqcom = new MySqlCommand("DELETE FROM homework WHERE homeworkid = " + delID, msqcon);
+                msqcom.ExecuteNonQuery();
+                //now delete from the hmwkassignment table
+                msqcom = new MySqlCommand("DELETE FROM hmwkassignment WHERE homeworkId = " + delID, msqcon);
+                msqcom.ExecuteNonQuery();
+                //finally delete related questions from the question table
+                msqcom = new MySqlCommand("DELETE FROM question WHERE homeworkId = " + delID, msqcon);
+                msqcom.ExecuteNonQuery();
+                //close our connection since we're now finished with deletion of our assignment
+                msqcon.Close();
+            }
+            catch (Exception error)
+            {
+                return "An error occurred while deleting the assignment: " + error;
+            }
+            //report successful deletion of assignment to user
+            return "The homework assignment was successfully deleted.";
         }
     }
 }

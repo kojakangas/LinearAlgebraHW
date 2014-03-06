@@ -60,8 +60,20 @@ namespace LinearHomeworkInterface
                 String userid = idfetch.GetString(0);
                 idfetch.Close();
 
+                String hmwkquery = "UPDATE linearhmwkdb.homework SET status = 'Complete' WHERE dueDate <= NOW()";
+                msqcmd = new MySqlCommand(hmwkquery, msqcon);
+                MySqlDataReader hmwkqrycmd = msqcmd.ExecuteReader();
+                hmwkqrycmd.Read();
+                hmwkqrycmd.Close();
+
+                String hmwkassignments = "UPDATE linearhmwkdb.hmwkassignment hw SET status = 'Late' WHERE (SELECT status from linearhmwkdb.homework where homeworkId = hw.homeworkId) = 'Complete' && status != 'Complete'";
+                msqcmd = new MySqlCommand(hmwkassignments, msqcon);
+                MySqlDataReader hmwkassqrycmd = msqcmd.ExecuteReader();
+                hmwkassqrycmd.Read();
+                hmwkassqrycmd.Close();
+
                 //fetch current homework assignments
-                String query = "SELECT  h.title, h.dueDate, ha.grade, ha.status, ha.assignmentId, h.points, ha.currentQuestion FROM hmwkassignment AS ha JOIN homework AS h WHERE ha.homeworkId=h.homeworkid AND ha.userID = @userid ORDER BY ha.assignmentID";
+                String query = "SELECT distinct h.title, h.dueDate, ha.grade, ha.status, ha.assignmentId, h.points, ha.currentQuestion, q.type, h.homeworkid FROM hmwkassignment AS ha JOIN homework AS h JOIN question AS q WHERE ha.homeworkId=h.homeworkid AND ha.userID = @userid AND q.number = ha.currentQuestion AND q.homeworkid = h.homeworkid ORDER BY h.dueDate DESC";
                 msqcmd = new MySqlCommand(query, msqcon);
                 msqcmd.Parameters.Add(new MySqlParameter("@userid", userid));
                 MySqlDataReader assignments = null;
@@ -73,7 +85,7 @@ namespace LinearHomeworkInterface
                     //find out if current assignment is available to work
                     bool available = false;
                     /*if(0>System.DateTime.Compare(System.DateTime.Now,assignments.GetDateTime(1))){*/
-                    if (assignments.GetString(3).Equals("Assigned") || assignments.GetString(3).Equals("In Progress"))
+                    if ((assignments.GetString(3).Equals("Assigned") || assignments.GetString(3).Equals("In Progress")))
                     {
                         available = true;
                     }
@@ -83,7 +95,26 @@ namespace LinearHomeworkInterface
                     sb.Append("<td style=\"text-align: left;\">");
                     if (available)
                     {
-                        sb.Append("<a href = \"QuestionPage.aspx?assign=" + assignments.GetString(4) + "&question=" + assignments.GetString(6) +"\">");
+                        if (assignments.GetString(7) == "SoE")
+                        {
+                            sb.Append("<a class=\"homeworkLink\" href = \"QuestionPage.aspx?assign=" + assignments.GetString(4) + "&question=" + assignments.GetString(6) + "\">");
+                        }
+
+                        if (assignments.GetString(7) == "I")
+                        {
+                            sb.Append("<a class=\"homeworkLink\" href = \"QuestionInverse.aspx?assign=" + assignments.GetString(4) + "&question=" + assignments.GetString(6) + "\">");
+                        }
+
+                        if (assignments.GetString(7) == "RtI")
+                        {
+                            sb.Append("<a class=\"homeworkLink\" href = \"ReducedRow.aspx?assign=" + assignments.GetString(4) + "&question=" + assignments.GetString(6) + "\">");
+                        }
+
+                        if (assignments.GetString(7) == "ID")
+                        {
+                            sb.Append("<a class=\"homeworkLink\" href = \"QuestionLinearDependence.aspx?assign=" + assignments.GetString(4) + "&question=" + assignments.GetString(6) + "\">");
+                        }
+                            
                         sb.Append(assignments.GetString(0));
                         sb.Append("</a>");
                     }
