@@ -266,6 +266,7 @@ MathJax.Hub.Config({
             });
 
             $("#submitAnswer").click(function () {
+                var existflag = 0;
                 if (confirm("Submit Answer?")) {
                     var hasEmptyInput = false;
 
@@ -369,10 +370,15 @@ MathJax.Hub.Config({
                                 $(".overlay").hide();
                                 if (gradingMsg.d.indexOf("!") === -1) {
                                     $("#answerDiv").append("<div id=\"resultsDiv\" class=\"alert alert-danger\" style=\"display:flex;\">" + gradingMsg.d + "</div>");
-                                } else {
+                                }
+                                else if (gradingMsg.d.indexOf("!") === 2) {
+                                    $("#answerDiv").append("<div id=\"resultsDiv\" class=\"alert alert-warning\" style=\"display:flex;\">The instructor has just deleted this assignment.</div>");
+                                    existflag = -1;
+                                }
+                                else {
                                     $("#answerDiv").append("<div id=\"resultsDiv\" class=\"alert alert-success\" style=\"display:flex;\"><div>Correct!<div><div>" + gradingMsg.d + "</div></div>");
                                 }
-                                nextQuestionUpdate();
+                                nextQuestionUpdate(existflag);
                             },
                             error: function (msg) {
                                 $(".overlay").hide();
@@ -383,61 +389,71 @@ MathJax.Hub.Config({
                 }
             });
 
-            function nextQuestionUpdate() {
-                var complete = "";
-                var vars = [], hash;
-                var q = document.URL.split('?')[1];
-                if (q != undefined) {
-                    q = q.split('&');
-                    for (var i = 0; i < q.length; i++) {
-                        hash = q[i].split('=');
-                        vars.push(hash[1]);
-                        vars[hash[0]] = hash[1];
-                        vars[hash[0]] = vars[hash[0]].replace("#", "");
+            function nextQuestionUpdate(exists) {
+                if (exists == 0) {
+                    var complete = "";
+                    var vars = [], hash;
+                    var q = document.URL.split('?')[1];
+                    if (q != undefined) {
+                        q = q.split('&');
+                        for (var i = 0; i < q.length; i++) {
+                            hash = q[i].split('=');
+                            vars.push(hash[1]);
+                            vars[hash[0]] = hash[1];
+                            vars[hash[0]] = vars[hash[0]].replace("#", "");
+                        }
                     }
+                    $.ajax({
+                        type: "POST",
+                        url: "QuestionInverse.aspx/updateForNextQuestion",
+                        data: "{'question': '" + vars['question'] + "','assignment': '" + vars['assign'] + "'}",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (data) {
+                            //the value returned from the POST AJAX is not immediately returned, so we must pass
+                            //it from the AJAX call to another function
+                            var statusAndQType = data.d.split(" ");
+                            if (statusAndQType[0] == "incomplete") {
+                                $('#nextQuestion').click(function () {
+                                    $(".overlay").show();
+                                    if (statusAndQType[1] === "SoE") {
+                                        window.location = "QuestionPage.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                                    }
+                                    else if (statusAndQType[1] === "I") {
+                                        window.location = "QuestionInverse.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                                    }
+                                    else if (statusAndQType[1] === "ID") {
+                                        window.location = "QuestionLinearDependence.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                                    }
+                                    else if (statusAndQType[1] === "RR") {
+                                        window.location = "ReducedRow.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
+                                    } else {
+                                        window.location.reload();
+                                    }
+                                });
+                            }
+                            if (statusAndQType[0] == "complete") {
+                                $('#nextQuestion').text('Finish');
+                                alert("Well done! This assignment is now complete.");
+                                $('#nextQuestion').click(function () {
+                                    $(".overlay").show();
+                                    window.location.href = "StudentHome.aspx";
+                                });
+                            }
+                        },
+                        error: function (msg) {
+                            alert("Question Loading Failed, don't panic");
+                        }
+                    });
                 }
-                $.ajax({
-                    type: "POST",
-                    url: "QuestionInverse.aspx/updateForNextQuestion",
-                    data: "{'question': '" + vars['question'] + "','assignment': '" + vars['assign'] + "'}",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (data) {
-                        //the value returned from the POST AJAX is not immediately returned, so we must pass
-                        //it from the AJAX call to another function
-                        var statusAndQType = data.d.split(" ");
-                        if (statusAndQType[0] == "incomplete") {
-                            $('#nextQuestion').click(function () {
-                                $(".overlay").show();
-                                if (statusAndQType[1] === "SoE") {
-                                    window.location = "QuestionPage.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
-                                }
-                                else if (statusAndQType[1] === "I") {
-                                    window.location = "QuestionInverse.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
-                                }
-                                else if (statusAndQType[1] === "ID") {
-                                    window.location = "QuestionLinearDependence.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
-                                }
-                                else if (statusAndQType[1] === "RtI") {
-                                    window.location = "ReducedRow.aspx?assign=" + vars['assign'] + "&question=" + (parseInt(vars['question'], 10) + 1);
-                                } else {
-                                    window.location.reload();
-                                }
-                            });
-                        }
-                        if (statusAndQType[0] == "complete") {
-                            $('#nextQuestion').text('Finish');
-                            alert("Well done! This assignment is now complete.");
-                            $('#nextQuestion').click(function () {
-                                $(".overlay").show();
-                                window.location.href = "StudentHome.aspx";
-                            });
-                        }
-                    },
-                    error: function (msg) {
-                        alert("Question Loading Failed, don't panic");
-                    }
-                });
+                else {
+                    $('#nextQuestion').text('Return Home');
+                    alert("The assignment no longer exists. Please return home.");
+                    $('#nextQuestion').click(function () {
+                        $(".overlay").show();
+                        window.location.href = "StudentHome.aspx";
+                    });
+                }
             };
 
             $("#signOut").click(function (e) {

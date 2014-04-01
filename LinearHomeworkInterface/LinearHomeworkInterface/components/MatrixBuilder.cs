@@ -978,7 +978,7 @@ namespace MatrixBuilder
             }
             else
             {
-                feedback = "Your answer has an incorrect number of variables.";
+                feedback = "<div>Your answer has an incorrect number of variables.</div>\n";
             }
             return feedback.Equals("") ? null : feedback;
         }

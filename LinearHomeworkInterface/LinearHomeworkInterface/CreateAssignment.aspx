@@ -44,7 +44,7 @@
 			<span>Question Type:  </span>
 			<select id="questionType" style="margin-bottom: 5px;">
 				<option value="SoE">System of Equations (SoE)</option>
-			    <option value="RtI">Row Reduction (RtI)</option>
+			    <option value="RR">Row Reduction (RR)</option>
 				<option value="I">Inverse (I)</option>
 				<option value="ID">Independence/Dependence (ID)</option>
 			</select>
@@ -62,12 +62,14 @@
 				<input type="checkbox" id="inconsistentSoE" style="margin-top: 0px;" />
 			</div>	
 
-			<div id="RtI" style="display:none;">
-				<span>Matrix Size: </span>
-				<input id="sizeRtI" type="text" maxlength="2" class="span1"  onkeypress="return validateNumericInput(event)" /><br />
+			<div id="RR" style="display:none;">
+                <span>Rows: </span>
+				<input id="rowsRR" type="text" maxlength="2" class="span1"  onkeypress="return validateNumericInput(event)" placeholder="n"/>
+				<span>Columns: </span>
+				<input id="colsRR" type="text" maxlength="2" class="span1"  onkeypress="return validateNumericInput(event)" placeholder="m"/><br />
 				<span>Coefficient Range: </span>
-				<input id="minRtI" type="text" maxlength="3" class="span1"  onkeypress="return validateNumericInputAllowMinus(event)" placeholder="min"/> - 
-				<input id="maxRtI" type="text" maxlength="3" class="span1"  onkeypress="return validateNumericInputAllowMinus(event)" placeholder="max"/>
+				<input id="minRR" type="text" maxlength="3" class="span1"  onkeypress="return validateNumericInputAllowMinus(event)" placeholder="min"/> - 
+				<input id="maxRR" type="text" maxlength="3" class="span1"  onkeypress="return validateNumericInputAllowMinus(event)" placeholder="max"/>
 			</div>
 						
 			<div id="ID" style="display:none;">
@@ -220,7 +222,7 @@
 	                if (freeVars === "") { freeVars = "0"; }
 	                if (parseInt($("#minSoE").val()) < parseInt($("#maxSoE").val()) && $("#rowsSoE").val() && $("#colsSoE").val() && $("#minSoE").val() && $("#maxSoE").val() && (parseInt(freeVars) >= 0) && (parseInt(freeVars) < parseInt($("#rowsSoE").val())) && ((parseInt($("#rowsSoE").val()) + 1) == parseInt($("#colsSoE").val()))) {
 	                    var inconsistent;
-	                    if ($("#inconsistentSoE").is(":checked")) { inconsistent = "Inconsistent"; } else { inconsistent = "Consistent"; }
+	                    if ($("#inconsistentSoE").is(":checked")) { inconsistent = "Inconsistent"; freeVars = "N/A";} else { inconsistent = "Consistent"; }
 	                    questionNumber++;
 	                    $("#addedQuestionTable").dataTable().fnAddData([
                             questionNumber,
@@ -234,16 +236,16 @@
 	                } else {
 	                    alert("Bad Question Parameters: \n1. Must specify Rows, Columns, Min and Max Coefficients\n2. Max Coefficient must be greater than Min Coefficient\n3. Must have Rows + 1 Columns (for now)\n4. Number of free variables must be from 0 to 1 less than the number of total variables");
 	                }
-	            } else if (questionType === "RtI") {
-	                if (parseInt($("#minRtI").val()) < parseInt($("#maxRtI").val()) && $("#sizeRtI").val() && $("#minRtI").val() && $("#maxRtI").val() && parseInt($("#sizeRtI").val()) > 0) {
+	            } else if (questionType === "RR") {
+	                if (parseInt($("#minRR").val()) < parseInt($("#maxRR").val()) && $("#rowsRR").val() && $("#colsRR").val() && $("#minRR").val() && $("#maxRR").val() && (parseInt($("#rowsRR").val()) > 0) && (parseInt($("#colsRR").val()) > 0)) {
 	                    questionNumber++;
 	                    $("#addedQuestionTable").dataTable().fnAddData([
 							questionNumber,
-							"RtI",
-							$("#sizeRtI").val(),
-							$("#sizeRtI").val(),
-							$("#minRtI").val(),
-							$("#maxRtI").val(),
+							"RR",
+							$("#rowsRR").val(),
+							$("#colsRR").val(),
+							$("#minRR").val(),
+							$("#maxRR").val(),
 							"N/A",
 							"N/A"]);
 	                } else {

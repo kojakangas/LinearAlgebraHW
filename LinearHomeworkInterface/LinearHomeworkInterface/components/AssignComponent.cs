@@ -13,6 +13,36 @@ namespace AssignComponent
             //no need for code
         }
 
+        public int checkAssignmentExists(String assignment)
+        {
+            string connStr = ConfigurationManager.ConnectionStrings["linearhmwkdb"].ConnectionString;
+            MySqlConnection msqcon = new MySqlConnection(connStr);
+            int checkass = 0;
+            try
+            {
+                MySqlCommand msqcheck = new MySqlCommand("SELECT EXISTS(SELECT * FROM hmwkassignment WHERE assignmentId = '" + assignment + "')", msqcon);
+                //open the connection
+                msqcon.Open();
+                MySqlDataReader doesitexist = msqcheck.ExecuteReader();
+                doesitexist.Read();
+                checkass = System.Convert.ToInt32(doesitexist["EXISTS(SELECT * FROM hmwkassignment WHERE assignmentId = '" + assignment + "')"]);
+                doesitexist.Close();
+                msqcon.Close();
+                if (checkass > 0)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            catch (Exception error)
+            {
+                return -1;
+            }
+        }
+
         //Here is the logic to assign the problems through SQL connection strings
         public String Assign(String title, String dueDate, String[] listOfQuestions)
         {
@@ -126,7 +156,7 @@ namespace AssignComponent
                 for (int j = 0; j < listOfQuestions.Length; j++)
                 {
                     //if we are dealing with any of the currently supported questions
-                    if (listOfQuestions[j].Contains("SoE") || listOfQuestions[j].Contains("RtI") || listOfQuestions[j].Contains("DP")
+                    if (listOfQuestions[j].Contains("SoE") || listOfQuestions[j].Contains("RR") || listOfQuestions[j].Contains("DP")
                         || listOfQuestions[j].Contains("D") || listOfQuestions[j].Contains("I"))
                     {
                         //split our question into separate strings and convert them to

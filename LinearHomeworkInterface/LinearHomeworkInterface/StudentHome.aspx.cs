@@ -105,7 +105,7 @@ namespace LinearHomeworkInterface
                             sb.Append("<a class=\"homeworkLink\" href = \"QuestionInverse.aspx?assign=" + assignments.GetString(4) + "&question=" + assignments.GetString(6) + "\">");
                         }
 
-                        if (assignments.GetString(7) == "RtI")
+                        if (assignments.GetString(7) == "RR")
                         {
                             sb.Append("<a class=\"homeworkLink\" href = \"ReducedRow.aspx?assign=" + assignments.GetString(4) + "&question=" + assignments.GetString(6) + "\">");
                         }

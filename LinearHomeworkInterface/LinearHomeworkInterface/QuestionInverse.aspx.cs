@@ -202,6 +202,7 @@ namespace LinearHomeworkInterface
             HttpContext.Current.Session["minNumOfRowOps"] = minNumOfRowOps;
             HttpContext.Current.Session["inconsistent"] = inconsistent;
             HttpContext.Current.Session["numOfFreeVars"] = numOfFreeVars;
+            HttpContext.Current.Session["assignment"] = assId;
         }
 
         //method to dynamically load the question using MATHJAX
@@ -385,96 +386,106 @@ namespace LinearHomeworkInterface
             int sessionMinNumOfRowsOps = (int)HttpContext.Current.Session["minNumOfRowOps"];
             Boolean sessionInconsistent = (Boolean)HttpContext.Current.Session["inconsistent"];
             int sessionNumOfFreeVars = (int)HttpContext.Current.Session["numOfFreeVars"];
-
-            //query to fetch question's point value and their current grade on the assignment
-            string connStr = ConfigurationManager.ConnectionStrings["linearhmwkdb"].ConnectionString;
-            MySqlConnection msqcon = new MySqlConnection(connStr);
-            try
-            {
-                msqcon.Open();
-                String query = "SELECT q.pointValue, ha.grade FROM question AS q JOIN hmwkassignment AS ha WHERE ha.homeworkId=q.homeworkId AND ha.assignmentId = " + assignment + " AND q.number = " + question;
-                MySqlCommand msqcmd = new MySqlCommand(query, msqcon);
-                MySqlDataReader points = msqcmd.ExecuteReader();
-                points.Read();
-                questionValue = points.GetFloat(0);
-                currentGrade = points.GetFloat(1);
-                points.Close();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-
-
+            String assignId = (String) HttpContext.Current.Session["assignment"];
             string feedback = "";
-            Dictionary<int, float[,]> MatrixMap = JsonConvert.DeserializeObject<Dictionary<int, float[,]>>(MatrixMapJSON);
-            MatrixBuilder.MatrixOperations mb = new MatrixBuilder.MatrixOperations();
-
-            //get the amount to deduct by dividing the total points by our approximate number of steps to solve (+1 for first matrix) (+1 for copying the answer correctly)
-            //shifted then rounded to keep it to 2 decimal points, then shifted back
-            float deductValue = (float)Math.Round((questionValue / ((float)mb.countOperationsNeeded(sessionMatrix) + 2F)) * 100F) / 100F;
-            //if above gives a value of 0 (a rediculously large number of steps), correct to .01 so points are actually deducted
-            if (deductValue == 0) deductValue = .01F;
-
-            //should probably check if the first matrix is the actual first matrix
-            float[,] augMatrix = null;
-            MatrixMap.TryGetValue(0, out augMatrix);
-            
-            if (!mb.checkMatrixEquality(sessionMatrix, augMatrix))
+            //first we need to check if the homework assignment is in the database
+            AssignComponent.Assigner check = new AssignComponent.Assigner();
+            int theresanassignment = check.checkAssignmentExists(assignId);
+            if (theresanassignment == 1)
             {
-                feedback += "<div>The first matrix does not match the given matrix.<div>";
-            }
-            List<int> keysToInclude = new List<int>();
-            for(int i = 1; i < MatrixMap.Count-2; i++){
-                keysToInclude.Add(i);
-            }
-            Dictionary<int, float[,]> MatrixMapWithoutFirstOrLast = MatrixMap.Where(kvp => keysToInclude.Contains(kvp.Key)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            feedback += mb.checkSingleRowOperationInverseQuestion(MatrixMapWithoutFirstOrLast);
+                //query to fetch question's point value and their current grade on the assignment
+                string connStr = ConfigurationManager.ConnectionStrings["linearhmwkdb"].ConnectionString;
+                MySqlConnection msqcon = new MySqlConnection(connStr);
+                try
+                {
+                    msqcon.Open();
+                    String query = "SELECT q.pointValue, ha.grade FROM question AS q JOIN hmwkassignment AS ha WHERE ha.homeworkId=q.homeworkId AND ha.assignmentId = " + assignment + " AND q.number = " + question;
+                    MySqlCommand msqcmd = new MySqlCommand(query, msqcon);
+                    MySqlDataReader points = msqcmd.ExecuteReader();
+                    points.Read();
+                    questionValue = points.GetFloat(0);
+                    currentGrade = points.GetFloat(1);
+                    points.Close();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
 
-            float[,] studentInverse = null;
-            MatrixMap.TryGetValue(MatrixMap.Count-1, out studentInverse);
-            if (!mb.checkInverse(sessionMatrix, studentInverse))
-            {
-                feedback += "<div>The final matrix does not match the inverse for this matrix.<div>";
-            }
 
-            float grade = questionValue;
-            //ensure there was feedback, if not, will retain value of the question's total points
-            if (!feedback.Equals(""))
-            {
-                //Run through feedback, create array of statements based on . to count number of point deductions
-                String[] deductionStrings = feedback.Split('.');
-                //set grade to the total minus the deduct amount times number of mistakes
-                grade = questionValue - deductValue * (deductionStrings.Length - 1);
-                //correct any odd values from results close to 0 by re-rounding to 2 decimal points
-                grade = (float)Math.Round(grade * 100F) / 100F;
-            }
-            //make their grade go no lower than 0 (no negative points)
-            if (grade < 0) grade = 0;
-            //create grade to write back to database
-            float updatedGrade = grade + currentGrade;
+                Dictionary<int, float[,]> MatrixMap = JsonConvert.DeserializeObject<Dictionary<int, float[,]>>(MatrixMapJSON);
+                MatrixBuilder.MatrixOperations mb = new MatrixBuilder.MatrixOperations();
 
-            //Need to display points somehow
-            if (grade == 1)
-            {
-                feedback += "<!-- -->";
-            }
-            feedback += "<div><strong>Points Earned: </strong>" + grade + " / " + questionValue + "<div>";
+                //get the amount to deduct by dividing the total points by our approximate number of steps to solve (+1 for first matrix) (+1 for copying the answer correctly)
+                //shifted then rounded to keep it to 2 decimal points, then shifted back
+                float deductValue = (float)Math.Round((questionValue / ((float)mb.countOperationsNeeded(sessionMatrix) + 2F)) * 100F) / 100F;
+                //if above gives a value of 0 (a rediculously large number of steps), correct to .01 so points are actually deducted
+                if (deductValue == 0) deductValue = .01F;
 
-            //Update grade in database
-            msqcon = new MySqlConnection(connStr);
-            try
-            {
-                msqcon.Open();
-                String query = "UPDATE hmwkassignment AS ha SET ha.grade = " + updatedGrade + " WHERE assignmentId = " + assignment;
-                MySqlCommand msqcmd = new MySqlCommand(query, msqcon);
-                msqcmd.ExecuteNonQuery();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+                //should probably check if the first matrix is the actual first matrix
+                float[,] augMatrix = null;
+                MatrixMap.TryGetValue(0, out augMatrix);
 
+                if (!mb.checkMatrixEquality(sessionMatrix, augMatrix))
+                {
+                    feedback += "<div>The first matrix does not match the given matrix.<div>";
+                }
+                List<int> keysToInclude = new List<int>();
+                for (int i = 1; i < MatrixMap.Count - 2; i++)
+                {
+                    keysToInclude.Add(i);
+                }
+                Dictionary<int, float[,]> MatrixMapWithoutFirstOrLast = MatrixMap.Where(kvp => keysToInclude.Contains(kvp.Key)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+                feedback += mb.checkSingleRowOperationInverseQuestion(MatrixMapWithoutFirstOrLast);
+
+                float[,] studentInverse = null;
+                MatrixMap.TryGetValue(MatrixMap.Count - 1, out studentInverse);
+                if (!mb.checkInverse(sessionMatrix, studentInverse))
+                {
+                    feedback += "<div>The final matrix does not match the inverse for this matrix.<div>";
+                }
+
+                float grade = questionValue;
+                //ensure there was feedback, if not, will retain value of the question's total points
+                if (!feedback.Equals(""))
+                {
+                    //Run through feedback, create array of statements based on . to count number of point deductions
+                    String[] deductionStrings = feedback.Split('.');
+                    //set grade to the total minus the deduct amount times number of mistakes
+                    grade = questionValue - deductValue * (deductionStrings.Length - 1);
+                    //correct any odd values from results close to 0 by re-rounding to 2 decimal points
+                    grade = (float)Math.Round(grade * 100F) / 100F;
+                }
+                //make their grade go no lower than 0 (no negative points)
+                if (grade < 0) grade = 0;
+                //create grade to write back to database
+                float updatedGrade = grade + currentGrade;
+
+                //Need to display points somehow
+                if (grade == 1)
+                {
+                    feedback += "<!-- -->";
+                }
+                feedback += "<div><strong>Points Earned: </strong>" + grade + " / " + questionValue + "<div>";
+
+                //Update grade in database
+                msqcon = new MySqlConnection(connStr);
+                try
+                {
+                    msqcon.Open();
+                    String query = "UPDATE hmwkassignment AS ha SET ha.grade = " + updatedGrade + " WHERE assignmentId = " + assignment;
+                    MySqlCommand msqcmd = new MySqlCommand(query, msqcon);
+                    msqcmd.ExecuteNonQuery();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+            else if (theresanassignment == 0)
+            {
+                feedback += "<-!- -->";
+            }
             return String.IsNullOrEmpty(feedback) ? null : feedback;
         }
 
