@@ -15,7 +15,28 @@ namespace LinearHomeworkInterface
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.Cache.SetNoStore();
+            HttpCookie cookie = Request.Cookies["LINALGHW"];
+            FormsAuthenticationTicket t = null;
+            string[] user = null;
+
+            if (cookie != null)
+            {
+                t = FormsAuthentication.Decrypt(cookie.Value);
+                user = t.UserData.ToString().Split(' ');
+            }
+            if (user != null)
+            {
+                if (user[0].Equals("S"))
+                {
+                    Server.Transfer("StudentHome.aspx", true);
+                }
+                else if (user[0].Equals("I"))
+                {
+                    Server.Transfer("InstructorHome.aspx", true);
+                }
+            }
         }
 
         //our WebMethod for checking the user's solution(s)
@@ -104,11 +125,11 @@ namespace LinearHomeworkInterface
                 String query = null;
                 if (newaccrole.Equals("student"))
                 {
-                    query = "insert into user (userId, username, first, last, password, role) values (@userId, @Username, @First, @Last, SHA(@Password), 'S')";
+                    query = "insert into user (userId, username, first, last, password, role) values (@userId, @Username, @First, @Last, @Password, 'S')";
                 }
                 else if (newaccrole.Equals("instructor"))
                 {
-                    query = "insert into user (userId, username, first, last, password, role) values (@userId, @Username, @First, @Last, SHA(@Password), 'I')";
+                    query = "insert into user (userId, username, first, last, password, role) values (@userId, @Username, @First, @Last, @Password, 'I')";
                 }
                 MySqlCommand msqcmd = new MySqlCommand(query, msqcon);
                 msqcmd.Parameters.Add(new MySqlParameter("@userId", usid));
@@ -218,7 +239,7 @@ namespace LinearHomeworkInterface
             {
                 msqcon.Open();
                 MySqlDataReader user = null;
-                String query = "SELECT * FROM user where username = @Username AND password = SHA(@Password)";
+                String query = "SELECT * FROM user where username = @Username AND password = @Password";
                 MySqlCommand msqcmd = new MySqlCommand(query, msqcon);
                 msqcmd.Parameters.Add(new MySqlParameter("@Username", Username));
                 msqcmd.Parameters.Add(new MySqlParameter("@Password", Password));
