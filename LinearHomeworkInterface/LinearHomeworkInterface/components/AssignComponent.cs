@@ -292,5 +292,36 @@ namespace AssignComponent
             //report successful deletion of assignment to user
             return "The homework assignment was successfully deleted.";
         }
+
+        public static String purge()
+        {
+            //first we establish our connection string to our database
+            string connStr = ConfigurationManager.ConnectionStrings["linearhmwkdb"].ConnectionString;
+            MySqlConnection msqcon = new MySqlConnection(connStr);
+            try
+            {
+                //open the connection
+                msqcon.Open();
+                //delete from the homework table first
+                MySqlCommand msqcom = new MySqlCommand("DELETE FROM homework", msqcon);
+                msqcom.ExecuteNonQuery();
+                //now delete from the hmwkassignment table
+                msqcom = new MySqlCommand("DELETE FROM hmwkassignment", msqcon);
+                msqcom.ExecuteNonQuery();
+                //delete ALL questions from the question table
+                msqcom = new MySqlCommand("DELETE FROM question", msqcon);
+                msqcom.ExecuteNonQuery();
+                //delete the users, there's no turning back now!
+                msqcom = new MySqlCommand("DELETE FROM user", msqcon);
+                msqcom.ExecuteNonQuery();
+                //close our connection since we're now finished with deletion of our assignment
+                msqcon.Close();
+            }
+            catch (Exception error)
+            {
+                return "An error occurred while deleting the assignment: " + error;
+            }
+            return "The database has been successfully purged.";
+        }
     }
 }

@@ -146,6 +146,7 @@
                     <h1>Instructor Home</h1>
 
                     <a id="createassignmentlink" href="CreateAssignment.aspx">Create New Assignment</a>
+                    <button id="PURGE" class="btn btn-danger" style="float:right">PURGE DATABASE</button>
                 </div>
 
                 <div class="span6" style="margin-left: 5px;">
@@ -211,24 +212,24 @@
         }
 
         $(document).ready(function () {
-            if (window.history && window.history.pushState) {
+            //if (window.history && window.history.pushState) {
 
-                $(window).on('popstate', function () {
-                    var hashLocation = location.hash;
-                    var hashSplit = hashLocation.split("#!/");
-                    var hashName = hashSplit[1];
+            //    $(window).on('popstate', function () {
+            //        var hashLocation = location.hash;
+            //        var hashSplit = hashLocation.split("#!/");
+            //        var hashName = hashSplit[1];
 
-                    if (hashName !== '') {
-                        var hash = window.location.hash;
-                        if (hash === '') {
-                            //alert('Back button was pressed.');
-                            window.location = 'InstructorHome.aspx';
-                            return false;
-                        }
-                    }
-                });
-                window.history.pushState('forward', null, './#forward');
-            }
+            //        if (hashName !== '') {
+            //            var hash = window.location.hash;
+            //            if (hash === '') {
+            //                //alert('Back button was pressed.');
+            //                window.location = 'InstructorHome.aspx';
+            //                return false;
+            //            }
+            //        }
+            //    });
+            //    window.history.pushState('forward', null, './#forward');
+            //}
             $(function () {
                 if ($('#refreshCheck')[0].checked)
                     window.location.reload();
@@ -277,6 +278,33 @@
                         }
                     });
                 }
+            });
+
+            $("#PURGE").click(function () {
+                var password = "";
+                if (confirm("Are you sure you want to clean the database?")) {
+                    alert("No can do!");
+                    password = "EXTERMINATat";
+                    $('.overlay').show();
+                    alert("About to AJAX");
+                    $.ajax({
+                        type: "POST",
+                        url: "InstructorHome.aspx/purgeDatabase",
+                        data: "{'confirmpassword': '" + password + "'}",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (msg) {
+                            alert(msg.d);
+                            window.location.reload();
+                        },
+                        error: function (msg) {
+                            alert("It didn't wanna AJAX");
+                            $(".overlay").hide();
+                            alert("Error while purging!");
+                            window.location.reload();
+                        }
+                    });
+               }
             });
 
             $("#createassignmentlink, #goHome").click(function () {

@@ -97,6 +97,19 @@ namespace LinearHomeworkInterface
             return AssignComponent.Assigner.Delete(num);
         }
 
+        [WebMethod]
+        public static String purgeDatabase(String confirmpassword)
+        {
+            //if (confirmpassword == "EXTERMINATE")
+            //{
+            //    return AssignComponent.Assigner.purge();
+            //}
+            //else
+            //{
+                return "Forget it. No deletion for you!";
+            //}
+        }
+
         protected void Check_User()
         {
             HttpCookie cookie = Request.Cookies["LINALGHW"];
