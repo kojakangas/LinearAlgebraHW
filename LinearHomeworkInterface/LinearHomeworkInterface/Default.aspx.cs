@@ -15,7 +15,28 @@ namespace LinearHomeworkInterface
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.Cache.SetNoStore();
+            HttpCookie cookie = Request.Cookies["LINALGHW"];
+            FormsAuthenticationTicket t = null;
+            string[] user = null;
+
+            if (cookie != null)
+            {
+                t = FormsAuthentication.Decrypt(cookie.Value);
+                user = t.UserData.ToString().Split(' ');
+            }
+            if (user != null)
+            {
+                if (user[0].Equals("S"))
+                {
+                    Server.Transfer("StudentHome.aspx", true);
+                }
+                else if (user[0].Equals("I"))
+                {
+                    Server.Transfer("InstructorHome.aspx", true);
+                }
+            }
         }
 
         //our WebMethod for checking the user's solution(s)
