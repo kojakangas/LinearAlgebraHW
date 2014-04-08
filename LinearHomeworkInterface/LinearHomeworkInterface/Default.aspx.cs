@@ -125,11 +125,11 @@ namespace LinearHomeworkInterface
                 String query = null;
                 if (newaccrole.Equals("student"))
                 {
-                    query = "insert into user (userId, username, first, last, password, role) values (@userId, @Username, @First, @Last, SHA(@Password), 'S')";
+                    query = "insert into user (userId, username, first, last, password, role) values (@userId, @Username, @First, @Last, @Password, 'S')";
                 }
                 else if (newaccrole.Equals("instructor"))
                 {
-                    query = "insert into user (userId, username, first, last, password, role) values (@userId, @Username, @First, @Last, SHA(@Password), 'I')";
+                    query = "insert into user (userId, username, first, last, password, role) values (@userId, @Username, @First, @Last, @Password, 'I')";
                 }
                 MySqlCommand msqcmd = new MySqlCommand(query, msqcon);
                 msqcmd.Parameters.Add(new MySqlParameter("@userId", usid));
@@ -239,7 +239,7 @@ namespace LinearHomeworkInterface
             {
                 msqcon.Open();
                 MySqlDataReader user = null;
-                String query = "SELECT * FROM user where username = @Username AND password = SHA(@Password)";
+                String query = "SELECT * FROM user where username = @Username AND password = @Password";
                 MySqlCommand msqcmd = new MySqlCommand(query, msqcon);
                 msqcmd.Parameters.Add(new MySqlParameter("@Username", Username));
                 msqcmd.Parameters.Add(new MySqlParameter("@Password", Password));

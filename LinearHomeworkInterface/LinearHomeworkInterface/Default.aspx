@@ -12,6 +12,7 @@
     <script src="javascript/bootstrap.js"></script>
     <script src="javascript/jquery-ui-1.10.3.custom.min.js"></script>
     <script src="javascript/jquery.dataTables.min.js"></script>
+    <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha1.js"></script>
 </head>
 <body style="background-color: #F5F5F5;">
     <div class="container">
@@ -135,7 +136,7 @@
                         $.ajax({
                             type: "POST",
                             url: "Default.aspx/SignIn",
-                            data: "{'Username': '" + $("#usernameSignIn").val() + "','Password': '" + $("#passwordSignIn").val() + "'}",
+                            data: "{'Username': '" + $("#usernameSignIn").val() + "','Password': '" + CryptoJS.SHA1($("#passwordSignIn").val()) + "'}",
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",
                             success: function (url) {
@@ -162,6 +163,10 @@
             });
 
             $("#create").click(function (e) {
+                alert(CryptoJS.SHA1($("#accessCode").val()));
+
+                alert(CryptoJS.SHA1("DU2014"));
+
                 e.preventDefault();
                 if (!$("#username").val()) {
                     $("#username").trigger("focus");
@@ -184,7 +189,7 @@
                     $("#retypedpass").addClass("error");
                     $("#password").tooltip({ trigger: "manual", title: "Passwords do not match!" });
                     $("#password").tooltip("show");
-                } else if (!$("#accessCode").val() || ($("#accessCode").val() != "DU2014" && $("#accessCode").val() != "DU1337")) {
+                } else if (!$("#accessCode").val() || (CryptoJS.SHA1($("#accessCode").val()) != "69f2a5b4722ce148c187843cfaf83021591a6619" && CryptoJS.SHA1($("#accessCode").val()) != "c70d71d654ed83f8c6410937ea5f747da8afac1c")) {
                     $("#accessCode").trigger("select");
                     $("#accessCode").addClass("error");
                     $("#accessCode").tooltip({ trigger: "manual", title: "Incorrect Access Code!" });
