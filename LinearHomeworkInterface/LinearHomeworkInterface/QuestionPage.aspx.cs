@@ -240,10 +240,10 @@ namespace LinearHomeworkInterface
                             expression += matrix[i, j];
                             expression += "x_";
                             expression += j + 1;
-                            expression += "} = ";
                         }
                         else if (j == (m - 1))
                         {
+                            expression += "} = ";
                             expression += matrix[i, j];
                             expression += "$$";
                         }
@@ -252,7 +252,7 @@ namespace LinearHomeworkInterface
                 }
             }
             //if this is a Reduce to Identity, Determinant, or Inverse problem
-            else if (type == "RtI" || type == "D" || type == "I")
+            else if (type == "RR" || type == "D" || type == "I")
             {
                 String expression;
                 expression = "$$\\begin{bmatrix}";

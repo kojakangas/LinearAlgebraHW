@@ -80,8 +80,14 @@ namespace LinearHomeworkInterface
                 assignments = msqcmd.ExecuteReader();
                 //build contents of table to display assignments
                 sb = new StringBuilder();
+                //initialize point totals for assignments
+                float studentTotal = 0;
+                int homeworkTotal = 0;
                 while (assignments.Read())
                 {
+                    //increment overal totals
+                    studentTotal += float.Parse(assignments.GetString(2));
+                    homeworkTotal += int.Parse(assignments.GetString(5));
                     //find out if current assignment is available to work
                     bool available = false;
                     /*if(0>System.DateTime.Compare(System.DateTime.Now,assignments.GetDateTime(1))){*/
@@ -127,18 +133,30 @@ namespace LinearHomeworkInterface
                     sb.Append("<td style=\"text-align: center;\">");
                     sb.Append(assignments.GetString(1));
                     sb.Append("</td>");
+                    //status
+                    sb.Append("<td style=\"text-align: center;\">");
+                    sb.Append(assignments.GetString(3));
+                    sb.Append("</td>");
                     //grade
                     sb.Append("<td style=\"text-align: center;\">");
                     sb.Append(assignments.GetString(2));
                     sb.Append('/' + assignments.GetString(5));
                     sb.Append("</td>");
-                    //status
-                    sb.Append("<td style=\"text-align: center;\">");
-                    sb.Append(assignments.GetString(3));
-                    sb.Append("</td>");
 
                     sb.Append("</tr>");
                 }
+                sb.Append("<tr>");
+                sb.Append("<td></td>");
+                sb.Append("<td></td>");
+                sb.Append("<td style=\"text-align: center; font-weight: bold;\">");
+                sb.Append("Total:");
+                sb.Append("</td>");
+                sb.Append("<td style=\"text-align: center; font-weight: bold;\">");
+                sb.Append(studentTotal.ToString("0.00"));
+                sb.Append('/' + homeworkTotal.ToString());
+                sb.Append("</td>");
+                sb.Append("</tr>");
+
                 ltData.Text = sb.ToString();
                 assignments.Close();
                 msqcon.Close();

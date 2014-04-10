@@ -37,8 +37,8 @@
                         <tr>
                             <th style="text-align: left;">Assignment</th>
                             <th style="text-align: center; width: 200px;">Due Date</th>
-                            <th style="text-align: center; width: 50px;">Grade</th>
                             <th style="text-align: center; width: 75px;">Status</th>
+                            <th style="text-align: center; width: 50px;">Grade</th>
                         </tr>
                     </thead>
                     <tbody>
