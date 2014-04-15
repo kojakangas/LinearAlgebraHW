@@ -163,10 +163,6 @@
             });
 
             $("#create").click(function (e) {
-                //alert(CryptoJS.SHA1($("#accessCode").val()));
-
-                //alert(CryptoJS.SHA1("DU2014"));
-
                 e.preventDefault();
                 if (!$("#username").val()) {
                     $("#username").trigger("focus");
