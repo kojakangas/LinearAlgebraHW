@@ -19,7 +19,7 @@ using AssignComponent;
 
 namespace LinearHomeworkInterface
 {
-    public partial class QuestionPage : System.Web.UI.Page
+    public partial class QuestionPage1 : System.Web.UI.MasterPage
     {
         Random rand = new Random();
         String assId;
@@ -161,7 +161,7 @@ namespace LinearHomeworkInterface
             }
             catch (Exception)
             {
-                
+
                 throw;
             }
 
@@ -171,23 +171,25 @@ namespace LinearHomeworkInterface
                 actualAnswer[i] = rand.Next(min, max);
             }
             matrix = this.Create_Problem(n, m, min, max, numOfFreeVars, inconsistent, type, actualAnswer);
-            
-            if(type.Equals("DP")){
+
+            if (type.Equals("DP"))
+            {
                 //Displays the two vectors for the Dot Product problem using MATHJAX
                 buildQuestionDisplay(vector1, vector2);
             }
-            else{
+            else
+            {
                 //Displays the equations or matrices using MATHJAX by building a parsable string
                 buildQuestionDisplay(matrix);
             }
 
             try
             {
-                
+
 
                 msqcon.Open();
-                
-                
+
+
 
                 msqcon.Close();
             }
@@ -208,7 +210,7 @@ namespace LinearHomeworkInterface
         public void buildQuestionDisplay(float[,] matrix)
         {
             //if we wish to generate a System of Equations question
-            if(type == "SoE")
+            if (type == "SoE")
             {
                 for (int i = 0; i < n; i++)
                 {
@@ -291,7 +293,7 @@ namespace LinearHomeworkInterface
             for (int i = 0; i < n; i++)
             {
                 expression += vector1[i];
-                expression += " \\\\";   
+                expression += " \\\\";
             }
             expression += "\\end{pmatrix}";
             expression += "\\cdot";
@@ -309,14 +311,22 @@ namespace LinearHomeworkInterface
         {
             MatrixBuilder.MatrixOperations mb = new MatrixBuilder.MatrixOperations();
 
-            if (type.Equals("SoE")) {
-                if ((n == m || (n + 1) == m) && !inconsistent && numOfFreeVars <= 0){//has unique solution if n = m + 1; will have free var if n < m + 1
+            if (type.Equals("SoE"))
+            {
+                if ((n == m || (n + 1) == m) && !inconsistent && numOfFreeVars <= 0)
+                {//has unique solution if n = m + 1; will have free var if n < m + 1
                     matrix = mb.generateUniqueSolutionMatrix(n, m, min, max, answer);
-                } else if (n <= m && inconsistent && numOfFreeVars <= 0) {//inconsistent matrix
+                }
+                else if (n <= m && inconsistent && numOfFreeVars <= 0)
+                {//inconsistent matrix
                     matrix = mb.generateInconsistentMatrix(n, m, min, max);
-                } else if (n <= m && !inconsistent && numOfFreeVars > 0) {//free variable matrix
+                }
+                else if (n <= m && !inconsistent && numOfFreeVars > 0)
+                {//free variable matrix
                     matrix = mb.generateMatrixWithFreeVariables(n, m, min, max, answer, numOfFreeVars);
-                } else {
+                }
+                else
+                {
                     //This is the catch all. Not sure how accurate it is
                     matrix = mb.generateRandomMatrix(n, m, min, max);
                 }
@@ -326,26 +336,34 @@ namespace LinearHomeworkInterface
                 //Do the parsing and text adding for question
                 instruction.Text = instruction.Text + "<h4 style=\"margin: 0px;\">Question " + queId + "</h4>\n"
                     + "<p style=\"margin: 0px; line-height: 25px; font-size: 14px;\">Solve the system of linear equations by using elementary row operations.</p>";
-            } else if (type.Equals("RtI")) {
+            }
+            else if (type.Equals("RtI"))
+            {
                 matrix = mb.generateRandomIdentityMatrix(n, min, max);
 
                 //Do the parsing and text adding for question
                 instruction.Text = instruction.Text + "<h4 style=\"margin: 0px;\">Question " + queId + "</h4>\n"
                     + "<p style=\"margin: 0px; line-height: 25px; font-size: 14px;\">Reduce this matrix to an identity matrix.</p>";
-            } else if (type.Equals("DP")) {
+            }
+            else if (type.Equals("DP"))
+            {
                 vector1 = mb.generateRandomVector(n, min, max);
                 vector2 = mb.generateRandomVector(n, min, max);
 
                 //Do the parsing and text adding for question
                 instruction.Text = instruction.Text + "<h4 style=\"margin: 0px;\">Question " + queId + "</h4>\n"
                     + "<p style=\"margin: 0px; line-height: 25px; font-size: 14px;\">Find the dot product between the following two vectors.</p>";
-            } else if (type.Equals("D")) {
+            }
+            else if (type.Equals("D"))
+            {
                 matrix = mb.generateRandomIdentityMatrix(n, min, max);
 
                 //Do the parsing and text adding for question
                 instruction.Text = instruction.Text + "<h4 style=\"margin: 0px;\">Question " + queId + "</h4>\n"
                     + "<p style=\"margin: 0px; line-height: 25px; font-size: 14px;\">Find the determinant.</p>";
-            } else if (type.Equals("I")) {
+            }
+            else if (type.Equals("I"))
+            {
                 matrix = mb.generateRandomIdentityMatrix(n, min, max);
 
                 //Do the parsing and text adding for question
@@ -364,17 +382,17 @@ namespace LinearHomeworkInterface
             float currentGrade = 0;
 
             //Get session variables
-            float[,] sessionMatrix = (float[,]) HttpContext.Current.Session["matrix"];
-            float[] sessionActualAnswer = (float[]) HttpContext.Current.Session["actualAnswer"];
-            int sessionMinNumOfRowsOps = (int) HttpContext.Current.Session["minNumOfRowOps"];
-            Boolean sessionInconsistent = (Boolean) HttpContext.Current.Session["inconsistent"];
-            int sessionNumOfFreeVars = (int) HttpContext.Current.Session["numOfFreeVars"];
-            String assignId = (String) HttpContext.Current.Session["assignment"];
+            float[,] sessionMatrix = (float[,])HttpContext.Current.Session["matrix"];
+            float[] sessionActualAnswer = (float[])HttpContext.Current.Session["actualAnswer"];
+            int sessionMinNumOfRowsOps = (int)HttpContext.Current.Session["minNumOfRowOps"];
+            Boolean sessionInconsistent = (Boolean)HttpContext.Current.Session["inconsistent"];
+            int sessionNumOfFreeVars = (int)HttpContext.Current.Session["numOfFreeVars"];
+            String assignId = (String)HttpContext.Current.Session["assignment"];
             string feedback = "";
             //first we need to check if the homework assignment is in the database
             AssignComponent.Assigner check = new AssignComponent.Assigner();
             int theresanassignment = check.checkAssignmentExists(assignId);
-            if (theresanassignment==1)
+            if (theresanassignment == 1)
             {
 
                 //query to fetch question's point value and their current grade on the assignment

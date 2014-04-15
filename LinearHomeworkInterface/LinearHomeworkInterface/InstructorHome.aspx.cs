@@ -98,16 +98,16 @@ namespace LinearHomeworkInterface
         }
 
         [WebMethod]
-        public static String purgeDatabase(String confirmpassword)
+        public static int purgeDatabase(String confirmpassword)
         {
-            //if (confirmpassword == "EXTERMINATE")
-            //{
-            //    return AssignComponent.Assigner.purge();
-            //}
-            //else
-            //{
-                return "Forget it. No deletion for you!";
-            //}
+            if (confirmpassword == "EXTERMINATE")
+            {
+                return AssignComponent.Assigner.purge();
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         protected void Check_User()

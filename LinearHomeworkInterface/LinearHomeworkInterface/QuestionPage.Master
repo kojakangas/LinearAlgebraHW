@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="QuestionPage.aspx.cs" Inherits="LinearHomeworkInterface.QuestionPage" %>
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="QuestionPage.master.cs" Inherits="LinearHomeworkInterface.QuestionPage1" %>
 
 <!DOCTYPE html>
 
@@ -20,9 +20,12 @@ MathJax.Hub.Config({
   tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
 });
     </script>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
 </head>
 <body>
-    <div class="container">
+    <form id="form1" runat="server">
+        <div class="container">
         <div class="navbar-inner" style="position: fixed; width: 900px; z-index: 1000;">
             <div class="nav-collapse collapse">
                 <ul class="nav" style="float: left; margin: 10px 0 0px 0;">
@@ -57,12 +60,13 @@ MathJax.Hub.Config({
                             </li>
                             <li><a id="copymatrix" style="cursor: pointer;">Copy Last Matrix</a></li>
                             <li class="dropdown">
-                                <a data-toggle="dropdown" class="dropdown-toggle" href="#">Fraction <b class="caret"></b></a>
+                                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                    <asp:ContentPlaceHolder ID="TipTitlePlaceHolder" runat="server">
+                                    </asp:ContentPlaceHolder>
+                                    <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
-                                    <li style="margin-left: 5px;">Use the / for fractions:</li>
-                                    <li style="margin-left: 5px;">Ex. 1/2</li>
-                                    <li style="margin-left: 5px;">You must use improper fractions</li>
-                                    <li style="margin-left: 5px;">Ex. 1 2/3 or 1.6666... must be written as 5/3</li>
+                                    <asp:ContentPlaceHolder ID="TipDetailsPlaceHolder" runat="server">
+                                    </asp:ContentPlaceHolder>
                                 </ul>
                             </li>
                             <li class="dropdown">
@@ -99,10 +103,14 @@ MathJax.Hub.Config({
                             <asp:Label ID="question" runat="server" />
                         </div>
                     </div>
-                    <form id="form1" runat="server">
+                    <form id="form2" runat="server">
                         <div id="matrixHolder" style="display: inline-block; width: 100%;">
                             <!-- jQuery appends the matrices here-->
-                            <div id="info" style="color: #888;">Note: You must start by creating the augmented matrix from the equations above.<br /> Only one row operation is allowed between matrices. Empty entries must contain 0.<br /> Use the tools on the left to work the problem and create your answer. </div>
+                            <div id="info" style="color: #888;">Note:
+                                <asp:ContentPlaceHolder ID="ImportantPointsPlaceHolder" runat="server">
+                                </asp:ContentPlaceHolder>
+
+                            </div>
                         </div>
                         <hr style="margin-bottom: 0px; margin-top: 0px;" />
                         <button id="submitAnswer" disabled="disabled" class="btn btn-primary" title="Note: Must create an answer to submit." type="button" style="margin-top: 5px; float: right; margin-bottom: 50px;">Submit Answer</button>
@@ -162,7 +170,7 @@ MathJax.Hub.Config({
                 matrixNumber = 0;
                 generatedAnswer = false;
                 $('#matrixHolder').empty();
-                $("#matrixHolder").append("<div id=\"info\" style=\"color: #888;\">Note: You must start by creating the augmented matrix from the equations above.<br /> Only one row operation is allowed between matrices. Empty entries must contain 0.<br /> Use the tools on the left to work the problem and create your answer. </div>");
+                $("#matrixHolder").append("<div id=\"info\" style=\"color: #888;\">Note: <asp:ContentPlaceHolder ID=\"ImportantPointsPlaceHolder\" runat=\"server\"></asp:ContentPlaceHolder></div>");
                 $("#createAnsLink").click(function () { return false; });
             }
         }
@@ -246,7 +254,7 @@ MathJax.Hub.Config({
                 var cols = $("#columns").val();
                 if ((!(rows === "") && !(cols === "")) && generatedAnswer === false) {
                     $('#matrixHolder').append("<div id=\"row" + matrixNumber + "\" class=\"row-fluid\"></div>");
-                    $('#row' + matrixNumber).append("<div style=\"font-size: 25px; margin-bottom: 5px;\">" + matrixNumber + "&rarr; </div>");
+                    $('#row' + matrixNumber).append("<div style=\"font-size: 25px; margin-bottom: 5px;\"> &rarr; </div>");
                     $('#row' + matrixNumber).append("<table id=\"table" + matrixNumber + "\" class=\"span12\" style=\"margin-left: 0px; width: auto;\"><tbody id=\"matrix" + matrixNumber + "\"></tbody></table>");
                     for (var i = 0; i < rows; i++) {
                         $('#table' + matrixNumber).append("<tr id=\"matrix" + matrixNumber + "row" + i + "\"></tr>");
@@ -559,5 +567,11 @@ MathJax.Hub.Config({
             z-index: 2000;
         }
 </style>
+    <div>
+        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+        
+        </asp:ContentPlaceHolder>
+    </div>
+    </form>
 </body>
 </html>

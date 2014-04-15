@@ -124,13 +124,12 @@
                 $(".overlay").hide();
             });
 
-            $("#PURGE").click(function () {
+            $("#PURGE").click(function (e) {
+                e.preventDefault();
                 var password = "";
                 if (confirm("Are you sure you want to clean the database?")) {
-                    alert("No can do!");
-                    password = "EXTERMINATat";
+                    password = prompt("This function requires authorization. Please enter valid password.");
                     $('.overlay').show();
-                    alert("About to AJAX");
                     $.ajax({
                         type: "POST",
                         url: "InstructorHome.aspx/purgeDatabase",
@@ -138,14 +137,21 @@
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (msg) {
-                            alert(msg.d);
-                            window.location.reload();
+                            $(".overlay").hide();
+                            if (msg.d == 1) {
+                                alert("The database was successfully purged.");
+                                $('#signOut').trigger('click');
+                            }
+                            else if (msg.d == 0) {
+                                alert("An incorrect passcode was entered. Purge denied.");
+                            }
+                            else if (msg.d == -1) {
+                                alert("An error occurred during the purging process. Please contact the development team.");
+                            }
                         },
                         error: function (msg) {
-                            alert("It didn't wanna AJAX");
                             $(".overlay").hide();
-                            alert("Error while purging!");
-                            window.location.reload();
+                            alert("Error while purging! " + msg.d);
                         }
                     });
                 }
@@ -240,12 +246,12 @@
 
         $(document).ready(function () {
 
-            $(function () {
-                if ($('#refreshCheck')[0].checked)
-                    window.location.reload();
+            //$(function () {
+            //    if ($('#refreshCheck')[0].checked)
+            //        window.location.reload();
 
-                $('#refreshCheck')[0].checked = true;
-            });
+            //    $('#refreshCheck')[0].checked = true;
+            //});
 
             $(".datepicker").datepicker({
                 dateFormat: 'yy-mm-dd',

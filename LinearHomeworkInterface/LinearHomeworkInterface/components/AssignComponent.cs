@@ -293,7 +293,7 @@ namespace AssignComponent
             return "The homework assignment was successfully deleted.";
         }
 
-        public static String purge()
+        public static int purge()
         {
             //first we establish our connection string to our database
             string connStr = ConfigurationManager.ConnectionStrings["linearhmwkdb"].ConnectionString;
@@ -317,11 +317,11 @@ namespace AssignComponent
                 //close our connection since we're now finished with deletion of our assignment
                 msqcon.Close();
             }
-            catch (Exception error)
+            catch (Exception)
             {
-                return "An error occurred while deleting the assignment: " + error;
+                return -1;
             }
-            return "The database has been successfully purged.";
+            return 1;
         }
     }
 }

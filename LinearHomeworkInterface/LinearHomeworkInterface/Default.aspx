@@ -158,14 +158,14 @@
                         });
                     }
                 } else {
-                    alert("Invalid Characters were entered \nin username and password fields!");
+                    alert("Invalid characters were entered \nin username and password fields!");
                 }
             });
 
             $("#create").click(function (e) {
-                alert(CryptoJS.SHA1($("#accessCode").val()));
+                //alert(CryptoJS.SHA1($("#accessCode").val()));
 
-                alert(CryptoJS.SHA1("DU2014"));
+                //alert(CryptoJS.SHA1("DU2014"));
 
                 e.preventDefault();
                 if (!$("#username").val()) {
@@ -212,7 +212,7 @@
                                 $("#username").tooltip("show");
                             } else {
                                 var details = $("#username").val() + " " + $("#first").val() + " " + $("#last").val() + " "
-                                    + $("#password").val() + " " + $("#accessCode").val();
+                                    + CryptoJS.SHA1($("#password").val()) + " " + $("#accessCode").val();
                                 $.ajax({
                                     type: "POST",
                                     url: "Default.aspx/CreateAccount",
