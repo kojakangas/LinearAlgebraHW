@@ -96,7 +96,7 @@ MathJax.Hub.Config({
                     <div class="hero-unit" style="padding: 10px; margin-bottom: 0px; font-size: 14px;">
                         <asp:Label ID="instruction" runat="server" />
                         <div id="questiondisplay">
-                            <asp:Label ID="question" runat="server" />
+                            <asp:Label ID="question" runat="server" style="display: none;" />
                         </div>
                     </div>
                     <form id="form1" runat="server">
@@ -228,6 +228,12 @@ MathJax.Hub.Config({
         }
 
         $(document).ready(function () {
+            $(".overlay").show();
+            MathJax.Hub.Register.StartupHook("End", function () {
+                $('#question').show();
+                $(".overlay").hide();
+            });
+
             $(function () {
                 //potentially unnessarcary now
                 if ($('#refreshCheck')[0].checked)
@@ -246,7 +252,7 @@ MathJax.Hub.Config({
                 var cols = $("#columns").val();
                 if ((!(rows === "") && !(cols === "")) && generatedAnswer === false) {
                     $('#matrixHolder').append("<div id=\"row" + matrixNumber + "\" class=\"row-fluid\"></div>");
-                    $('#row' + matrixNumber).append("<div style=\"font-size: 25px; margin-bottom: 5px;\">" + matrixNumber + "&rarr; </div>");
+                    $('#row' + matrixNumber).append("<div style=\"font-size: 15px; font-weight: bold; margin-bottom: 5px;\">Matrix " + (matrixNumber+1) + ":</div>");
                     $('#row' + matrixNumber).append("<table id=\"table" + matrixNumber + "\" class=\"span12\" style=\"margin-left: 0px; width: auto;\"><tbody id=\"matrix" + matrixNumber + "\"></tbody></table>");
                     for (var i = 0; i < rows; i++) {
                         $('#table' + matrixNumber).append("<tr id=\"matrix" + matrixNumber + "row" + i + "\"></tr>");
@@ -405,7 +411,7 @@ MathJax.Hub.Config({
                     }
                     $.ajax({
                         type: "POST",
-                        url: "Question.aspx/updateForNextQuestion",
+                        url: "QuestionPage.aspx/updateForNextQuestion",
                         data: "{'question': '" + vars['question'] + "','assignment': '" + vars['assign'] + "'}",
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
