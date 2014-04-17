@@ -34,7 +34,7 @@ namespace LinearHomeworkInterface
             {
                 msqcon.Open();
                 //fetch data for assignments table
-                String query = "SELECT h.title, h.dueDate, h.homeworkid FROM homework AS h";
+                String query = "SELECT h.title, h.dueDate, h.homeworkid FROM homework AS h ORDER BY h.homeworkid DESC";
                 MySqlCommand msqcmd = new MySqlCommand(query, msqcon);
                 MySqlDataReader assignments = null;
                 assignments = msqcmd.ExecuteReader();
