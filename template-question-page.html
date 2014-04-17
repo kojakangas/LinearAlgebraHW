@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+    <title>Assignment Questions</title>
+    <link href="theme/bootstrap.css" rel="stylesheet" media="screen" />
+    <link href="theme/jquery.dataTables.css" rel="stylesheet" media="screen" />
+    <link href="theme/jquery-ui-1.10.3.custom.css" rel="stylesheet" media="screen" />
+    <script src="javascript/jquery.js"></script>
+    <script src="javascript/bootstrap.js"></script>
+    <script src="javascript/jquery-ui-1.10.3.custom.min.js"></script>
+</head>
+	<body>
+		<div class="container">
+			<div class="navbar-inner" style="position: fixed; width: 900px; z-index: 1000;">
+				<div class="nav-collapse collapse">
+					<ul class="nav" style="float: left; margin: 10px 0 0px 0;">
+						<li id="goHome" style="float: left; padding: 0 20px 0 0;"><a href="StudentHome.aspx">Home</a></li>
+					</ul>
+					<form class="navbar-form pull-right" style="">
+						<button id="signOut" class="btn" style="margin-top: 5px;" type="submit">Sign Out</button>
+					</form>
+				</div>
+				<!--/.nav-collapse -->
+			</div>
+
+			<div style="padding-top: 50px;">
+				<div class="row-fluid">
+					<div class="span3">
+						<div class="well sidebar-nav" style="height: 780px; width: 185px; position: fixed;">
+							<ul class="nav nav-list">
+								<li class="nav-header">Tools</li>
+								<li class="dropdown">
+									<a data-toggle="dropdown" class="dropdown-toggle" href="#">Sample Tool 1 <b class="caret"></b></a>
+									<ul class="dropdown-menu">
+									
+									</ul>
+								</li>
+							</ul>
+						</div>
+						<!--/.well -->
+					</div>
+					<!--/span-->
+					<div class="span9">
+						<div class="pagination pagination-centered" style="margin-top: 3px; margin-bottom: 3px;">
+							
+						</div>
+						<div class="hero-unit" style="padding: 10px; margin-bottom: 0px; font-size: 14px;">
+							<asp:Label ID="instruction" runat="server" />
+							<div id="questiondisplay">
+								<asp:Label ID="question" runat="server" />
+							</div>
+						</div>
+						<form id="form1" runat="server">
+							<div id="matrixHolder" style="display: inline-block; width: 100%;">
+								<!-- put question work here-->
+							</div>
+
+							<hr style="margin-bottom: 0px; margin-top: 0px;" />
+							<button id="submitAnswer" class="btn btn-primary" disabled="disabled" type="button" style="margin-top: 5px; float: right; margin-bottom: 50px;">Submit Answer</button>
+							<button id="nextQuestion" class="btn btn-primary" type="button" style="display: none; margin-top: 5px; float: right; margin-bottom: 50px;">Next Question</button>
+						</form>
+					</div>
+				</div>
+				<div class="overlay" style="display: none;">
+				   <img src="theme/images/loading.gif" style="margin-top: 150px;" />
+				</div>
+				<!--/.fluid-container-->
+			</div>
+		</div>
+	</body>
+</html>
