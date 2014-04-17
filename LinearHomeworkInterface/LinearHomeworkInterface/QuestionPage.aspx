@@ -275,15 +275,17 @@ MathJax.Hub.Config({
                         }
                         else {
                             try {
-                                eval(input.value);
                                 var temp = input.value;
-                                var firstChar = temp.charAt(0);
-                                // the g in the regular expression says to search the whole string 
-                                // rather than just find the first occurrence
-                                // match returns and array of -'s. Length will be the count for -.
-                                var count = temp.match(/-/g);
-                                if (count != null) {
-                                    if (count.length > 1 || firstChar != '-') hasEmptyInput = true;
+                                if(temp != "F"){
+                                    var firstChar = temp.charAt(0);
+                                    eval(input.value);
+                                    // the g in the regular expression says to search the whole string 
+                                    // rather than just find the first occurrence
+                                    // match returns and array of -'s. Length will be the count for -.
+                                    var count = temp.match(/-/g);
+                                    if (count != null) {
+                                        if (count.length > 1 || firstChar != '-') hasEmptyInput = true;
+                                    }
                                 }
                             }
                             catch (err) {
