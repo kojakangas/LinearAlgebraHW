@@ -12,6 +12,7 @@
     <script src="javascript/bootstrap.min.js"></script>
     <script src="javascript/jquery-ui-1.10.3.custom.min.js"></script>
     <script src="javascript/jquery.dataTables.min.js"></script>
+    <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha1.js"></script>
 </head>
 <body>
     <script>
@@ -133,7 +134,7 @@
                     $.ajax({
                         type: "POST",
                         url: "InstructorHome.aspx/purgeDatabase",
-                        data: "{'confirmpassword': '" + password + "'}",
+                        data: "{'confirmpassword': '" + CryptoJS.SHA1(password) + "'}",
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (msg) {

@@ -100,7 +100,7 @@ namespace LinearHomeworkInterface
         [WebMethod]
         public static int purgeDatabase(String confirmpassword)
         {
-            if (confirmpassword == "EXTERMINATE")
+            if (confirmpassword == "c0923e7a024f8bbe04748a59cb30be37c6661bd4")
             {
                 return AssignComponent.Assigner.purge();
             }
