@@ -186,6 +186,11 @@ MathJax.Hub.Config({
         }
 
         $(document).ready(function () {
+            $(".overlay").show();
+            MathJax.Hub.Register.StartupHook("End", function () {
+                $('#question').show();
+                $(".overlay").hide();
+            });
 
             $("#instructionButton").click(function () {
                 $("#myModal").css("left", "40%");
@@ -208,7 +213,7 @@ MathJax.Hub.Config({
                 var cols = $("#columns").val();
                 if ((!(rows === "") && !(cols === "")) && generatedAnswer === false) {
                     $('#matrixHolder').append("<div id=\"row" + matrixNumber + "\" class=\"row-fluid\"></div>");
-                    $('#row' + matrixNumber).append("<div style=\"font-size: 25px; margin-bottom: 5px;\"> &rarr; </div>");
+                    $('#row' + matrixNumber).append("<div style=\"font-size: 15px; font-weight: bold; margin-bottom: 5px;\">Matrix " + (matrixNumber + 1) + ":</div>");
                     $('#row' + matrixNumber).append("<table id=\"table" + matrixNumber + "\" class=\"span12\" style=\"margin-left: 0px; width: auto;\"><tbody id=\"matrix" + matrixNumber + "\"></tbody></table>");
                     for (var i = 0; i < rows; i++) {
                         $('#table' + matrixNumber).append("<tr id=\"matrix" + matrixNumber + "row" + i + "\"></tr>");
