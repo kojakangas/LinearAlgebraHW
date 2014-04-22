@@ -312,7 +312,6 @@ MathJax.Hub.Config({
                                 $(".gradingInputs").attr("disabled", "true");
                                 $("#submitAnswer").remove();
                                 $("#nextQuestion").show();
-                                $(".overlay").hide();
                                 if (gradingMsg.d.indexOf("!") === -1) {
                                     $("#answerDiv").append("<div id=\"resultsDiv\" class=\"alert alert-danger\" style=\"display:flex;\">" + gradingMsg.d + "</div>");
                                 }
@@ -385,8 +384,10 @@ MathJax.Hub.Config({
                                     window.location.href = "StudentHome.aspx";
                                 });
                             }
+                            $(".overlay").hide();
                         },
                         error: function (msg) {
+                            $(".overlay").hide();
                             alert("Question Loading Failed, don't panic");
                         }
                     });
