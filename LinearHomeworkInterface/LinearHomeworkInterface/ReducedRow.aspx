@@ -94,7 +94,7 @@ MathJax.Hub.Config({
                     <form id="form1" runat="server">
                         <div id="matrixHolder" style="display: inline-block; width: 100%;">
                             <!-- jQuery appends the matrices here-->
-                            <div id="info" style="color: #888;">Note: You must reduce the above matrix to Reduced Row Echelon form.<br /> You must start by creating the augmented matrix from the equations above.<br /> Only one row operation is allowed between matrices. Empty entries must contain 0.<br /> Use the tools on the left to work the problem. </div>
+                            <div id="info" style="color: #888;">Note: You must start by copying the above matrix.<br /> Only one row operation is allowed between matrices. Empty entries must contain 0.<br /> Use the tools on the left to work the problem. </div>
                         </div>
                         <hr style="margin-bottom: 0px; margin-top: 0px;" />
                         <button id="submitAnswer" disabled="disabled" class="btn btn-primary" title="Note: Must create an answer to submit." type="button" style="margin-top: 5px; float: right; margin-bottom: 50px;">Submit Answer</button>
@@ -154,7 +154,7 @@ MathJax.Hub.Config({
                 matrixNumber = 0;
                 generatedAnswer = false;
                 $('#matrixHolder').empty();
-                $("#matrixHolder").append("<div id=\"info\" style=\"color: #888;\">Note: You must start by creating the augmented matrix from the equations above.<br /> Only one row operation is allowed between matrices. Empty entries must contain 0.<br /> Use the tools on the left to work the problem. </div>");
+                $("#matrixHolder").append("<div id=\"info\" style=\"color: #888;\">Note: You must start by copying the above matrix.<br /> Only one row operation is allowed between matrices. Empty entries must contain 0.<br /> Use the tools on the left to work the problem. </div>");
             }
         }
 
