@@ -942,7 +942,7 @@ namespace MatrixBuilder
         public String checkSingleRowOperationInverseQuestion(Dictionary<int, float[,]> matrixMap)
         {
             String feedback = "";
-            for (int i = 1; i < matrixMap.Count(); i++)
+            for (int i = 0; i < matrixMap.Count()-1; i++)
             {
                 float[,] matrix1 = null;
                 matrixMap.TryGetValue(i, out matrix1);

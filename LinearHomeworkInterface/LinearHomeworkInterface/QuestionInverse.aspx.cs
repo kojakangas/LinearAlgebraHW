@@ -426,12 +426,27 @@ namespace LinearHomeworkInterface
                 float[,] augMatrix = null;
                 MatrixMap.TryGetValue(0, out augMatrix);
 
-                if (!mb.checkMatrixEquality(sessionMatrix, augMatrix))
+                float[,] sessionMatrixWithIdentity = new float[sessionMatrix.GetLength(0), sessionMatrix.GetLength(1) * 2];
+                for (int i = 0; i < sessionMatrix.GetLength(0); i++)
+                {
+                    for (int j = 0; j < sessionMatrix.GetLength(1); j++)
+                    {
+                        sessionMatrixWithIdentity[i, j] = sessionMatrix[i, j];
+                    }
+                }
+                int row = 0;
+                for (int j = sessionMatrix.GetLength(1); j < sessionMatrixWithIdentity.GetLength(1); j++)
+                {
+                    sessionMatrixWithIdentity[row, j] = 1;
+                    row++;
+                }
+
+                if (!mb.checkMatrixEquality(sessionMatrixWithIdentity, augMatrix))
                 {
                     feedback += "<div>The first matrix does not match the given matrix.<div>";
                 }
                 List<int> keysToInclude = new List<int>();
-                for (int i = 1; i < MatrixMap.Count - 2; i++)
+                for (int i =0; i < MatrixMap.Count - 1; i++)
                 {
                     keysToInclude.Add(i);
                 }

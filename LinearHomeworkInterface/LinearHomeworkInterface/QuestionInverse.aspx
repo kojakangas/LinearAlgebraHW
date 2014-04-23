@@ -55,7 +55,7 @@ MathJax.Hub.Config({
                                     <li><a id="makeMatrix" class="btn" style="margin: 0px 5px 5px 5px;">Create</a></li>
                                 </ul>
                             </li>
-                            <li><a id="copymatrix" style="cursor: pointer;">Copy Last Matrix</a></li>
+                            <li><a id="copymatrix" style="cursor: pointer;" title="Press Enter while in a matrix to perform this action">Copy Last Matrix</a></li>
                             <li class="dropdown">
                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">Fraction <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
@@ -95,7 +95,7 @@ MathJax.Hub.Config({
                     <form id="form1" runat="server">
                         <div id="matrixHolder" style="display: inline-block; width: 100%;">
                             <!-- jQuery appends the matrices here-->
-                            <div id="info" style="color: #888;">Instructions: Start by creating the initial matrix, then create a matrix that will include the initial matrix and identity, <br />then row reduce to the identity. Once the matrix is row reduced to the identity, create a matrix of the correct size and input the inverse as your answer. <br />Note: Only one row operation is allowed between matrices. Empty entries must contain 0.<br /> Use the tools on the left to work the problem. </div>
+                            <div id="info" style="color: #888;">Instructions: Start by creating a matrix that will include the initial matrix and identity, <br />then row reduce to the identity. Once the matrix is row reduced to the identity, create a matrix of the correct size and input the inverse as your answer. <br />Note: Only one row operation is allowed between matrices. Empty entries must contain 0.<br /> Use the tools on the left to work the problem. </div>
                         </div>
 
 
@@ -122,7 +122,7 @@ MathJax.Hub.Config({
                     </form>
                 </div>
             </div>
-            <div class="overlay" style="display: none;">
+            <div class="overlay">
                <img src="theme/images/loading.gif" style="margin-top: 150px;" />
             </div>
             <!--/.fluid-container-->
@@ -186,7 +186,6 @@ MathJax.Hub.Config({
         }
 
         $(document).ready(function () {
-            $(".overlay").show();
             MathJax.Hub.Register.StartupHook("End", function () {
                 $('#question').show();
                 $(".overlay").hide();
