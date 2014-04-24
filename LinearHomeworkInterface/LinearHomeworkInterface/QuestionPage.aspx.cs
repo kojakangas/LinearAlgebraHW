@@ -356,7 +356,7 @@ namespace LinearHomeworkInterface
             return matrix;
         }
 
-        [WebMethod]
+        [WebMethod(EnableSession = true)]
         public static string Grade(String MatrixMapJSON, String AnswerJSON, String question, String assignment)
         {
             //initialize floats for total point value and their grade so far on assignment
@@ -366,7 +366,7 @@ namespace LinearHomeworkInterface
             //Get session variables
             float[,] sessionMatrix = (float[,]) HttpContext.Current.Session["matrix"];
             float[] sessionActualAnswer = (float[]) HttpContext.Current.Session["actualAnswer"];
-            int sessionMinNumOfRowsOps = (int) HttpContext.Current.Session["minNumOfRowOps"];
+            //int sessionMinNumOfRowsOps = (int) HttpContext.Current.Session["minNumOfRowOps"];
             Boolean sessionInconsistent = (Boolean) HttpContext.Current.Session["inconsistent"];
             int sessionNumOfFreeVars = (int) HttpContext.Current.Session["numOfFreeVars"];
             String assignId = (String) HttpContext.Current.Session["assignment"];
