@@ -95,7 +95,7 @@ MathJax.Hub.Config({
                     <form id="form1" runat="server">
                         <div id="matrixHolder" style="display: inline-block; width: 100%;">
                             <!-- jQuery appends the matrices here-->
-                            <div id="info" style="color: #888;">Instructions: Start by creating a matrix that will include the initial matrix and identity, <br />then row reduce to the identity. Once the matrix is row reduced to the identity, create a matrix of the correct size and input the inverse as your answer. <br />Note: Only one row operation is allowed between matrices. Empty entries must contain 0.<br /> Use the tools on the left to work the problem. </div>
+                            <div id="info" style="color: #888;">Instructions: Start by creating the initial matrix augmented with the identity matrix, <br />then row reduce to the identity. Once the matrix is row reduced to the identity, create a matrix of the correct size and input the inverse as your answer. <br />Note: Only one row operation is allowed between matrices. Empty entries must contain 0.<br /> Use the tools on the left to work the problem. </div>
                         </div>
 
 
