@@ -211,7 +211,7 @@ MathJax.Hub.Config({
             $('#makeMatrix').click(function () {
                 var rows = $("#rows").val();
                 var cols = $("#columns").val();
-                if ((!(rows === "") && !(cols === "")) && generatedAnswer === false) {
+                if ((!(rows === "") && !(cols === "") && !(rows === "0") && !(cols === "0") && !(rows === "00") && !(cols === "00")) && generatedAnswer === false) {
                     $('#matrixHolder').append("<div id=\"row" + matrixNumber + "\" class=\"row-fluid\"></div>");
                     $('#row' + matrixNumber).append("<div style=\"font-size: 15px; font-weight: bold; margin-bottom: 5px;\">Matrix " + (matrixNumber + 1) + ":</div>");
                     $('#row' + matrixNumber).append("<table id=\"table" + matrixNumber + "\" class=\"span12\" style=\"margin-left: 0px; width: auto;\"><tbody id=\"matrix" + matrixNumber + "\"></tbody></table>");

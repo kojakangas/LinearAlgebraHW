@@ -149,7 +149,9 @@ MathJax.Hub.Config({
             if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 45 && charCode != 46 && charCode != 37 && charCode != 39 && !(charCode == 47 && evt.currentTarget.value != "" && evt.currentTarget.value.indexOf('/') === -1)) {
                 return false;
             }
-            else if (charCode == 13) $("#copymatrix").trigger('click');
+            else if (charCode == 13 && !enterPressed) {
+                $("#copymatrix").trigger('click');
+            }
             return true;
         }
 
@@ -249,7 +251,7 @@ MathJax.Hub.Config({
             $('#makeMatrix').click(function () {
                 var rows = $("#rows").val();
                 var cols = $("#columns").val();
-                if ((!(rows === "") && !(cols === "")) && generatedAnswer === false) {
+                if ((!(rows === "") && !(cols === "") && !(rows === "0") && !(cols === "0") && !(rows === "00") && !(cols === "00")) && generatedAnswer === false) {
                     $('#matrixHolder').append("<div id=\"row" + matrixNumber + "\" class=\"row-fluid\"></div>");
                     $('#row' + matrixNumber).append("<div style=\"font-size: 15px; font-weight: bold; margin-bottom: 5px;\">Matrix " + (matrixNumber+1) + ":</div>");
                     $('#row' + matrixNumber).append("<table id=\"table" + matrixNumber + "\" class=\"span12\" style=\"margin-left: 0px; width: auto;\"><tbody id=\"matrix" + matrixNumber + "\"></tbody></table>");

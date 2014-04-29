@@ -609,7 +609,7 @@ namespace MatrixBuilder
                 }
                 for (int i = 0; i < oldMatrix.GetLength(1); i++)
                 {
-                    if (Math.Abs(constant * oldMatrix[row, i] - newMatrix[row, i]) > floatOffset)
+                    if (Math.Abs(constant) <= floatOffset || Math.Abs(constant * oldMatrix[row, i] - newMatrix[row, i]) > floatOffset)
                     {
                         isTimesScalar = false;
                         break;
