@@ -207,6 +207,12 @@ MathJax.Hub.Config({
                 e.stopPropagation();
             });
 
+            $("#rows, #columns").keydown(function (e) {
+                if (e.keyCode == 13) {
+                    $("#makeMatrix").trigger("click");
+                }
+            });
+
             $('#makeMatrix').click(function () {
                 var rows = $("#rows").val();
                 var cols = $("#columns").val();

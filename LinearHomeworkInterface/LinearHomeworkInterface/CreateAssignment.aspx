@@ -220,7 +220,7 @@
 	            if (questionType === "SoE") {
 	                var freeVars = $("#freeVarsSoE").val();
 	                if (freeVars === "") { freeVars = "0"; }
-	                if (parseInt($("#minSoE").val()) < parseInt($("#maxSoE").val()) && $("#rowsSoE").val() && $("#colsSoE").val() && $("#minSoE").val() && $("#maxSoE").val() && (parseInt(freeVars) >= 0) && (parseInt(freeVars) < parseInt($("#rowsSoE").val())) && ((parseInt($("#rowsSoE").val()) + 1) == parseInt($("#colsSoE").val()))) {
+	                if (parseInt(freeVars) < 2 && parseInt($("#minSoE").val()) < parseInt($("#maxSoE").val()) && $("#rowsSoE").val() && $("#colsSoE").val() && $("#minSoE").val() && $("#maxSoE").val() && (parseInt(freeVars) >= 0) && (parseInt(freeVars) < parseInt($("#rowsSoE").val())) && ((parseInt($("#rowsSoE").val()) + 1) == parseInt($("#colsSoE").val()))) {
 	                    var inconsistent;
 	                    if ($("#inconsistentSoE").is(":checked")) { inconsistent = "Inconsistent"; freeVars = "N/A";} else { inconsistent = "Consistent"; }
 	                    questionNumber++;
@@ -234,7 +234,7 @@
                             freeVars,
                             inconsistent]);
 	                } else {
-	                    alert("Bad Question Parameters: \n1. Must specify Rows, Columns, Min and Max Coefficients\n2. Max Coefficient must be greater than Min Coefficient\n3. Must have Rows + 1 Columns (for now)\n4. Number of free variables must be from 0 to 1 less than the number of total variables");
+	                    alert("Bad Question Parameters: \n1. Must specify Rows, Columns, Min and Max Coefficients\n2. Max Coefficient must be greater than Min Coefficient\n3. Must have Rows + 1 Columns (for now)\n4. Number of free variables must be from 0 to 1 less than the number of total variables\n5. Free variable count must be less than 2");
 	                }
 	            } else if (questionType === "RR") {
 	                if (parseInt($("#minRR").val()) < parseInt($("#maxRR").val()) && $("#rowsRR").val() && $("#colsRR").val() && $("#minRR").val() && $("#maxRR").val() && (parseInt($("#rowsRR").val()) > 0) && (parseInt($("#colsRR").val()) > 0)) {

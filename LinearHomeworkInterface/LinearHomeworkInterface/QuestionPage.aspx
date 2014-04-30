@@ -72,7 +72,7 @@ MathJax.Hub.Config({
                                         <h5>Solution: </h5>
                                     </li>
                                         <li>
-                                            <input id="variables" type="text" onkeypress="return validateNumericInput(event)" class="span10" style="float: left; margin-left: 13px" placeholder="# of elements" />
+                                            <input id="variables" type="text" onkeypress="return validateNumericInputMatrixSize(event)" class="span10" style="float: left; margin-left: 13px" placeholder="# of elements" />
                                         </li>
                                         <li style="margin-bottom: 5px;">
                                             <span style="margin-left: 13px;">Inconsistent: </span>
@@ -149,9 +149,7 @@ MathJax.Hub.Config({
             if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 45 && charCode != 46 && charCode != 37 && charCode != 39 && !(charCode == 47 && evt.currentTarget.value != "" && evt.currentTarget.value.indexOf('/') === -1)) {
                 return false;
             }
-            else if (charCode == 13 && !enterPressed) {
-                $("#copymatrix").trigger('click');
-            }
+            else if (charCode == 13) $("#copymatrix").trigger('click');
             return true;
         }
 
@@ -246,6 +244,12 @@ MathJax.Hub.Config({
 
             $('.dropdown-menu input, #makeMatrix').click(function (e) {
                 e.stopPropagation();
+            });
+
+            $("#rows, #columns").keydown(function (e) {
+                if (e.keyCode == 13) {
+                    $("#makeMatrix").trigger("click");
+                }
             });
 
             $('#makeMatrix').click(function () {

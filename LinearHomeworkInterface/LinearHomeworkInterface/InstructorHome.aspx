@@ -128,7 +128,7 @@
             $("#PURGE").click(function (e) {
                 e.preventDefault();
                 var password = "";
-                if (confirm("Are you sure you want to clean the database?")) {
+                if (confirm("Are you sure you want to clean the database?\n This action will remove all data including instructor accounts.\n To make a new instructor account you would use the access code DU1337")) {
                     password = prompt("This function requires authorization. Please enter valid password.");
                     $('.overlay').show();
                     $.ajax({
@@ -140,11 +140,11 @@
                         success: function (msg) {
                             $(".overlay").hide();
                             if (msg.d == 1) {
-                                alert("The database was successfully purged.");
+                                alert("The database was successfully reset.");
                                 $('#signOut').trigger('click');
                             }
                             else if (msg.d == 0) {
-                                alert("An incorrect passcode was entered. Purge denied.");
+                                alert("An incorrect passcode was entered. Reset denied.");
                             }
                             else if (msg.d == -1) {
                                 alert("An error occurred during the purging process. Please contact the development team.");
@@ -180,7 +180,7 @@
                     <h1>Instructor Home</h1>
 
                     <a id="createassignmentlink" href="CreateAssignment.aspx">Create New Assignment</a>
-                    <button id="PURGE" class="btn btn-danger" style="float:right">PURGE DATABASE</button>
+                    <button id="PURGE" class="btn btn-danger" style="float:right">System Reset</button>
                 </div>
 
                 <div class="span6" style="margin-left: 5px;">

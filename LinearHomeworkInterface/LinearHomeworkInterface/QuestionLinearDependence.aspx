@@ -195,6 +195,12 @@ MathJax.Hub.Config({
                 $(".overlay").hide();
             });
 
+            $("#rows, #columns").keydown(function (e) {
+                if (e.keyCode == 13) {
+                    $("#makeMatrix").trigger("click");
+                }
+            });
+
             $(function () {
                 //potentially unnessarcary now
                 if ($('#refreshCheck')[0].checked)
