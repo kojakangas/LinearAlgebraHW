@@ -15,6 +15,17 @@ namespace LinearHomeworkInterface
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            string connStr = ConfigurationManager.ConnectionStrings["linearhmwkdb"].ConnectionString;
+            MySqlConnection msqcon = new MySqlConnection(connStr);
+            
+                msqcon.Open();
+                MySqlDataReader usernameCount = null;
+                String query = "Select * from user where username = 'ssigman'";
+                MySqlCommand msqcmd = new MySqlCommand(query, msqcon);
+                usernameCount = msqcmd.ExecuteReader();
+
+
+                msqcon.Close();
             
         }
 
